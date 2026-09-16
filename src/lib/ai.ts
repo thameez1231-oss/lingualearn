@@ -317,6 +317,138 @@ const GRAMMAR_MISTAKES = [
   },
 ];
 
+/**
+ * Detects Manglish (Malayalam written in Latin/English script) and mixed Malayalam-English.
+ * Understands phrases and converts into equivalent English meaning.
+ */
+export function resolveManglishAndMixed(text: string): { isManglish: boolean; englishMeaning?: string; naturalTip?: string } {
+  const lower = text.toLowerCase().trim();
+
+  // 1. Direct Manglish phrases and common colloquial sentences
+  const directPhrases: Array<{ pattern: RegExp; meaning: string; tip?: string }> = [
+    {
+      pattern: /\b(enthokke\s*(?:undu?|yundu?)|enthokke\s+vishesham|vishesham\s+entha|visheshangal\s+entha)\b/i,
+      meaning: "What is up? How is everything going?",
+      tip: "To say 'enthokke und vishesham' in English, say: 'How's it going?' or 'What's new?'",
+    },
+    {
+      pattern: /\b(sukhamano|sukham\s+aano|sukham\s+alle|sukham\s+thanne)\b/i,
+      meaning: "How are you? Are you doing well?",
+      tip: "To ask 'sukhamano' in English, say: 'How are you doing today?'",
+    },
+    {
+      pattern: /\b(food\s+kazhicho|lunch\s+kazhicho|dinner\s+kazhicho|choru\s+kazhicho|kazhicho)\b/i,
+      meaning: "Did you have food? Have you eaten yet?",
+      tip: "To ask 'food kazhicho' in English, say: 'Have you had lunch yet?' or 'Did you eat?'",
+    },
+    {
+      pattern: /\b(ith(?:u)?\s+engane\s+(?:english(?:il)?\s+)?parayum|engane\s+parayum)\b/i,
+      meaning: "How do I say this in English?",
+      tip: "You can ask: 'How do you say this in English?'",
+    },
+    {
+      pattern: /\b(njan|njaan)\s+(?:english\s+)?(?:padikkan|padikkanam|padikkan\s+aagrahikkunnu)\b/i,
+      meaning: "I want to learn English.",
+      tip: "Say: 'I want to improve my English speaking skills.'",
+    },
+    {
+      pattern: /\b(oru\s+doubt(?:\s+und)?|oru\s+chodyam\s+chodichotte|doubt\s+chodikkam)\b/i,
+      meaning: "May I ask a question or doubt?",
+      tip: "In English, instead of saying 'I have a doubt', native speakers usually say: 'I have a question.'",
+    },
+    {
+      pattern: /\b(njan|njaan)\s+(?:innale|yesterday)\s+(?:office-?il|veettil|college-?il)\s+(?:poyi|aayirunnu)\b/i,
+      meaning: "I was at the office yesterday.",
+      tip: "Say: 'I was at the office yesterday.'",
+    },
+    {
+      pattern: /\b(njan|njaan)\s+office-?il\s+(?:aanu|aayirunnu)\b/i,
+      meaning: "I am at the office.",
+      tip: "Say: 'I am currently at the office.'",
+    },
+    {
+      pattern: /\b(njan|njaan)\s+veettil\s+(?:aanu|ethi)\b/i,
+      meaning: "I am at home / I reached home.",
+      tip: "Say: 'I am at home now.'",
+    },
+    {
+      pattern: /\b(njan|njaan)\s+train-?il\s+aanu\b/i,
+      meaning: "I am on the train.",
+      tip: "In English, remember to say 'on the train', not 'in the train'.",
+    },
+    {
+      pattern: /\b(njan|njaan)\s+naale\s+varilla\b/i,
+      meaning: "I will not come tomorrow.",
+      tip: "Say: 'I won't be able to come tomorrow.'",
+    },
+    {
+      pattern: /\b(ith(?:u)?\s+(?:correct\s+aano|thettundo|mistake\s+undo))\b/i,
+      meaning: "Is this correct, or is there any mistake?",
+      tip: "Say: 'Is this sentence grammatically correct?'",
+    },
+    {
+      pattern: /\b(english\s+(?:speak|talk)\s+cheyyan\s+help\s+cheyyumo)\b/i,
+      meaning: "Can you help me practice speaking English?",
+      tip: "Say: 'Could you please help me practice speaking English?'",
+    },
+    {
+      pattern: /\b(office-?il\s+late\s+aayi|late\s+aayi\s+poyi)\b/i,
+      meaning: "I was late to the office.",
+      tip: "Say: 'I got delayed on the way to the office.'",
+    },
+    {
+      pattern: /\b(valare\s+nanni|nanni\s+und)\b/i,
+      meaning: "Thank you very much!",
+      tip: "Say: 'Thank you so much!'",
+    },
+  ];
+
+  for (const item of directPhrases) {
+    if (item.pattern.test(lower)) {
+      return { isManglish: true, englishMeaning: item.meaning, naturalTip: item.tip };
+    }
+  }
+
+  // 2. Detect common Manglish vocabulary tokens
+  const manglishTokenPattern = /\b(njan|njaan|ente|enikku|enikk|ningal|ningalkk|avide|ivide|evide|entha|enthaanu|enthina|enthokke|vishesham|sukham|sukhamano|kazhicho|kazhichu|cheyyo|cheyyam|cheyyan|cheythatha|poyi|pokum|pokunnu|varum|vannu|undo|und|illa|athe|alla|alle|engane|engana|eppol|eppozha|chodyam|padikkan|padipikku|parayum|parayamo|veettil|thettundo|thettu|ariyilla|ariyumo|aagrahikkunnu|aano|aanu|aayirunnu|kandu|nokkam|sherikkum|karyam|pinnentha|pinne|nanni)\b/i;
+
+  if (manglishTokenPattern.test(lower)) {
+    const substituted = lower
+      .replace(/\bnjan\b|\bnjaan\b/g, 'I')
+      .replace(/\benikk(?:u)?\b/g, 'for me')
+      .replace(/\bente\b/g, 'my')
+      .replace(/\bningal(?:kku)?\b/g, 'you')
+      .replace(/\bkazhicho\b/g, 'did you eat')
+      .replace(/\bsukhamano\b/g, 'how are you')
+      .replace(/\bvishesham\b/g, 'news')
+      .replace(/\bentha(?:anu)?\b/g, 'what is')
+      .replace(/\benthokke\b/g, 'what all')
+      .replace(/\bevide(?:ya)?\b/g, 'where')
+      .replace(/\bengane(?:ya)?\b/g, 'how')
+      .replace(/\bpoyi\b/g, 'went')
+      .replace(/\bvarum\b/g, 'will come')
+      .replace(/\baanu\b/g, 'is')
+      .replace(/\baayirunnu\b/g, 'was')
+      .replace(/\billa\b/g, 'not')
+      .replace(/\bundo\b/g, 'is there')
+      .replace(/\bund\b/g, 'have')
+      .replace(/\bpadikkan\b/g, 'to learn')
+      .replace(/\bparayum\b/g, 'say')
+      .replace(/\bthettundo\b/g, 'is it wrong')
+      .replace(/\bcheyyo\b/g, 'will do')
+      .replace(/\bcheyyan\b/g, 'to do')
+      .replace(/\bhelp\s+cheyyumo\b/g, 'can you help');
+
+    return {
+      isManglish: true,
+      englishMeaning: substituted.trim(),
+      naturalTip: 'You used Manglish! Practice expressing this in natural English.',
+    };
+  }
+
+  return { isManglish: false };
+}
+
 export async function translateNativeToEnglish(
   text: string,
   preferredLanguage: string,
@@ -325,7 +457,22 @@ export async function translateNativeToEnglish(
   const trimmed = text.trim();
   const sourceLangCode = getLanguageCode(preferredLanguage);
 
-  // 1. DO NOT OVER-TRANSLATE: Check if user input is already pure English
+  // 1. Manglish and Mixed Malayalam-English Detection
+  const manglishCheck = resolveManglishAndMixed(trimmed);
+  if (manglishCheck.isManglish && manglishCheck.englishMeaning) {
+    const natural = naturalizeEnglish(manglishCheck.englishMeaning);
+    return {
+      detectedLanguage: 'Manglish (Malayalam)',
+      nativeText: trimmed,
+      englishText: natural,
+      phoneticGuide: generatePhoneticGuide(natural),
+      breakdown: [],
+      naturalTip: manglishCheck.naturalTip || 'Practice speaking this in natural English!',
+      confidence: 0.96,
+    };
+  }
+
+  // 2. DO NOT OVER-TRANSLATE: Check if user input is already pure English
   const isPureEnglish = /^[a-zA-Z0-9\s.,!?'"-]+$/.test(trimmed);
   if (isPureEnglish && trimmed.split(/\s+/).length <= 4) {
     const natural = naturalizeEnglish(trimmed);
@@ -340,10 +487,13 @@ export async function translateNativeToEnglish(
     };
   }
 
-  // 2. High-Quality AI LLM Translation (Tier 1: Google Gemini API)
-  if (process.env.GEMINI_API_KEY) {
-    try {
-      const strictInstruction = `You are a highly accurate multilingual translation engine.
+  // 3. High-Quality AI LLM Translation (Tier 1: Google Gemini API)
+  const geminiKey = process.env.GEMINI_API_KEY?.trim();
+  if (geminiKey) {
+    const candidateModels = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+    for (const model of candidateModels) {
+      try {
+        const strictInstruction = `You are a highly accurate multilingual translation engine.
 Translate the user's sentence from ${preferredLanguage} into natural, grammatically correct English.
 First understand the complete meaning and context of the sentence.
 Do not translate word-by-word.
@@ -354,7 +504,7 @@ Do not add information that was not present.
 If the source sentence is informal or conversational, produce natural conversational English.
 If the source contains an idiom or expression, translate its meaning rather than translating the individual words literally.
 If the source sentence is ambiguous, preserve the ambiguity rather than guessing an unrelated meaning.
-Handle code-switching (e.g. ${preferredLanguage} mixed with English words) naturally.
+Handle code-switching (e.g. Malayalam mixed with English words, or Manglish in Latin alphabet) naturally.
 ${context ? `Context of conversation: "${context}"` : ''}
 
 User's sentence: "${trimmed}"
@@ -370,40 +520,42 @@ Respond in JSON only with format:
   "didYouMean": [] // include alternative interpretations if ambiguous, otherwise empty array
 }`;
 
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: strictInstruction }] }],
-            generationConfig: { responseMimeType: 'application/json' },
-          }),
-        }
-      );
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: strictInstruction }] }],
+              generationConfig: { responseMimeType: 'application/json' },
+            }),
+          }
+        );
 
-      if (res.ok) {
-        const data = await res.json();
-        const content = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (content) {
-          const parsed = JSON.parse(content);
-          if (parsed?.englishText) {
-            const natural = naturalizeEnglish(parsed.englishText);
-            return {
-              detectedLanguage: parsed.detectedLanguage || preferredLanguage,
-              nativeText: trimmed,
-              englishText: natural,
-              phoneticGuide: parsed.phoneticGuide || generatePhoneticGuide(natural),
-              breakdown: parsed.breakdown || [],
-              naturalTip: parsed.naturalTip || 'Practice saying this sentence aloud to build muscle memory.',
-              confidence: typeof parsed.confidence === 'number' ? parsed.confidence : 0.95,
-              didYouMean: parsed.didYouMean || [],
-            };
+        if (res.ok) {
+          const data = await res.json();
+          const content = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (content) {
+            const cleanJson = content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+            const parsed = JSON.parse(cleanJson);
+            if (parsed?.englishText) {
+              const natural = naturalizeEnglish(parsed.englishText);
+              return {
+                detectedLanguage: parsed.detectedLanguage || preferredLanguage,
+                nativeText: trimmed,
+                englishText: natural,
+                phoneticGuide: parsed.phoneticGuide || generatePhoneticGuide(natural),
+                breakdown: parsed.breakdown || [],
+                naturalTip: parsed.naturalTip || 'Practice saying this sentence aloud to build muscle memory.',
+                confidence: typeof parsed.confidence === 'number' ? parsed.confidence : 0.95,
+                didYouMean: parsed.didYouMean || [],
+              };
+            }
           }
         }
+      } catch (err) {
+        console.warn(`[AI] Gemini ${model} translation notice:`, err);
       }
-    } catch (err) {
-      console.warn('[AI] Gemini translation fallback to neural engine:', err);
     }
   }
 
@@ -459,7 +611,8 @@ export async function chatWithAITutor(
   }
 
   // 2. If Gemini API is configured, generate generative response
-  if (process.env.GEMINI_API_KEY) {
+  const geminiKey = process.env.GEMINI_API_KEY?.trim();
+  if (geminiKey) {
     const candidateModels = ['gemini-2.0-flash', 'gemini-1.5-flash'];
     for (const model of candidateModels) {
       try {
@@ -477,13 +630,18 @@ ${conversationContext || 'No previous conversation yet.'}
 
 Learner's Latest Message: "${trimmed}"
 
-Instructions:
-1. Understand the exact intent and emotion of what the learner said, even if they typed in ${userLanguage}, transliterated script, broken English, or mixed slang.
-2. Reply directly to what they said in natural, clear English tailored to their proficiency level (1-3 sentences max).
-3. If they asked an English question (e.g. "How do I say...", "What is the difference between...", "Explain..."), answer with crystal clarity and provide a practical real-world example.
-4. If they made a grammar, preposition, tense, or wording mistake, provide constructive guidance in the correction object. If no error, set correction to null.
-5. In "replyNative", provide a high quality translation of your English reply in ${userLanguage}.
-6. In "suggestions", provide 3 natural, practical follow-up sentences the learner can easily say next.
+Linguistic Instructions:
+1. The learner may communicate in:
+   - Natural English (or beginner/broken English)
+   - Malayalam script (e.g. "എനിക്ക് ഇംഗ്ലീഷ് സംസാരിക്കാൻ പഠിക്കണം", "സുഖമാണോ?")
+   - Manglish / Latin-script Malayalam (e.g. "enthokke und vishesham", "sukhamano", "food kazhicho", "njan office-il aayirunnu", "ith engane englishil parayum", "oru doubt und")
+   - Mixed Malayalam-English code-switching (e.g. "njan yesterday movie kandu", "office-il late aayi", "English speak cheyyan help cheyyumo", "ith correct aano?")
+2. Accurately understand the learner's message regardless of whether it is in English, Malayalam script, Manglish, or mixed English-Malayalam.
+3. Reply directly and conversationally in natural, friendly English (1-3 sentences max) appropriate for their level (${englishLevel}).
+4. If they asked how to say something or wrote in Manglish/Malayalam, show them how to express that exact thought naturally in English.
+5. If they made an English grammar, preposition, tense, or wording mistake, gently provide constructive guidance in the "correction" object (otherwise set "correction": null).
+6. In "replyNative", translate your English response into Malayalam script (or ${userLanguage}).
+7. In "suggestions", provide 3 natural, beginner-friendly English follow-up sentences the learner can easily say or click next.
 
 Return PURE JSON only:
 {
@@ -494,7 +652,7 @@ Return PURE JSON only:
 }`;
 
         const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -535,22 +693,60 @@ Return PURE JSON only:
   }
 
   // 3. High-Precision Conversational Intelligence Engine (Zero External Key Needed)
-  // Step A: Universal Semantic Understanding
-  const isPureEnglish = /^[a-zA-Z0-9\s.,!?'"-]+$/.test(trimmed);
+  // Step A: Universal Semantic Understanding (English, Malayalam, Manglish, Code-Switching)
+  const manglishData = resolveManglishAndMixed(trimmed);
   let englishMeaning = trimmed;
-  if (!isPureEnglish) {
-    const neuralMeaning = await fetchNeuralTranslation(trimmed, userLangCode, 'en');
-    if (neuralMeaning) englishMeaning = neuralMeaning;
+
+  if (manglishData.isManglish && manglishData.englishMeaning) {
+    englishMeaning = manglishData.englishMeaning;
+  } else {
+    const isPureEnglish = /^[a-zA-Z0-9\s.,!?'"-]+$/.test(trimmed);
+    if (!isPureEnglish) {
+      const neuralMeaning = await fetchNeuralTranslation(trimmed, userLangCode, 'en');
+      if (neuralMeaning) englishMeaning = neuralMeaning;
+    }
   }
 
   const cleanLower = englishMeaning.toLowerCase().replace(/[^\w\s]/g, ' ').trim();
   const lowerWords = cleanLower.split(/\s+/).filter(Boolean);
 
-  // Step B: Context & History Tracking (What did Coach Maya last ask or say?)
-  const lastMayaMessage = [...history].reverse().find((h) => h.role === 'assistant')?.text?.toLowerCase() || '';
-
   let replyEnglish = '';
   let suggestions: string[] = [];
+
+  // --- Case 0: Manglish & Malayalam Conversational Expressions ---
+  if (!replyEnglish && manglishData.isManglish) {
+    if (cleanLower.includes('how is everything going') || cleanLower.includes('what is up')) {
+      replyEnglish = `I am doing wonderfully, thank you! In English, to say "enthokke und vishesham", you can say: "How is everything going?" or "What's new?" How has your day been?`;
+      suggestions = ['Everything is going great!', 'I had a busy day.', 'What about you, Coach Maya?'];
+    } else if (cleanLower.includes('how are you') || cleanLower.includes('are you doing well')) {
+      replyEnglish = `I am doing very well! To ask someone "sukhamano" in English, you can say: "How are you doing today?" or "I hope you are doing well!" How are you feeling today?`;
+      suggestions = ['I am feeling happy today.', 'I am a bit tired.', 'I am ready to learn English!'];
+    } else if (cleanLower.includes('did you have food') || cleanLower.includes('have you eaten yet')) {
+      replyEnglish = `Yes, thank you for asking! In English, to ask "food kazhicho", you can say: "Have you had lunch yet?" or "Did you eat?" What did you have to eat today?`;
+      suggestions = ['I had rice and fish curry.', 'I just had some tea and snacks.', 'I have not eaten yet.'];
+    } else if (cleanLower.includes('i want to learn english')) {
+      replyEnglish = `That is fantastic! In English, you can say: "I want to speak fluent English." You are in the right place! What would you like to practice first — daily conversation, ordering food, or grammar?`;
+      suggestions = ['I want to practice daily conversation.', 'Teach me some common English phrases.', 'Can you correct my grammar?'];
+    } else if (cleanLower.includes('can i ask a question') || cleanLower.includes('doubt')) {
+      replyEnglish = `Of course! In English, native speakers usually say: "I have a question" rather than "I have a doubt". What question would you like to ask me?`;
+      suggestions = ['How do I introduce myself?', 'What does this word mean?', 'How can I practice speaking?'];
+    } else if (cleanLower.includes('can you help me practice speaking english')) {
+      replyEnglish = `I would love to help you practice! In English, you can say: "Could you please help me practice speaking English?" Let's start: Tell me about your favorite hobby or food!`;
+      suggestions = ['I enjoy listening to music.', 'My favorite food is biryani.', 'I like playing sports.'];
+    } else if (cleanLower.includes('is this correct') || cleanLower.includes('mistake')) {
+      replyEnglish = `Let's review it together! In English, you can ask: "Is this sentence grammatically correct?" Tell me the sentence you want to check!`;
+      suggestions = ['Can you check my sentence?', 'Is my pronunciation good?', 'Give me an example sentence.'];
+    } else if (cleanLower.includes('i was at the office') || cleanLower.includes('i am at the office')) {
+      replyEnglish = `Great! In English, you can say: "I was working at the office today." How was your work day?`;
+      suggestions = ['My workday was very busy.', 'It was a relaxed day.', 'I am heading home now.'];
+    } else if (cleanLower.includes('i am on the train')) {
+      replyEnglish = `Have a safe journey! In English, remember to say "I am on the train" (we use "on" for trains and buses). Where are you traveling to?`;
+      suggestions = ['I am going to my hometown.', 'I am traveling to work.', 'I am coming back home.'];
+    }
+  }
+
+  // Step B: Context & History Tracking (What did Coach Maya last ask or say?)
+  const lastMayaMessage = [...history].reverse().find((h) => h.role === 'assistant')?.text?.toLowerCase() || '';
 
   // --- Case 1: Answering Maya's Direct Question from History ---
   if (lastMayaMessage.includes('your name') || lastMayaMessage.includes('call you')) {
