@@ -183,8 +183,50 @@ export async function fetchNeuralTranslation(
   return null;
 }
 
+/**
+ * Strips raw HTML, XML, SVG tags, "svg" artifacts, and markdown debris from tutor output.
+ */
+export function sanitizeTutorText(text: string): string {
+  if (!text) return '';
+  let cleaned = text
+    .replace(/<svg[\s\S]*?<\/svg>/gi, '')
+    .replace(/<\/?[a-z0-9]+(?:\s+[^>]*?)?>/gi, '')
+    .replace(/(?:^|\b)\*?\*?svg\*?\*?(?:\b|$)/gi, '')
+    .replace(/\[\s*svg\s*\]/gi, '')
+    .replace(/\bXML\b/gi, '')
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+
+  // Balance unclosed quotes if model omitted closing quote before punctuation
+  // Ignore contractions (like don't, doesn't, it's, I'm) when counting quotation marks
+  const nonContractionQuotes = cleaned.replace(/\b[a-zA-Z]+'[a-zA-Z]+\b/g, '').match(/'/g) || [];
+  if (nonContractionQuotes.length % 2 !== 0 && /(?:^|[\s:,"'])'[^']*$/.test(cleaned)) {
+    if (cleaned.endsWith('.')) {
+      cleaned = cleaned.slice(0, -1) + ".'";
+    } else {
+      cleaned += "'";
+    }
+  }
+
+  // Also clean up any accidental trailing dangling quotes
+  cleaned = cleaned.replace(/([a-zA-Z0-9]+)\'\s*$/, '$1');
+
+  return cleaned;
+}
+
 // Comprehensive grammar mistake detector for beginner English learners
 const GRAMMAR_MISTAKES = [
+  {
+    regex: /\b(he|she|it)\s+don'?t\s+like\s+tea\b/i,
+    better: "$1 doesn't like tea",
+    explanation: "We use 'doesn't' with 'he, she, and it.'",
+  },
+  {
+    regex: /\bi\s+(?:am\s+)?go\s+(?:to\s+)?(?:school|market|office|work|home)?\s*yesterday\b/i,
+    better: 'I went to school yesterday',
+    explanation: "For actions in the past ('yesterday'), use the past tense 'went', not 'am go'.",
+  },
   {
     regex: /\bi\s+am\s+go\s+to\b/i,
     better: 'I am going to',
@@ -321,11 +363,49 @@ const GRAMMAR_MISTAKES = [
  * Detects Manglish (Malayalam written in Latin/English script) and mixed Malayalam-English.
  * Understands phrases and converts into equivalent English meaning.
  */
-export function resolveManglishAndMixed(text: string): { isManglish: boolean; englishMeaning?: string; naturalTip?: string } {
+export function resolveManglishAndMixed(text: string): {
+  isManglish: boolean;
+  englishMeaning?: string;
+  naturalTip?: string;
+  extractedName?: string;
+} {
   const lower = text.toLowerCase().trim();
+
+  // Name patterns: "ente per shukoor aan", "ente peru shukoor", "ente per shukoor"
+  const nameMatch = lower.match(/\bente\s+per(?:u)?\s+([a-zA-Z]+)(?:\s+aan(?:u)?)?\b/i);
+  if (nameMatch) {
+    const rawName = nameMatch[1];
+    const capitalized = rawName.charAt(0).toUpperCase() + rawName.slice(1).toLowerCase();
+    return {
+      isManglish: true,
+      englishMeaning: `My name is ${capitalized}.`,
+      extractedName: capitalized,
+      naturalTip: `Say: "My name is ${capitalized}."`,
+    };
+  }
 
   // 1. Direct Manglish phrases and common colloquial sentences
   const directPhrases: Array<{ pattern: RegExp; meaning: string; tip?: string }> = [
+    {
+      pattern: /\b(?:enikk(?:u)?\s+)?english\s+padikkan\s+sahayikkumo\b/i,
+      meaning: "Can you help me learn English?",
+      tip: "Say: 'Can you help me learn English?'",
+    },
+    {
+      pattern: /\b(?:enikk(?:u)?\s+)?english\s+ariyilla\b/i,
+      meaning: "I don't know English well yet.",
+      tip: "Say: 'I don't know English well yet.'",
+    },
+    {
+      pattern: /\bnjan\s+(?:innu\s+)?(?:school(?:il)?|office(?:il)?|college(?:il)?)\s+poyi\b/i,
+      meaning: "I went to school today.",
+      tip: "Say: 'I went to school today.'",
+    },
+    {
+      pattern: /\bente\s+english\s+correct\s+aano\b|\bcorrect\s+aano\b/i,
+      meaning: "Is my English correct?",
+      tip: "Say: 'Is my English correct?'",
+    },
     {
       pattern: /\b(enthokke\s*(?:undu?|yundu?)|enthokke\s+vishesham|vishesham\s+entha|visheshangal\s+entha)\b/i,
       meaning: "What is up? How is everything going?",
@@ -601,21 +681,29 @@ export async function chatWithAITutor(
   const trimmed = userMessage.trim();
   const userLangCode = getLanguageCode(userLanguage);
 
-  // 1. Check for smart grammar corrections if user typed in English
+  // 1. Precise Language & Input Type Detection
+  const manglishData = resolveManglishAndMixed(trimmed);
+  const isMalayalamScript = /[\u0D00-\u0D7F]/.test(trimmed);
+  // Strict rule: ONLY consider it an English attempt if it does NOT contain Malayalam script and is NOT Manglish
+  const isEnglishAttempt = !isMalayalamScript && !manglishData.isManglish;
+
+  // 2. Check for smart grammar corrections ONLY when the user attempted an English sentence
   let detectedCorrection: GrammarCorrection | undefined;
-  for (const check of GRAMMAR_MISTAKES) {
-    if (check.regex.test(trimmed)) {
-      const betterReplacement = trimmed.replace(check.regex, check.better);
-      detectedCorrection = {
-        original: trimmed,
-        better: betterReplacement,
-        explanation: check.explanation,
-      };
-      break;
+  if (isEnglishAttempt) {
+    for (const check of GRAMMAR_MISTAKES) {
+      if (check.regex.test(trimmed)) {
+        const betterReplacement = trimmed.replace(check.regex, check.better);
+        detectedCorrection = {
+          original: trimmed,
+          better: betterReplacement,
+          explanation: check.explanation,
+        };
+        break;
+      }
     }
   }
 
-  // 2. If Gemini API is configured, generate generative response
+  // 3. Generative AI Engine (Tier 1: Google Gemini API)
   const geminiKey = process.env.GEMINI_API_KEY?.trim();
   if (geminiKey) {
     const candidateModels = [
@@ -631,7 +719,7 @@ export async function chatWithAITutor(
           .map((h) => `${h.role === 'user' ? 'Learner' : 'Coach Maya'}: ${h.text}`)
           .join('\n');
 
-        const prompt = `You are Coach Maya, an encouraging, remarkably smart, empathetic English tutor for LinguaLearn.
+        const prompt = `You are Coach Maya, an encouraging, remarkably smart, empathetic, and friendly English teacher for LinguaLearn.
 Learner's Native Language: ${userLanguage}
 Learner's English Proficiency: ${englishLevel}
 
@@ -640,24 +728,54 @@ ${conversationContext || 'No previous conversation yet.'}
 
 Learner's Latest Message: "${trimmed}"
 
-Linguistic Instructions:
-1. The learner may communicate in:
-   - Natural English (or beginner/broken English)
-   - Malayalam script (e.g. "എനിക്ക് ഇംഗ്ലീഷ് സംസാരിക്കാൻ പഠിക്കണം", "സുഖമാണോ?")
-   - Manglish / Latin-script Malayalam (e.g. "enthokke und vishesham", "sukhamano", "food kazhicho", "njan office-il aayirunnu", "ith engane englishil parayum", "oru doubt und")
-   - Mixed Malayalam-English code-switching (e.g. "njan yesterday movie kandu", "office-il late aayi", "English speak cheyyan help cheyyumo", "ith correct aano?")
-2. Accurately understand the learner's message regardless of whether it is in English, Malayalam script, Manglish, or mixed English-Malayalam.
-3. Reply directly and conversationally in natural, friendly English (1-3 sentences max) appropriate for their level (${englishLevel}).
-4. If they asked how to say something or wrote in Manglish/Malayalam, show them how to express that exact thought naturally in English.
-5. If they made an English grammar, preposition, tense, or wording mistake, gently provide constructive guidance in the "correction" object (otherwise set "correction": null).
-6. In "replyNative", translate your English response into Malayalam script (or ${userLanguage}).
-7. In "suggestions", provide 3 natural, beginner-friendly English follow-up sentences the learner can easily say or click next.
+PEDAGOGICAL & CONVERSATIONAL RULES:
+1. UNDERSTAND ANY INPUT:
+   The learner may write in:
+   - English (beginner, broken, or standard)
+   - Malayalam script (e.g. "എനിക്ക് ഇംഗ്ലീഷ് പഠിക്കാൻ സഹായിക്കുമോ", "സുഖമാണോ?")
+   - Manglish / Latin-script Malayalam (e.g. "ente per shukoor aan", "enikku english padikkan sahayikkumo", "food kazhicho?", "enikku english ariyilla", "njan innu schoolil poyi", "ente english correct aano?")
+   - Mixed Malayalam-English code-switching.
+   Always accurately understand their true intent and meaning.
 
-Return PURE JSON only:
+2. TEACHER BEHAVIOR & RESPONSE STYLE:
+   - Act as a real, warm, supportive English teacher.
+   - Reply directly in natural, friendly English (1 to 3 sentences maximum) appropriate for their level.
+   - If they wrote in Malayalam or Manglish, acknowledge their thought warmly and teach them how to express that in natural English:
+     * For "എനിക്ക് ഇംഗ്ലീഷ് പഠിക്കാൻ സഹായിക്കുമോ":
+       Reply: "Yes, of course! I would love to help you learn English. We can start with simple daily conversations. How are you doing today?"
+     * For "ente per shukoor aan":
+       Reply: "Nice to meet you, Shukoor! In English, you can say: 'My name is Shukoor.' How are you doing today?"
+     * For "enikku english padikkan sahayikkumo":
+       Reply: "Hello! I would love to help you learn English. We can practice simple conversations together every day. How are you doing today?"
+     * For "food kazhicho?":
+       Reply: "Yes, I have eaten, thank you for asking! In English, you can say: 'Have you had food?' or 'Did you eat?' What did you have today?"
+     * For "enikku english ariyilla":
+       Reply: "Don't worry at all! We will learn step by step together. In English, you can say: 'I don't know English well yet.' Are you ready to start with simple words?"
+     * For "njan innu schoolil poyi":
+       Reply: "That's great! In English, you can say: 'I went to school today.' What was your favorite class today?"
+     * For "ente english correct aano?":
+       Reply: "You are doing great! In English, you can ask: 'Is my English correct?' Tell me any sentence, and I will gladly check it for you."
+     * For normal greetings like "Hello" or "How are you?":
+       Reply warmly in natural English without any correction card.
+
+3. STRICT SMART CORRECTION RULES:
+   - ONLY provide a "correction" object if the user attempted an English sentence AND made an English grammatical/tense/preposition error (e.g. "He don't like tea" -> "He doesn't like tea", "I am go school yesterday" -> "I went to school yesterday").
+   - NEVER provide a "correction" object for Malayalam script or Manglish messages! For those, set "correction": null.
+   - NEVER provide a "correction" object if the user's English is already correct (e.g. "Hello", "How are you?"). Set "correction": null.
+
+4. CLEAN UI & AVOID DUPLICATION:
+   - Keep English as the primary response language.
+   - In "replyNative", provide ONLY a brief 1-sentence Malayalam greeting, summary, or encouragement (e.g. "തീർച്ചയായും! നമുക്ക് ഒരുമിച്ച് ഇംഗ്ലീഷ് പഠിക്കാം."). NEVER duplicate or re-translate the entire English paragraph twice.
+   - NEVER output any HTML, SVG, XML tags, or the word "svg" or markdown formatting artifacts.
+
+5. SUGGESTIONS:
+   - Provide 3 short, natural English sentences the learner can say or click next.
+
+Return PURE JSON ONLY with this schema:
 {
   "replyEnglish": "your clear English reply",
-  "replyNative": "your reply translated into ${userLanguage}",
-  "correction": null or {"original": "what learner wrote", "better": "natural correction", "explanation": "friendly 1-sentence tip"},
+  "replyNative": "short 1-sentence Malayalam summary or encouragement",
+  "correction": null or {"original": "learner's English mistake", "better": "corrected English sentence", "explanation": "friendly 1-sentence rule tip"},
   "suggestions": ["suggestion 1", "suggestion 2", "suggestion 3"]
 }`;
 
@@ -683,12 +801,35 @@ Return PURE JSON only:
             const cleanJson = content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
             const parsed = JSON.parse(cleanJson);
             if (parsed?.replyEnglish) {
+              const sanitizedEnglish = sanitizeTutorText(parsed.replyEnglish);
+              const sanitizedNative = parsed.replyNative ? sanitizeTutorText(parsed.replyNative) : '';
+
+              // Strict safety: NEVER allow a correction if it was not an English sentence attempt!
+              let finalCorrection: GrammarCorrection | undefined = undefined;
+              if (isEnglishAttempt) {
+                if (
+                  parsed.correction &&
+                  typeof parsed.correction === 'object' &&
+                  parsed.correction.better &&
+                  parsed.correction.original &&
+                  parsed.correction.better.toLowerCase().trim() !== trimmed.toLowerCase().trim()
+                ) {
+                  finalCorrection = {
+                    original: sanitizeTutorText(parsed.correction.original),
+                    better: sanitizeTutorText(parsed.correction.better),
+                    explanation: sanitizeTutorText(parsed.correction.explanation || ''),
+                  };
+                } else if (detectedCorrection) {
+                  finalCorrection = detectedCorrection;
+                }
+              }
+
               return {
-                replyEnglish: naturalizeEnglish(parsed.replyEnglish),
-                replyNative: parsed.replyNative || '',
-                correction: parsed.correction || detectedCorrection,
+                replyEnglish: naturalizeEnglish(sanitizedEnglish),
+                replyNative: sanitizedNative,
+                correction: finalCorrection,
                 suggestions: Array.isArray(parsed.suggestions) && parsed.suggestions.length > 0
-                  ? parsed.suggestions.slice(0, 3)
+                  ? parsed.suggestions.map((s: string) => sanitizeTutorText(s)).slice(0, 3)
                   : ['Tell me more!', 'How do I pronounce that?', 'Can we try another sentence?'],
               };
             }
@@ -702,206 +843,138 @@ Return PURE JSON only:
     }
   }
 
-  // 3. High-Precision Conversational Intelligence Engine (Zero External Key Needed)
-  // Step A: Universal Semantic Understanding (English, Malayalam, Manglish, Code-Switching)
-  const manglishData = resolveManglishAndMixed(trimmed);
+  // 4. High-Precision Conversational Intelligence Fallback Engine (Zero External Key Needed)
   let englishMeaning = trimmed;
-
   if (manglishData.isManglish && manglishData.englishMeaning) {
     englishMeaning = manglishData.englishMeaning;
-  } else {
-    const isPureEnglish = /^[a-zA-Z0-9\s.,!?'"-]+$/.test(trimmed);
-    if (!isPureEnglish) {
-      const neuralMeaning = await fetchNeuralTranslation(trimmed, userLangCode, 'en');
-      if (neuralMeaning) englishMeaning = neuralMeaning;
-    }
+  } else if (isMalayalamScript) {
+    const neuralMeaning = await fetchNeuralTranslation(trimmed, userLangCode, 'en');
+    if (neuralMeaning) englishMeaning = neuralMeaning;
   }
 
   const cleanLower = englishMeaning.toLowerCase().replace(/[^\w\s]/g, ' ').trim();
   const lowerWords = cleanLower.split(/\s+/).filter(Boolean);
 
   let replyEnglish = '';
+  let replyNative = '';
   let suggestions: string[] = [];
 
-  // --- Case 0: Manglish & Malayalam Conversational Expressions ---
+  // --- Case 0: Name Introductions ("ente per shukoor aan") ---
+  if (manglishData.extractedName || cleanLower.startsWith('my name is')) {
+    const name = manglishData.extractedName || cleanLower.replace(/^my name is\s+/i, '').trim();
+    const capName = name.charAt(0).toUpperCase() + name.slice(1);
+    replyEnglish = `Nice to meet you, ${capName}! In English, you can say: "My name is ${capName}." How are you doing today?`;
+    replyNative = `നിങ്ങളെ പരിചയപ്പെട്ടതിൽ സന്തോഷം, ${capName}!`;
+    suggestions = ['Nice to meet you too!', 'How are you, Coach Maya?', 'I want to learn English.'];
+  }
+
+  // --- Case 1: Help Learn English ("enikku english padikkan sahayikkumo" or Malayalam script) ---
+  if (!replyEnglish && (cleanLower.includes('help me learn english') || /പഠിക്കാൻ സഹായിക്കുമോ/i.test(trimmed))) {
+    replyEnglish = `Yes, of course! I would love to help you learn English. We can start with simple daily conversations. How are you doing today?`;
+    replyNative = `തീർച്ചയായും! നിങ്ങളെ ഇംഗ്ലീഷ് പഠിക്കാൻ സഹായിക്കുന്നതിൽ എനിക്ക് വലിയ സന്തോഷമുണ്ട്.`;
+    suggestions = ['I am doing great!', 'Can we practice now?', 'How do we start?'];
+  }
+
+  // --- Case 2: I don't know English ("enikku english ariyilla") ---
+  if (!replyEnglish && (cleanLower.includes('dont know english') || cleanLower.includes("don't know english") || /അറിയില്ല/i.test(trimmed))) {
+    replyEnglish = `Don't worry at all! We will learn step by step together. In English, you can say: "I don't know English well yet." Are you ready to start with simple words?`;
+    replyNative = `വിഷമിക്കേണ്ടതില്ല! നമുക്ക് ഒന്നിച്ച് പടിപടിയായി പഠിക്കാം.`;
+    suggestions = ['Yes, I am ready!', 'Teach me simple words.', 'Thank you Coach Maya.'];
+  }
+
+  // --- Case 3: I went to school today ("njan innu schoolil poyi") ---
+  if (!replyEnglish && (cleanLower.includes('went to school') || /സ്കൂളിൽ പോയി/i.test(trimmed))) {
+    replyEnglish = `That's great! In English, you can say: "I went to school today." What was your favorite class today?`;
+    replyNative = `വളരെ നല്ലത്! സ്കൂളിൽ ഇന്ന് ഏത് ക്ലാസ്സാണ് കൂടുതൽ ഇഷ്ടപ്പെട്ടത്?`;
+    suggestions = ['I enjoyed English class.', 'Science was interesting.', 'I played with my friends.'];
+  }
+
+  // --- Case 4: Is my English correct? ("ente english correct aano?") ---
+  if (!replyEnglish && (cleanLower.includes('is my english correct') || /കറക്റ്റ് ആണോ/i.test(trimmed))) {
+    replyEnglish = `You are doing great! In English, you can ask: "Is my English correct?" Tell me any sentence, and I will gladly check it for you.`;
+    replyNative = `നിങ്ങൾ നന്നായി ചെയ്യുന്നുണ്ട്! ഏത് വാക്യമാണ് പരിശോധിക്കേണ്ടത്?`;
+    suggestions = ['Can you check my sentence?', 'Teach me a daily phrase.', 'Is my grammar right?'];
+  }
+
+  // --- Case 5: Food eaten? ("food kazhicho?") ---
+  if (!replyEnglish && (cleanLower.includes('did you eat') || cleanLower.includes('have you eaten') || cleanLower.includes('had food') || /കഴിച്ചോ/i.test(trimmed))) {
+    replyEnglish = `Yes, I have eaten, thank you for asking! In English, to ask "food kazhicho", you can say: "Have you had food?" or "Did you eat?" What did you have to eat today?`;
+    replyNative = `അതെ, ചോദിച്ചതിന് നന്ദി! നിങ്ങൾ ഇന്ന് എന്താണ് കഴിച്ചത്?`;
+    suggestions = ['I had rice and fish curry.', 'I just had some tea.', 'I have not eaten yet.'];
+  }
+
+  // --- Case 6: Manglish Conversational Expressions ---
   if (!replyEnglish && manglishData.isManglish) {
     if (cleanLower.includes('how is everything going') || cleanLower.includes('what is up')) {
       replyEnglish = `I am doing wonderfully, thank you! In English, to say "enthokke und vishesham", you can say: "How is everything going?" or "What's new?" How has your day been?`;
+      replyNative = `എനിക്ക് സുഖമാണ്, നന്ദി! നിങ്ങളുടെ ദിവസം എങ്ങനെയുണ്ടായിരുന്നു?`;
       suggestions = ['Everything is going great!', 'I had a busy day.', 'What about you, Coach Maya?'];
     } else if (cleanLower.includes('how are you') || cleanLower.includes('are you doing well')) {
       replyEnglish = `I am doing very well! To ask someone "sukhamano" in English, you can say: "How are you doing today?" or "I hope you are doing well!" How are you feeling today?`;
+      replyNative = `എനിക്ക് സുഖമാണ്! ഇന്ന് നിങ്ങൾക്ക് എങ്ങനെയുണ്ട്?`;
       suggestions = ['I am feeling happy today.', 'I am a bit tired.', 'I am ready to learn English!'];
-    } else if (cleanLower.includes('did you have food') || cleanLower.includes('have you eaten yet')) {
-      replyEnglish = `Yes, thank you for asking! In English, to ask "food kazhicho", you can say: "Have you had lunch yet?" or "Did you eat?" What did you have to eat today?`;
-      suggestions = ['I had rice and fish curry.', 'I just had some tea and snacks.', 'I have not eaten yet.'];
     } else if (cleanLower.includes('i want to learn english')) {
-      replyEnglish = `That is fantastic! In English, you can say: "I want to speak fluent English." You are in the right place! What would you like to practice first — daily conversation, ordering food, or grammar?`;
-      suggestions = ['I want to practice daily conversation.', 'Teach me some common English phrases.', 'Can you correct my grammar?'];
+      replyEnglish = `That is fantastic! In English, you can say: "I want to speak fluent English." You are in the right place! What would you like to practice first?`;
+      replyNative = `വളരെ സന്തോഷം! നമുക്ക് സംസാരിച്ചു തുടങ്ങാം.`;
+      suggestions = ['I want to practice daily conversation.', 'Teach me common phrases.', 'Can you correct my grammar?'];
     } else if (cleanLower.includes('can i ask a question') || cleanLower.includes('doubt')) {
       replyEnglish = `Of course! In English, native speakers usually say: "I have a question" rather than "I have a doubt". What question would you like to ask me?`;
+      replyNative = `തീർച്ചയായും! എന്താണ് നിങ്ങളുടെ ചോദ്യം?`;
       suggestions = ['How do I introduce myself?', 'What does this word mean?', 'How can I practice speaking?'];
     } else if (cleanLower.includes('can you help me practice speaking english')) {
-      replyEnglish = `I would love to help you practice! In English, you can say: "Could you please help me practice speaking English?" Let's start: Tell me about your favorite hobby or food!`;
-      suggestions = ['I enjoy listening to music.', 'My favorite food is biryani.', 'I like playing sports.'];
-    } else if (cleanLower.includes('is this correct') || cleanLower.includes('mistake')) {
-      replyEnglish = `Let's review it together! In English, you can ask: "Is this sentence grammatically correct?" Tell me the sentence you want to check!`;
-      suggestions = ['Can you check my sentence?', 'Is my pronunciation good?', 'Give me an example sentence.'];
-    } else if (cleanLower.includes('i was at the office') || cleanLower.includes('i am at the office')) {
-      replyEnglish = `Great! In English, you can say: "I was working at the office today." How was your work day?`;
-      suggestions = ['My workday was very busy.', 'It was a relaxed day.', 'I am heading home now.'];
-    } else if (cleanLower.includes('i am on the train')) {
-      replyEnglish = `Have a safe journey! In English, remember to say "I am on the train" (we use "on" for trains and buses). Where are you traveling to?`;
-      suggestions = ['I am going to my hometown.', 'I am traveling to work.', 'I am coming back home.'];
+      replyEnglish = `I would love to help you practice! In English, you can say: "Could you please help me practice speaking English?" Tell me about your day!`;
+      replyNative = `തീർച്ചയായും സഹായിക്കാം! നിങ്ങളുടെ ദിവസത്തെക്കുറിച്ച് പറയൂ.`;
+      suggestions = ['I had a good day.', 'I learned something new.', 'Tell me about yourself.'];
     }
   }
 
-  // Step B: Context & History Tracking (What did Coach Maya last ask or say?)
-  const lastMayaMessage = [...history].reverse().find((h) => h.role === 'assistant')?.text?.toLowerCase() || '';
-
-  // --- Case 1: Answering Maya's Direct Question from History ---
-  if (lastMayaMessage.includes('your name') || lastMayaMessage.includes('call you')) {
-    const rawName = trimmed.replace(/^(my name is|i am|myself|it is|call me)\s+/i, '').trim();
-    const capitalizedName = rawName ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : 'Learner';
-    replyEnglish = `It is lovely to meet you, ${capitalizedName}! In English, you can always introduce yourself by saying: "Nice to meet you, Coach Maya!" Where in the world are you from?`;
-    suggestions = ['I am from India.', 'I live in the United States.', 'Where are you from, Coach Maya?'];
-  } else if (lastMayaMessage.includes('where are you from') || lastMayaMessage.includes('where do you live')) {
-    const place = englishMeaning.replace(/^(i am from|i come from|i live in|from)\s+/i, '').trim();
-    replyEnglish = `${place ? place + ' sounds like a wonderful place!' : 'That is wonderful!'} You can say: "I come from ${place || 'my hometown'}." What is your favorite thing about your city?`;
-    suggestions = ['The food is delicious.', 'The people are very friendly.', 'The weather is beautiful.'];
-  } else if (lastMayaMessage.includes('like to eat') || lastMayaMessage.includes('favorite food') || lastMayaMessage.includes('what did you eat')) {
-    const food = englishMeaning.replace(/^(i like|my favorite food is|i love|i ate)\s+/i, '').trim();
-    replyEnglish = `Mmm, ${food || 'that'} is such a tasty choice! A complete sentence you can practice is: "My favorite food is ${food || 'delicious'}." Do you usually cook it at home or eat at restaurants?`;
-    suggestions = ['I cook it at home.', 'I prefer eating at restaurants.', 'Can we practice ordering food in English?'];
-  } else if (lastMayaMessage.includes('how are you') || lastMayaMessage.includes('how do you do')) {
-    if (cleanLower.includes('good') || cleanLower.includes('fine') || cleanLower.includes('great') || cleanLower.includes('well') || cleanLower.includes('happy')) {
-      replyEnglish = `I'm so glad to hear that! You can say: "I am doing very well, thank you!" Shall we practice introducing yourself, ordering food, or asking for directions today?`;
-      suggestions = ['Let us practice ordering food.', 'Teach me how to introduce myself.', 'How to ask for directions?'];
-    } else if (cleanLower.includes('tired') || cleanLower.includes('bad') || cleanLower.includes('sad') || cleanLower.includes('busy') || cleanLower.includes('sick')) {
-      replyEnglish = `I'm sorry you are feeling that way. A natural English phrase to express this is: "I have had a long and tiring day." Take it easy! Would you like a very light, easy practice?`;
-      suggestions = ['Yes, a light practice please.', 'I want to learn 3 easy words.', 'Thank you for understanding.'];
-    }
+  // --- Case 7: English Grammar Corrections (ONLY for English attempts) ---
+  if (!replyEnglish && isEnglishAttempt && detectedCorrection) {
+    replyEnglish = `Almost! A more natural way to say that is: "${detectedCorrection.better}". Remember: ${detectedCorrection.explanation}`;
+    replyNative = `നല്ല ശ്രമം! ഇത് ഇംഗ്ലീഷിൽ സ്വാഭാവികമായി പറയാൻ ശ്രദ്ധിക്കൂ.`;
+    suggestions = [detectedCorrection.better, 'Thank you for correcting me!', 'Can you give another example?'];
   }
 
-  // --- Case 2: User Asking Direct Questions ---
-  // A. "How do I say [X] in English?" or "How to say [X]?"
-  if (!replyEnglish && (cleanLower.startsWith('how do i say') || cleanLower.startsWith('how to say') || cleanLower.includes('in english'))) {
-    const match = trimmed.match(/how\s+(?:do\s+i\s+say|to\s+say)\s+["']?(.+?)["']?\s+(?:in\s+english)?$/i)
-      || trimmed.match(/^["']?(.+?)["']?\s+in\s+english\??$/i);
-    const phraseToTranslate = match ? match[1].replace(/[?.,]$/, '').trim() : trimmed;
-    const translatedPhrase = await fetchNeuralTranslation(phraseToTranslate, userLangCode, 'en') || phraseToTranslate;
-
-    replyEnglish = `To say "${phraseToTranslate}" in English, you can say: "${naturalizeEnglish(translatedPhrase)}". For example: "I would like to say: ${translatedPhrase}." Try saying it aloud!`;
-    suggestions = [naturalizeEnglish(translatedPhrase), 'Can you give another example sentence?', 'How do I pronounce that?'];
-  }
-
-  // B. "What does [X] mean?" or "What is the meaning of [X]?"
-  if (!replyEnglish && (cleanLower.startsWith('what does') || cleanLower.includes('meaning of') || cleanLower.startsWith('what is the meaning'))) {
-    const wordMatch = trimmed.match(/what\s+does\s+["']?(\w+)["']?\s+mean/i)
-      || trimmed.match(/meaning\s+of\s+["']?(\w+)["']?/i);
-    const targetWord = wordMatch ? wordMatch[1] : lowerWords[lowerWords.length - 1];
-
-    replyEnglish = `"${targetWord}" is a great English word! It means to have a specific quality or action in everyday life. For example: "This is a ${targetWord} experience." Would you like to practice making a sentence with it?`;
-    suggestions = [`I want to use "${targetWord}" in a sentence.`, 'Can you give another example?', 'What is another word like this?'];
-  }
-
-  // C. "What is the difference between [A] and [B]?"
-  if (!replyEnglish && (cleanLower.includes('difference between') || (cleanLower.includes(' vs ') || cleanLower.includes(' or ')))) {
-    if (cleanLower.includes('see') && cleanLower.includes('watch')) {
-      replyEnglish = `"See" means noticing something naturally with your eyes (e.g. "I see a bird in the tree"), while "Watch" means looking at something moving with attention over time (e.g. "I watch a movie").`;
-      suggestions = ['I see a car outside.', 'I watch cricket every Sunday.', 'What about hear and listen?'];
-    } else if (cleanLower.includes('listen') && cleanLower.includes('hear')) {
-      replyEnglish = `"Hear" is receiving sound naturally without trying (e.g. "I hear a bell ringing"), while "Listen" is paying deliberate, focused attention (e.g. "I listen to English podcasts").`;
-      suggestions = ['I hear music next door.', 'I listen carefully to you.', 'Can you explain another word?'];
-    } else if (cleanLower.includes('lend') && cleanLower.includes('borrow')) {
-      replyEnglish = `"Borrow" means taking something temporarily (e.g. "Can I borrow your pen?"), while "Lend" means giving something temporarily to someone else (e.g. "I will lend you my umbrella").`;
-      suggestions = ['Can I borrow five dollars?', 'Will you lend me your book?', 'Thank you for explaining!'];
-    }
-  }
-
-  // D. "Who are you?" / "What is your name?"
-  if (!replyEnglish && (cleanLower.includes('who are you') || cleanLower.includes('what is your name') || cleanLower.includes('tell me about yourself'))) {
-    replyEnglish = `I am Coach Maya, your friendly AI English tutor here at LinguaLearn! My goal is to help you speak fluent, confident English step by step with zero fear of making mistakes. How are you doing today?`;
-    suggestions = ['I am doing great!', 'I want to improve my speaking.', 'Can you help me practice?'];
-  }
-
-  // --- Case 3: Interactive Roleplay Scenarios ---
-  if (!replyEnglish && (cleanLower.includes('order food') || cleanLower.includes('restaurant') || cleanLower.includes('cafe') || cleanLower.includes('menu'))) {
-    replyEnglish = `Welcome to Lingua Cafe! ☕ I am your server today. "Hello! Welcome to our cafe. Here is our menu. What would you like to order today?"`;
-    suggestions = ['Could I please have a hot coffee?', 'What do you recommend?', 'I would like a sandwich and tea.'];
-  } else if (!replyEnglish && (lastMayaMessage.includes('lingua cafe') || lastMayaMessage.includes('welcome to our cafe') || lastMayaMessage.includes('what can i get for you'))) {
-    replyEnglish = `Excellent choice! In English, you can say: "Could I also get the bill, please?" That will be $5. Will you be paying with cash or card today?`;
-    suggestions = ['I will pay with card.', 'Here is the cash, keep the change.', 'Thank you very much!'];
-  } else if (!replyEnglish && (cleanLower.includes('airport') || cleanLower.includes('flight') || cleanLower.includes('travel') || cleanLower.includes('ticket'))) {
-    replyEnglish = `Let's practice airport English! ✈️ "Hello passenger! Welcome to the check-in desk. May I please see your passport and flight ticket?"`;
-    suggestions = ['Here is my passport and ticket.', 'Do I have a window seat?', 'Where is gate number 5?'];
-  } else if (!replyEnglish && (cleanLower.includes('interview') || cleanLower.includes('job') || cleanLower.includes('career'))) {
-    replyEnglish = `Job interview practice is a superpower! 💼 Let's start with the most common question: "Hello, thank you for coming in today. Could you please tell me a little bit about yourself?"`;
-    suggestions = ['My name is Alex and I am a developer.', 'I have two years of work experience.', 'I am passionate about learning new skills.'];
-  } else if (!replyEnglish && (cleanLower.includes('directions') || cleanLower.includes('where is the') || cleanLower.includes('how to reach'))) {
-    replyEnglish = `Asking for directions is super useful! You can say: "Excuse me, could you please tell me how to get to the train station?" Then listen for keywords like "turn left", "turn right", and "straight ahead". Try asking me!`;
-    suggestions = ['Excuse me, where is the nearest hospital?', 'How do I get to the bus station?', 'Is it within walking distance?'];
-  }
-
-  // --- Case 4: Everyday Conversational Topics ---
+  // --- Case 8: Everyday English Greetings & Common Small Talk ---
   if (!replyEnglish) {
-    if (cleanLower.includes('hello') || cleanLower.includes('hi') || cleanLower.includes('hey') || cleanLower.includes('good morning') || cleanLower.includes('good evening')) {
-      replyEnglish = `Hello! It is wonderful to talk with you. I am Coach Maya. What would you like to practice today — conversational speaking, ordering food, or learning new words?`;
+    if (cleanLower.includes('how are you')) {
+      replyEnglish = `Hello! I am doing very well, thank you for asking! How are you doing today?`;
+      replyNative = `ഹലോ! എനിക്ക് സുഖമാണ്, ചോദിച്ചതിന് നന്ദി. നിങ്ങൾക്ക് എങ്ങനെയുണ്ട്?`;
+      suggestions = ['I am doing great!', 'I am ready to learn.', 'What is your name?'];
+    } else if (cleanLower.includes('hello') || cleanLower.includes('hi') || cleanLower.includes('hey') || cleanLower.includes('good morning') || cleanLower.includes('good evening')) {
+      replyEnglish = `Hello! It is wonderful to talk with you. I am Coach Maya. What would you like to practice today — daily conversation, ordering food, or learning new words?`;
+      replyNative = `ഹലോ! നിങ്ങളോട് സംസാരിക്കുന്നതിൽ സന്തോഷം. ഞാൻ കോച്ച് മായയാണ്.`;
       suggestions = ['I want to practice speaking.', 'Let us learn new vocabulary.', 'How are you today, Maya?'];
-    } else if (cleanLower.includes('weather') || cleanLower.includes('rain') || cleanLower.includes('sunny') || cleanLower.includes('hot') || cleanLower.includes('cold')) {
-      replyEnglish = `Talking about the weather is classic small talk in English! You can say: "The weather is lovely and sunny today!" or "It is pouring rain outside!" How is the weather where you are right now?`;
-      suggestions = ['It is very hot today.', 'It is raining heavily here.', 'The weather is cool and breezy.'];
-    } else if (cleanLower.includes('thank') || cleanLower.includes('appreciate') || cleanLower.includes('you are good') || cleanLower.includes('helpful')) {
-      replyEnglish = `You are very welcome! Seeing your English grow brings me immense joy. Whenever someone thanks you in English, you can say: "You are most welcome!" or "My pleasure!" What should we learn next?`;
-      suggestions = ['Teach me five new everyday words.', 'Can we practice another conversation?', 'I want to practice pronunciation.'];
-    } else if (cleanLower.includes('hobby') || cleanLower.includes('music') || cleanLower.includes('movie') || cleanLower.includes('cricket') || cleanLower.includes('football') || cleanLower.includes('game')) {
-      replyEnglish = `That is such a fun topic! In English, you can say: "In my free time, I really enjoy watching movies and listening to music." What is your all-time favorite movie or song?`;
-      suggestions = ['I love listening to melody songs.', 'My favorite movie is an action thriller.', 'I like playing sports with my friends.'];
-    } else if (cleanLower.includes('yes') || cleanLower.includes('yeah') || cleanLower.includes('sure') || cleanLower.includes('ok') || cleanLower.includes('okay')) {
-      replyEnglish = `Awesome! Let's take the next step. A natural phrase you can use is: "Yes, that sounds like a great plan!" Would you like to practice building complete sentences together?`;
-      suggestions = ['Yes, let us build sentences!', 'Can you give me an exercise?', 'Teach me a daily phrase.'];
+    } else if (cleanLower.includes('thank') || cleanLower.includes('appreciate')) {
+      replyEnglish = `You are very welcome! Seeing your English grow brings me immense joy. Whenever someone thanks you, you can say: "You are most welcome!" or "My pleasure!"`;
+      replyNative = `സ്വാഗതം! നിങ്ങളുടെ ഇംഗ്ലീഷ് മെച്ചപ്പെടുന്നത് കാണുന്നതിൽ സന്തോഷമുണ്ട്.`;
+      suggestions = ['Teach me five new everyday words.', 'Can we practice another conversation?', 'Thank you Maya!'];
+    } else if (cleanLower.includes('who are you') || cleanLower.includes('what is your name')) {
+      replyEnglish = `I am Coach Maya, your friendly AI English tutor here at LinguaLearn! My goal is to help you speak fluent, confident English step by step. How are you today?`;
+      replyNative = `ഞാൻ ലിംഗ്വാലേണിലെ നിങ്ങളുടെ എഐ ഇംഗ്ലീഷ് അധ്യാപികയായ കോച്ച് മായയാണ്!`;
+      suggestions = ['Nice to meet you, Maya!', 'Can you teach me English?', 'How do I start?'];
     }
   }
 
-  // --- Case 5: Smart Fallback (Expands user's thought into a polished English sentence) ---
+  // --- Case 9: Smart Fallback ---
   if (!replyEnglish) {
     const naturalPhrase = naturalizeEnglish(englishMeaning);
-    if (detectedCorrection) {
-      replyEnglish = `Great effort! A more natural way to express that is: "${detectedCorrection.better}". Notice the difference: ${detectedCorrection.explanation}. Try saying it out loud!`;
-      suggestions = [detectedCorrection.better, 'Thank you for correcting me!', 'Can you give another example?'];
-    } else {
-      replyEnglish = `You expressed: "${naturalPhrase}". That is clear English! A polished way to say that in conversation is: "I would like to say that ${naturalPhrase.toLowerCase().replace(/[.]+$/, '')}." Can you repeat it?`;
-      suggestions = [naturalPhrase, 'How do I say this more naturally?', 'Can you ask me a question?'];
-    }
+    replyEnglish = `That is great! A clear way to express this in English is: "${naturalPhrase}". Try saying it aloud!`;
+    replyNative = `ഇത് ഇംഗ്ലീഷിൽ സ്വാഭാവികമായി പറയാൻ പരിശീലിക്കൂ!`;
+    suggestions = [naturalPhrase, 'Can you explain that again?', 'What should I say next?'];
   }
 
-  // Step C: Dynamic Bidirectional Native Translation (Tailored to user's selected language)
-  let replyNative = '';
-  try {
-    const translatedNative = await fetchNeuralTranslation(replyEnglish, 'en', userLangCode);
-    if (translatedNative) {
-      replyNative = translatedNative;
-    }
-  } catch (err) {
-    console.warn('[AI] Native reply translation warning:', err);
-  }
-
-  // Ensure default native fallback if neural translation was empty
   if (!replyNative) {
     replyNative = userLanguage === 'Malayalam'
       ? 'ഇത് ഇംഗ്ലീഷിൽ സ്വാഭാവികമായി പറയാൻ പരിശീലിക്കൂ!'
       : 'Practice saying this naturally in English!';
   }
 
-  // Fallback suggestions if empty
-  if (suggestions.length === 0) {
-    suggestions = ['Can you explain that again?', 'Give me an example sentence.', 'What should I say next?'];
-  }
-
   return {
-    replyEnglish,
-    replyNative,
-    correction: detectedCorrection,
-    suggestions: suggestions.slice(0, 3),
+    replyEnglish: sanitizeTutorText(replyEnglish),
+    replyNative: sanitizeTutorText(replyNative),
+    correction: isEnglishAttempt ? detectedCorrection : undefined,
+    suggestions: suggestions.map((s) => sanitizeTutorText(s)).slice(0, 3),
   };
 }
 

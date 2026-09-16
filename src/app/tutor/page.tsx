@@ -31,6 +31,35 @@ interface ChatMessage {
   timestamp: string;
 }
 
+function cleanDisplay(text?: string): string {
+  if (!text) return '';
+  let cleaned = text
+    .replace(/<svg[\s\S]*?<\/svg>/gi, '')
+    .replace(/<\/?[a-z0-9]+(?:\s+[^>]*?)?>/gi, '')
+    .replace(/(?:^|\b)\*?\*?svg\*?\*?(?:\b|$)/gi, '')
+    .replace(/\[\s*svg\s*\]/gi, '')
+    .replace(/\bXML\b/gi, '')
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+
+  // Balance unclosed quotes if model omitted closing quote before punctuation
+  // Ignore contractions (like don't, doesn't, it's, I'm) when counting quotation marks
+  const nonContractionQuotes = cleaned.replace(/\b[a-zA-Z]+'[a-zA-Z]+\b/g, '').match(/'/g) || [];
+  if (nonContractionQuotes.length % 2 !== 0 && /(?:^|[\s:,"'])'[^']*$/.test(cleaned)) {
+    if (cleaned.endsWith('.')) {
+      cleaned = cleaned.slice(0, -1) + ".'";
+    } else {
+      cleaned += "'";
+    }
+  }
+
+  // Also clean up any accidental trailing dangling quotes
+  cleaned = cleaned.replace(/([a-zA-Z0-9]+)\'\s*$/, '$1');
+
+  return cleaned;
+}
+
 export default function TutorPage() {
   const [user, setUser] = useState<{
     id: string;
@@ -61,27 +90,6 @@ export default function TutorPage() {
       .then((data) => {
         if (data?.user) {
           setUser(data.user);
-          const lang = data.user.preferredLanguage || 'Malayalam';
-          const greetingNative =
-            lang === 'Malayalam'
-              ? `ഹലോ ${data.user.name}! ഞാൻ നിങ്ങളുടെ ഇംഗ്ലീഷ് അധ്യാപിക മായയാണ്. ഇന്ന് നിങ്ങൾക്ക് സുഖമാണോ?`
-              : lang === 'Hindi'
-              ? `नमस्ते ${data.user.name}! मैं कोच माया हूँ, आपकी निजी अंग्रेजी शिक्षक। आज आप कैसे हैं?`
-              : lang === 'Tamil'
-              ? `வணக்கம் ${data.user.name}! நான் உங்கள் ஆங்கில ஆசிரியர் மாயா. இன்று எப்படி இருக்கிறீர்கள்?`
-              : undefined;
-
-          // Initial greeting from Coach Maya
-          setMessages([
-            {
-              id: 'msg-1',
-              sender: 'tutor',
-              text: `Hello ${data.user.name}! I am Coach Maya, your personal English tutor. How are you doing today?`,
-              nativeTranslation: greetingNative,
-              audioText: `Hello ${data.user.name}! I am Coach Maya, your personal English tutor. How are you doing today?`,
-              timestamp: 'Just now',
-            },
-          ]);
         }
       })
       .catch(() => {});
@@ -89,61 +97,67 @@ export default function TutorPage() {
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, loading]);
+
+  // Initial welcome greeting from Coach Maya
+  useEffect(() => {
+    const welcomeName = user?.name ? user.name.split(' ')[0] : 'there';
+    setMessages([
+      {
+        id: 'msg-welcome',
+        sender: 'tutor',
+        text: `Hello ${welcomeName}! I am Coach Maya, your personal AI English tutor. We can practice speaking, chatting, or checking grammar. You can type in English, Malayalam, or Manglish! What would you like to talk about today?`,
+        nativeTranslation: 'ഹലോ! ഞാൻ കോച്ച് മായയാണ്, നിങ്ങളുടെ ഇംഗ്ലീഷ് അധ്യാപിക. എന്ത് സംസാരിക്കാനാണ് നിങ്ങൾക്ക് താല്പര്യം?',
+        audioText: `Hello ${welcomeName}! I am Coach Maya, your personal AI English tutor. What would you like to talk about today?`,
+        timestamp: 'Just now',
+      },
+    ]);
+  }, [user]);
 
   const toggleListening = () => {
-    if (isListening) {
-      recognitionRef.current?.stop();
-      setIsListening(false);
+    if (typeof window === 'undefined') return;
+
+    const SpeechRecognition =
+      (window as unknown as { SpeechRecognition?: any }).SpeechRecognition ||
+      (window as unknown as { webkitSpeechRecognition?: any }).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert('Speech recognition is not supported in this browser. Please use Chrome or Edge.');
       return;
     }
 
-    const SpeechRec =
-      (window as unknown as { SpeechRecognition?: any; webkitSpeechRecognition?: any })
-        .SpeechRecognition ||
-      (window as unknown as { SpeechRecognition?: any; webkitSpeechRecognition?: any })
-        .webkitSpeechRecognition;
-
-    if (!SpeechRec) {
-      alert('Speech recognition is not supported in this browser. Please type your message.');
+    if (isListening) {
+      setIsListening(false);
       return;
     }
 
     try {
-      const recognition = new SpeechRec();
-      const langCode = getSpeechCodeForLanguage(user?.preferredLanguage || 'Malayalam');
-      recognition.lang = langCode || 'en-US';
-      recognition.interimResults = true;
+      const recognition = new SpeechRecognition();
+      recognition.lang = getSpeechCodeForLanguage(user?.preferredLanguage || 'Malayalam');
       recognition.continuous = false;
+      recognition.interimResults = false;
 
       recognition.onstart = () => setIsListening(true);
+      recognition.onend = () => setIsListening(false);
+      recognition.onerror = () => setIsListening(false);
+
       recognition.onresult = (event: any) => {
-        let transcript = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          transcript += event.results[i][0].transcript;
-        }
+        const transcript = event.results?.[0]?.[0]?.transcript;
         if (transcript) {
           setInput(transcript);
         }
       };
-      recognition.onerror = () => setIsListening(false);
-      recognition.onend = () => setIsListening(false);
 
-      recognitionRef.current = recognition;
       recognition.start();
-    } catch {
+    } catch (e) {
+      console.error('Speech recognition error:', e);
       setIsListening(false);
     }
   };
 
-  const handleSend = async (messageText?: string) => {
-    const textToSend = messageText || input;
-    if (!textToSend.trim() || loading) return;
-
-    if (isListening) {
-      recognitionRef.current?.stop();
-      setIsListening(false);
-    }
+  const handleSend = async (overrideText?: string) => {
+    const textToSend = (overrideText || input).trim();
+    if (!textToSend || loading) return;
 
     const userMsg: ChatMessage = {
       id: `user-${crypto.randomUUID()}`,
@@ -176,16 +190,16 @@ export default function TutorPage() {
         const tutorMsg: ChatMessage = {
           id: `tutor-${crypto.randomUUID()}`,
           sender: 'tutor',
-          text: data.response.replyEnglish,
-          nativeTranslation: data.response.replyNative,
+          text: cleanDisplay(data.response.replyEnglish),
+          nativeTranslation: cleanDisplay(data.response.replyNative),
           correction: data.response.correction,
-          audioText: data.response.replyEnglish,
+          audioText: cleanDisplay(data.response.replyEnglish),
           timestamp: 'Just now',
         };
         setMessages((prev) => [...prev, tutorMsg]);
 
         if (Array.isArray(data.response.suggestions) && data.response.suggestions.length > 0) {
-          setSuggestions(data.response.suggestions);
+          setSuggestions(data.response.suggestions.map((s: string) => cleanDisplay(s)));
         }
 
         if (data.awardedXp && user) {
@@ -214,8 +228,8 @@ export default function TutorPage() {
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-200">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-violet-100">
-              <Bot className="w-6 h-6" />
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-violet-100 select-none">
+              <Bot className="w-6 h-6 select-none pointer-events-none" aria-hidden="true" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -234,20 +248,22 @@ export default function TutorPage() {
           <button
             type="button"
             onClick={() => {
+              const welcomeName = user?.name ? user.name.split(' ')[0] : 'there';
               setMessages([
                 {
                   id: 'msg-restart',
                   sender: 'tutor',
-                  text: 'Fresh conversation started! What would you like to practice now?',
+                  text: `Fresh conversation started! What would you like to practice now, ${welcomeName}?`,
+                  nativeTranslation: 'പുതിയ സംഭാഷണം ആരംഭിച്ചു! നമുക്ക് എന്ത് സംസാരിക്കണം?',
                   audioText: 'Fresh conversation started! What would you like to practice now?',
                   timestamp: 'Just now',
                 },
               ]);
             }}
-            className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
+            className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
             title="Restart conversation"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="w-4 h-4 select-none pointer-events-none" aria-hidden="true" />
           </button>
         </div>
 
@@ -262,13 +278,18 @@ export default function TutorPage() {
             >
               {/* Avatar */}
               <div
-                className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-xs font-bold ${
+                className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-xs font-bold select-none ${
                   msg.sender === 'user'
                     ? 'bg-indigo-600 text-white'
                     : 'bg-violet-100 text-violet-700'
                 }`}
+                aria-hidden="true"
               >
-                {msg.sender === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                {msg.sender === 'user' ? (
+                  <User className="w-4 h-4 select-none pointer-events-none" aria-hidden="true" />
+                ) : (
+                  <Bot className="w-4 h-4 select-none pointer-events-none" aria-hidden="true" />
+                )}
               </div>
 
               {/* Message Bubble */}
@@ -276,46 +297,59 @@ export default function TutorPage() {
                 className={`max-w-[82%] sm:max-w-[75%] rounded-3xl p-4 sm:p-5 shadow-xs ${
                   msg.sender === 'user'
                     ? 'bg-indigo-600 text-white rounded-tr-none'
-                    : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none space-y-3'
+                    : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none space-y-2.5'
                 }`}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <p className="text-sm font-medium leading-relaxed">{msg.text}</p>
-                  {msg.audioText && (
-                    <AudioButton text={msg.audioText} label="" size="sm" className="shrink-0" />
-                  )}
+                <div>
+                  <p className="text-sm font-medium leading-relaxed whitespace-pre-wrap select-text">
+                    {cleanDisplay(msg.text)}
+                  </p>
                 </div>
 
                 {/* Smart English Correction Box */}
                 {msg.correction && (
-                  <div className="mt-3 p-3.5 bg-amber-50/80 border border-amber-200/80 rounded-2xl text-xs space-y-1.5">
-                    <div className="flex items-center gap-1.5 text-amber-900 font-extrabold uppercase text-[10px] tracking-wider">
-                      <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
-                      <span>Smart Correction</span>
+                  <div className="mt-2.5 p-3.5 bg-amber-50/80 border border-amber-200/80 rounded-2xl text-xs space-y-1.5 select-text">
+                    <div className="flex items-center gap-1.5 text-amber-900 font-extrabold uppercase text-[10px] tracking-wider select-none">
+                      <Lightbulb className="w-3.5 h-3.5 text-amber-600 shrink-0 select-none pointer-events-none" aria-hidden="true" />
+                      <span className="select-none">Smart Correction</span>
                     </div>
                     <p className="text-slate-600">
                       You said:{' '}
                       <span className="line-through text-rose-600 font-medium">
-                        &ldquo;{msg.correction.original}&rdquo;
+                        &ldquo;{cleanDisplay(msg.correction.original)}&rdquo;
                       </span>
                     </p>
                     <p className="text-emerald-950 font-bold">
                       Better English:{' '}
-                      <span className="text-emerald-700">&ldquo;{msg.correction.better}&rdquo;</span>
+                      <span className="text-emerald-700">&ldquo;{cleanDisplay(msg.correction.better)}&rdquo;</span>
                     </p>
                     <p className="text-slate-600 pt-0.5">
-                      💡 <strong>Why?</strong> {msg.correction.explanation}
+                      💡 <strong>Why?</strong> {cleanDisplay(msg.correction.explanation)}
                     </p>
                   </div>
                 )}
 
                 {/* Native Language Translation */}
-                {msg.nativeTranslation && (
-                  <div className="pt-2 border-t border-slate-100 text-xs text-slate-500 font-medium">
-                    <span className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">
-                      In {user?.preferredLanguage}:
-                    </span>
-                    {msg.nativeTranslation}
+                {msg.nativeTranslation &&
+                  cleanDisplay(msg.nativeTranslation).trim() !== '' &&
+                  cleanDisplay(msg.nativeTranslation).toLowerCase().trim() !== cleanDisplay(msg.text).toLowerCase().trim() && (
+                    <div className="pt-2 border-t border-slate-100 text-xs text-slate-500 font-medium select-text">
+                      <span className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5 select-none">
+                        In {user?.preferredLanguage || 'Malayalam'}:
+                      </span>
+                      {cleanDisplay(msg.nativeTranslation)}
+                    </div>
+                )}
+
+                {/* Bubble Action Footer (AudioButton cleanly separated from message text) */}
+                {msg.audioText && msg.sender === 'tutor' && (
+                  <div className="pt-1 flex items-center justify-end select-none">
+                    <AudioButton
+                      text={cleanDisplay(msg.audioText)}
+                      label="Listen"
+                      size="sm"
+                      className="shrink-0 select-none text-[11px] py-1 px-2.5"
+                    />
                   </div>
                 )}
               </div>
@@ -323,9 +357,9 @@ export default function TutorPage() {
           ))}
 
           {loading && (
-            <div className="flex items-center gap-2 text-slate-400 text-xs pl-11">
-              <Loader2 className="w-4 h-4 animate-spin text-indigo-600" />
-              <span>Coach Maya is typing...</span>
+            <div className="flex items-center gap-2 text-slate-400 text-xs pl-11 select-none">
+              <Loader2 className="w-4 h-4 animate-spin text-indigo-600 select-none pointer-events-none" aria-hidden="true" />
+              <span className="select-none">Coach Maya is typing...</span>
             </div>
           )}
 
@@ -339,10 +373,10 @@ export default function TutorPage() {
               key={i}
               type="button"
               onClick={() => handleSend(prompt)}
-              className="px-3.5 py-1.5 bg-white hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 border border-slate-200 rounded-full text-xs font-medium text-slate-700 whitespace-nowrap active:scale-95 transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-1.5 bg-white hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 border border-slate-200 rounded-full text-xs font-medium text-slate-700 whitespace-nowrap active:scale-95 transition-all shadow-xs flex items-center gap-1.5 cursor-pointer select-none"
             >
-              <Sparkles className="w-3 h-3 text-indigo-500 shrink-0" />
-              <span>{prompt}</span>
+              <Sparkles className="w-3 h-3 text-indigo-500 shrink-0 select-none pointer-events-none" aria-hidden="true" />
+              <span className="select-none">{prompt}</span>
             </button>
           ))}
         </div>
@@ -360,14 +394,18 @@ export default function TutorPage() {
             <button
               type="button"
               onClick={toggleListening}
-              className={`p-2.5 rounded-xl transition-all cursor-pointer ${
+              className={`p-2.5 rounded-xl transition-all cursor-pointer select-none ${
                 isListening
                   ? 'bg-rose-500 text-white animate-pulse shadow-md shadow-rose-200'
                   : 'text-slate-400 hover:text-indigo-600 hover:bg-indigo-50'
               }`}
               title={isListening ? 'Listening... click to stop' : 'Tap to speak to Coach Maya'}
             >
-              {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              {isListening ? (
+                <MicOff className="w-4 h-4 select-none pointer-events-none" aria-hidden="true" />
+              ) : (
+                <Mic className="w-4 h-4 select-none pointer-events-none" aria-hidden="true" />
+              )}
             </button>
 
             <input
@@ -381,10 +419,10 @@ export default function TutorPage() {
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="p-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-all disabled:opacity-50 shadow-sm cursor-pointer"
+              className="p-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-all disabled:opacity-50 shadow-sm cursor-pointer select-none"
               title="Send message"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-4 h-4 select-none pointer-events-none" aria-hidden="true" />
             </button>
           </form>
         </div>

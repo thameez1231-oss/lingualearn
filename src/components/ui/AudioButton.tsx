@@ -72,11 +72,11 @@ export function AudioButton({
       title="Listen to natural English pronunciation"
     >
       {isPlaying ? (
-        <Loader2 className="w-4 h-4 animate-spin text-white" />
+        <Loader2 className="w-4 h-4 animate-spin text-white select-none pointer-events-none" aria-hidden="true" />
       ) : (
-        <Volume2 className="w-4 h-4 text-indigo-600" />
+        <Volume2 className="w-4 h-4 text-indigo-600 select-none pointer-events-none" aria-hidden="true" />
       )}
-      {label && <span>{isPlaying ? 'Speaking...' : label}</span>}
+      {label && <span className="select-none">{isPlaying ? 'Speaking...' : label}</span>}
     </button>
   );
 }

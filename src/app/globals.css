@@ -24,3 +24,10 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Prevent SVG icons from being selected or copied as text artifacts */
+svg {
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
+}
