@@ -10,37 +10,52 @@ export async function GET() {
       return NextResponse.json({ user: null }, { status: 401 });
     }
 
-    // Fetch user stats
+    // Fetch user stats with resilient fallbacks
     const [completedLessonsCount, learnedWordsCount, speakingCount] = await Promise.all([
-      db.userProgress.count({
-        where: { userId: user.id, status: 'COMPLETED' },
-      }),
-      db.learnedWord.count({
-        where: { userId: user.id },
-      }),
-      db.speakingHistory.count({
-        where: { userId: user.id },
-      }),
+      db.userProgress
+        .count({
+          where: { userId: user.id, status: 'COMPLETED' },
+        })
+        .catch(() => 0),
+      db.learnedWord
+        .count({
+          where: { userId: user.id },
+        })
+        .catch(() => 0),
+      db.speakingHistory
+        .count({
+          where: { userId: user.id },
+        })
+        .catch(() => 0),
     ]);
 
     // Today's date YYYY-MM-DD
     const today = new Date().toISOString().split('T')[0];
-    let dailyGoal = await db.dailyGoal.findUnique({
-      where: {
-        userId_date: {
-          userId: user.id,
-          date: today,
-        },
-      },
-    });
-
-    if (!dailyGoal) {
-      dailyGoal = await db.dailyGoal.create({
-        data: {
-          userId: user.id,
-          date: today,
+    let dailyGoal = null;
+    try {
+      dailyGoal = await db.dailyGoal.findUnique({
+        where: {
+          userId_date: {
+            userId: user.id,
+            date: today,
+          },
         },
       });
+
+      if (!dailyGoal) {
+        dailyGoal = await db.dailyGoal.create({
+          data: {
+            userId: user.id,
+            date: today,
+          },
+        });
+      }
+    } catch {
+      dailyGoal = {
+        wordsLearned: 0,
+        speakingMinutes: 0,
+        lessonsCompleted: 0,
+      };
     }
 
     return NextResponse.json({

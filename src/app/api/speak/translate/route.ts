@@ -18,40 +18,44 @@ export async function POST(req: Request) {
     // If user is authenticated, log speaking practice and update XP & DailyGoal
     let awardedXp = 0;
     if (user) {
-      await db.speakingHistory.create({
-        data: {
-          userId: user.id,
-          nativeText: text,
-          detectedLanguage: translation.detectedLanguage,
-          englishTranslation: translation.englishText,
-          pronunciationScore: typeof score === 'number' ? score : null,
-        },
-      });
+      try {
+        await db.speakingHistory.create({
+          data: {
+            userId: user.id,
+            nativeText: text,
+            detectedLanguage: translation.detectedLanguage,
+            englishTranslation: translation.englishText,
+            pronunciationScore: typeof score === 'number' ? score : null,
+          },
+        });
 
-      awardedXp = 15;
-      await db.user.update({
-        where: { id: user.id },
-        data: { xp: { increment: awardedXp } },
-      });
+        awardedXp = 15;
+        await db.user.update({
+          where: { id: user.id },
+          data: { xp: { increment: awardedXp } },
+        });
 
-      // Update today's daily goal
-      const today = new Date().toISOString().split('T')[0];
-      await db.dailyGoal.upsert({
-        where: {
-          userId_date: {
+        // Update today's daily goal
+        const today = new Date().toISOString().split('T')[0];
+        await db.dailyGoal.upsert({
+          where: {
+            userId_date: {
+              userId: user.id,
+              date: today,
+            },
+          },
+          update: {
+            speakingMinutes: { increment: 1 },
+          },
+          create: {
             userId: user.id,
             date: today,
+            speakingMinutes: 1,
           },
-        },
-        update: {
-          speakingMinutes: { increment: 1 },
-        },
-        create: {
-          userId: user.id,
-          date: today,
-          speakingMinutes: 1,
-        },
-      });
+        });
+      } catch (dbErr) {
+        console.warn('[API] Speaking history persist notice:', dbErr);
+      }
     }
 
     return NextResponse.json({

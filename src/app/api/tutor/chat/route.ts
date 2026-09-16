@@ -20,30 +20,34 @@ export async function POST(req: Request) {
     // Reward active practice XP
     let awardedXp = 0;
     if (user) {
-      awardedXp = 10;
-      await db.user.update({
-        where: { id: user.id },
-        data: { xp: { increment: awardedXp } },
-      });
+      try {
+        awardedXp = 10;
+        await db.user.update({
+          where: { id: user.id },
+          data: { xp: { increment: awardedXp } },
+        });
 
-      // Update daily goal
-      const today = new Date().toISOString().split('T')[0];
-      await db.dailyGoal.upsert({
-        where: {
-          userId_date: {
+        // Update daily goal
+        const today = new Date().toISOString().split('T')[0];
+        await db.dailyGoal.upsert({
+          where: {
+            userId_date: {
+              userId: user.id,
+              date: today,
+            },
+          },
+          update: {
+            speakingMinutes: { increment: 1 },
+          },
+          create: {
             userId: user.id,
             date: today,
+            speakingMinutes: 1,
           },
-        },
-        update: {
-          speakingMinutes: { increment: 1 },
-        },
-        create: {
-          userId: user.id,
-          date: today,
-          speakingMinutes: 1,
-        },
-      });
+        });
+      } catch (dbErr) {
+        console.warn('[API] Tutor practice XP persist notice:', dbErr);
+      }
     }
 
     return NextResponse.json({

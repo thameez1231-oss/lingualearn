@@ -19,9 +19,11 @@ export default async function LearnOverviewPage() {
 
   // Fetch completed lessons from DB
   const userProgress = user
-    ? await db.userProgress.findMany({
-        where: { userId: user.id, status: 'COMPLETED' },
-      })
+    ? await db.userProgress
+        .findMany({
+          where: { userId: user.id, status: 'COMPLETED' },
+        })
+        .catch(() => [])
     : [];
 
   const completedMap = new Set(userProgress.map((p) => p.lessonId));

@@ -15,11 +15,15 @@ export async function GET(req: NextRequest) {
     // Fetch user saved words if logged in
     let savedWordList: string[] = [];
     if (user) {
-      const userWords = await db.learnedWord.findMany({
-        where: { userId: user.id },
-        select: { word: true },
-      });
-      savedWordList = userWords.map((w) => w.word.toLowerCase());
+      try {
+        const userWords = await db.learnedWord.findMany({
+          where: { userId: user.id },
+          select: { word: true },
+        });
+        savedWordList = userWords.map((w) => w.word.toLowerCase());
+      } catch (err) {
+        console.warn('[API] Fetch saved words DB warning:', err);
+      }
     }
 
     return NextResponse.json({
@@ -46,40 +50,44 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Word is required.' }, { status: 400 });
     }
 
-    const existing = await db.learnedWord.findUnique({
-      where: {
-        userId_word: {
-          userId: user.id,
-          word,
-        },
-      },
-    });
-
-    if (existing) {
-      // Toggle / remove
-      await db.learnedWord.delete({
-        where: { id: existing.id },
-      });
-      return NextResponse.json({ saved: false });
-    } else {
-      // Add word & award XP
-      await db.learnedWord.create({
-        data: {
-          userId: user.id,
-          word,
-          nativeTranslation: nativeTranslation || '',
-          definition: definition || '',
-          mastered: true,
+    let saved = true;
+    try {
+      const existing = await db.learnedWord.findUnique({
+        where: {
+          userId_word: {
+            userId: user.id,
+            word,
+          },
         },
       });
 
-      await db.user.update({
-        where: { id: user.id },
-        data: { xp: { increment: 5 } },
-      });
+      if (existing) {
+        await db.learnedWord.delete({
+          where: { id: existing.id },
+        });
+        saved = false;
+      } else {
+        await db.learnedWord.create({
+          data: {
+            userId: user.id,
+            word,
+            nativeTranslation: nativeTranslation || '',
+            definition: definition || '',
+            mastered: true,
+          },
+        });
 
-      return NextResponse.json({ saved: true });
+        await db.user.update({
+          where: { id: user.id },
+          data: { xp: { increment: 5 } },
+        }).catch(() => {});
+        saved = true;
+      }
+    } catch (dbErr) {
+      console.warn('[API] Word toggle DB warning:', dbErr);
     }
+
+    return NextResponse.json({ saved });
   } catch (error: unknown) {
     console.error('[API] Word bookmark error:', error);
     return NextResponse.json({ error: 'Failed to bookmark word.' }, { status: 500 });

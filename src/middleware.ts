@@ -8,20 +8,7 @@ const JWT_SECRET = new TextEncoder().encode(
 
 const PROTECTED_ROUTES = [
   '/dashboard',
-  '/learn',
-  '/speak',
-  '/tutor',
-  '/pronounce',
-  '/words',
   '/profile',
-  '/onboarding',
-];
-
-const AUTH_ONLY_ROUTES = [
-  '/login',
-  '/signup',
-  '/forgot-password',
-  '/reset-password',
 ];
 
 export async function middleware(req: NextRequest) {
@@ -32,7 +19,7 @@ export async function middleware(req: NextRequest) {
   if (sessionCookie?.value) {
     try {
       const { payload } = await jwtVerify(sessionCookie.value, JWT_SECRET);
-      if (payload?.sessionToken && payload?.userId) {
+      if (payload?.userId) {
         isAuthenticated = true;
       }
     } catch {
@@ -40,7 +27,14 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // 1. If accessing protected routes while unauthenticated, redirect to login
+  // If cookie exists but cannot be verified, purge the corrupt/stale cookie immediately
+  if (sessionCookie?.value && !isAuthenticated) {
+    const response = NextResponse.next();
+    response.cookies.delete(SESSION_COOKIE_NAME);
+    return response;
+  }
+
+  // If accessing protected routes while unauthenticated, redirect to login
   const isProtected = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
   if (isProtected && !isAuthenticated) {
     const loginUrl = new URL('/login', req.url);
@@ -48,25 +42,11 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // 2. If visiting auth routes (login/signup)
-  const isAuthRoute = AUTH_ONLY_ROUTES.some((route) => pathname.startsWith(route));
-  if (isAuthRoute) {
-    // If arriving with a redirect query param, or logout/clear signal,
-    // clear any existing session cookie so the user is NEVER trapped in a redirect loop
-    if (
-      req.nextUrl.searchParams.has('redirect') ||
-      req.nextUrl.searchParams.has('logout') ||
-      req.nextUrl.searchParams.has('clear')
-    ) {
-      const response = NextResponse.next();
-      response.cookies.delete(SESSION_COOKIE_NAME);
-      return response;
-    }
-
-    // Otherwise, if already authenticated, take them straight to the dashboard
-    if (isAuthenticated) {
-      return NextResponse.redirect(new URL('/dashboard', req.url));
-    }
+  // Explicit logout or cookie clear query
+  if (req.nextUrl.searchParams.has('clear') || req.nextUrl.searchParams.has('logout')) {
+    const response = NextResponse.next();
+    response.cookies.delete(SESSION_COOKIE_NAME);
+    return response;
   }
 
   return NextResponse.next();
@@ -75,16 +55,9 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     '/dashboard/:path*',
-    '/learn/:path*',
-    '/speak/:path*',
-    '/tutor/:path*',
-    '/pronounce/:path*',
-    '/words/:path*',
     '/profile/:path*',
-    '/onboarding/:path*',
     '/login',
     '/signup',
-    '/forgot-password',
-    '/reset-password',
   ],
 };
+
