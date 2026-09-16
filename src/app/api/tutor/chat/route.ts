@@ -6,14 +6,14 @@ import { chatWithAITutor } from '@/lib/ai';
 export async function POST(req: Request) {
   try {
     const user = await getCurrentUser();
-    const { message, history } = await req.json();
+    const { message, history, userLanguage, proficiencyLevel } = await req.json();
 
     if (!message || typeof message !== 'string') {
       return NextResponse.json({ error: 'Message is required.' }, { status: 400 });
     }
 
-    const preferredLanguage = user?.preferredLanguage || 'Malayalam';
-    const englishLevel = user?.englishLevel || 'COMPLETE_BEGINNER';
+    const preferredLanguage = user?.preferredLanguage || userLanguage || 'Malayalam';
+    const englishLevel = user?.englishLevel || proficiencyLevel || 'COMPLETE_BEGINNER';
 
     const tutorResponse = await chatWithAITutor(message, preferredLanguage, englishLevel, history || []);
 

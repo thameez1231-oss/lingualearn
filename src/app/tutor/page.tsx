@@ -162,7 +162,9 @@ export default function TutorPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: textToSend,
-          history: messages.slice(-6).map((m) => ({
+          userLanguage: user?.preferredLanguage || 'Malayalam',
+          proficiencyLevel: user?.englishLevel || 'BEGINNER',
+          history: messages.slice(-8).map((m) => ({
             role: m.sender === 'user' ? 'user' : 'assistant',
             text: m.text,
           })),

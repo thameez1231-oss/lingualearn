@@ -460,66 +460,77 @@ export async function chatWithAITutor(
 
   // 2. If Gemini API is configured, generate generative response
   if (process.env.GEMINI_API_KEY) {
-    try {
-      const conversationContext = history
-        .slice(-6)
-        .map((h) => `${h.role === 'user' ? 'Learner' : 'Coach Maya'}: ${h.text}`)
-        .join('\n');
+    const candidateModels = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+    for (const model of candidateModels) {
+      try {
+        const conversationContext = history
+          .slice(-8)
+          .map((h) => `${h.role === 'user' ? 'Learner' : 'Coach Maya'}: ${h.text}`)
+          .join('\n');
 
-      const prompt = `You are Coach Maya, an encouraging, remarkably smart and friendly English tutor for LinguaLearn.
+        const prompt = `You are Coach Maya, an encouraging, remarkably smart, empathetic English tutor for LinguaLearn.
 Learner's Native Language: ${userLanguage}
-Learner's English Level: ${englishLevel}
+Learner's English Proficiency: ${englishLevel}
 
 Conversation History:
-${conversationContext || 'No previous conversation.'}
+${conversationContext || 'No previous conversation yet.'}
 
 Learner's Latest Message: "${trimmed}"
 
 Instructions:
-1. Understand the exact intent and meaning of what the learner said, even if they typed in ${userLanguage}, broken English, or mixed languages.
-2. Reply directly to what they said in natural, clear English suitable for a beginner (2-3 sentences max).
-3. If they asked a question (e.g. "How do I say...", "What does ... mean?"), answer it accurately and provide a clear example.
-4. If they made a grammar or wording mistake, gently explain it with positive encouragement in the correction object.
-5. Provide a natural translation of your English reply in ${userLanguage}.
-6. Provide 3 contextually relevant, natural suggestions the user can say next.
+1. Understand the exact intent and emotion of what the learner said, even if they typed in ${userLanguage}, transliterated script, broken English, or mixed slang.
+2. Reply directly to what they said in natural, clear English tailored to their proficiency level (1-3 sentences max).
+3. If they asked an English question (e.g. "How do I say...", "What is the difference between...", "Explain..."), answer with crystal clarity and provide a practical real-world example.
+4. If they made a grammar, preposition, tense, or wording mistake, provide constructive guidance in the correction object. If no error, set correction to null.
+5. In "replyNative", provide a high quality translation of your English reply in ${userLanguage}.
+6. In "suggestions", provide 3 natural, practical follow-up sentences the learner can easily say next.
 
-Return pure JSON only:
+Return PURE JSON only:
 {
-  "replyEnglish": "...",
-  "replyNative": "...",
-  "correction": null or {"original": "...", "better": "...", "explanation": "..."},
-  "suggestions": ["...", "...", "..."]
+  "replyEnglish": "your clear English reply",
+  "replyNative": "your reply translated into ${userLanguage}",
+  "correction": null or {"original": "what learner wrote", "better": "natural correction", "explanation": "friendly 1-sentence tip"},
+  "suggestions": ["suggestion 1", "suggestion 2", "suggestion 3"]
 }`;
 
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { responseMimeType: 'application/json' },
-          }),
-        }
-      );
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: {
+                responseMimeType: 'application/json',
+                temperature: 0.6,
+              },
+            }),
+          }
+        );
 
-      if (res.ok) {
-        const data = await res.json();
-        const content = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (content) {
-          const parsed = JSON.parse(content);
-          return {
-            replyEnglish: naturalizeEnglish(parsed.replyEnglish),
-            replyNative: parsed.replyNative || '',
-            correction: parsed.correction || detectedCorrection,
-            suggestions: Array.isArray(parsed.suggestions) && parsed.suggestions.length > 0
-              ? parsed.suggestions.slice(0, 3)
-              : ['Tell me more!', 'How do I pronounce that?', 'Can we try another sentence?'],
-          };
+        if (res.ok) {
+          const data = await res.json();
+          const content = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (content) {
+            const cleanJson = content.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+            const parsed = JSON.parse(cleanJson);
+            if (parsed?.replyEnglish) {
+              return {
+                replyEnglish: naturalizeEnglish(parsed.replyEnglish),
+                replyNative: parsed.replyNative || '',
+                correction: parsed.correction || detectedCorrection,
+                suggestions: Array.isArray(parsed.suggestions) && parsed.suggestions.length > 0
+                  ? parsed.suggestions.slice(0, 3)
+                  : ['Tell me more!', 'How do I pronounce that?', 'Can we try another sentence?'],
+              };
+            }
+          }
+        } else {
+          console.warn(`[AI] Gemini model ${model} returned status: ${res.status}`);
         }
+      } catch (modelErr) {
+        console.warn(`[AI] Gemini ${model} invocation notice:`, modelErr);
       }
-    } catch (err) {
-      console.warn('[AI] Gemini tutor fallback triggered:', err);
     }
   }
 
