@@ -1,0 +1,151 @@
+// LinguaLearn Database Schema
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                   String    @id @default(cuid())
+  name                 String
+  email                String    @unique
+  passwordHash         String
+  emailVerified        Boolean   @default(false)
+  emailVerifiedAt      DateTime?
+  preferredLanguage    String    @default("Malayalam")
+  englishLevel         String    @default("COMPLETE_BEGINNER") // COMPLETE_BEGINNER, BEGINNER, INTERMEDIATE, ADVANCED
+  onboardingCompleted  Boolean   @default(false)
+  xp                   Int       @default(0)
+  streak               Int       @default(1)
+  lastActiveDate       String?   // YYYY-MM-DD
+  currentLessonId      String    @default("basics-1")
+  avatar               String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  sessions             Session[]
+  verificationTokens   EmailVerificationToken[]
+  resetTokens          PasswordResetToken[]
+  progress             UserProgress[]
+  learnedWords         LearnedWord[]
+  speakingHistory      SpeakingHistory[]
+  dailyGoals           DailyGoal[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model UserProgress {
+  id          String    @id @default(cuid())
+  userId      String
+  lessonId    String
+  status      String    @default("IN_PROGRESS") // NOT_STARTED, IN_PROGRESS, COMPLETED
+  score       Int       @default(0)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+}
+
+model LearnedWord {
+  id                 String   @id @default(cuid())
+  userId             String
+  word               String
+  nativeTranslation  String
+  definition         String?
+  exampleSentence    String?
+  mastered           Boolean  @default(false)
+  learnedAt          DateTime @default(now())
+
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, word])
+  @@index([userId])
+}
+
+model SpeakingHistory {
+  id                 String   @id @default(cuid())
+  userId             String
+  nativeText         String
+  detectedLanguage   String
+  englishTranslation String
+  pronunciationScore Int?
+  createdAt          DateTime @default(now())
+
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model DailyGoal {
+  id               String   @id @default(cuid())
+  userId           String
+  date             String   // YYYY-MM-DD
+  wordsLearned     Int      @default(0)
+  wordsTarget      Int      @default(5)
+  lessonsCompleted Int      @default(0)
+  lessonsTarget    Int      @default(1)
+  speakingMinutes  Int      @default(0)
+  speakingTarget   Int      @default(5)
+  isCompleted      Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
+}
+
+model OutboxEmail {
+  id         String   @id @default(cuid())
+  to         String
+  subject    String
+  html       String
+  text       String?
+  previewUrl String?
+  type       String   @default("VERIFICATION") // VERIFICATION, RESET
+  createdAt  DateTime @default(now())
+}

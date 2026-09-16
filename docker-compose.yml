@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  lingualearn:
+    build: .
+    container_name: lingualearn-app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:./dev.db
+      - SESSION_SECRET=lingualearn_super_secure_production_secret_key_change_me!
+      - NEXT_PUBLIC_APP_URL=http://localhost:3000
+    volumes:
+      - sqlite_data:/app/prisma
+
+volumes:
+  sqlite_data:
