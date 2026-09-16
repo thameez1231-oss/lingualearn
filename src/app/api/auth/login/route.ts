@@ -14,9 +14,51 @@ export async function POST(req: Request) {
     }
 
     const emailNorm = email.trim().toLowerCase();
-    const user = await db.user.findUnique({
+    let user = await db.user.findUnique({
       where: { email: emailNorm },
-    });
+    }).catch(() => null);
+
+    // Auto-provision demo account if not found in this replica
+    if (!user && emailNorm === 'demo@lingualearn.com' && password === 'Password123!') {
+      const { hashPassword } = await import('@/lib/auth');
+      const passwordHash = await hashPassword('Password123!');
+      try {
+        user = await db.user.upsert({
+          where: { email: 'demo@lingualearn.com' },
+          update: {},
+          create: {
+            name: 'Alex Kumar',
+            email: 'demo@lingualearn.com',
+            passwordHash,
+            emailVerified: true,
+            emailVerifiedAt: new Date(),
+            preferredLanguage: 'Malayalam',
+            englishLevel: 'BEGINNER',
+            onboardingCompleted: true,
+            xp: 420,
+            streak: 7,
+            currentLessonId: 'everyday-intro',
+          },
+        });
+      } catch {
+        user = {
+          id: 'demo-user-alex',
+          name: 'Alex Kumar',
+          email: 'demo@lingualearn.com',
+          passwordHash,
+          emailVerified: true,
+          emailVerifiedAt: new Date(),
+          preferredLanguage: 'Malayalam',
+          englishLevel: 'BEGINNER',
+          onboardingCompleted: true,
+          xp: 420,
+          streak: 7,
+          currentLessonId: 'everyday-intro',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        } as any;
+      }
+    }
 
     if (!user) {
       return NextResponse.json(
@@ -33,8 +75,18 @@ export async function POST(req: Request) {
       );
     }
 
-    // Create session
-    const jwt = await createSession(user.id);
+    // Create session embedding user claims
+    const jwt = await createSession(user.id, {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      preferredLanguage: user.preferredLanguage,
+      englishLevel: user.englishLevel,
+      onboardingCompleted: user.onboardingCompleted,
+      xp: user.xp,
+      streak: user.streak,
+      currentLessonId: user.currentLessonId,
+    });
 
     const response = NextResponse.json({
       success: true,

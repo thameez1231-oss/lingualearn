@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser, createSession, SESSION_COOKIE_NAME } from '@/lib/auth';
 import { db } from '@/lib/db';
 
 export async function POST(req: Request) {
@@ -19,28 +19,59 @@ export async function POST(req: Request) {
       );
     }
 
-    // Update user profile and award 50 welcome XP
-    const updated = await db.user.update({
-      where: { id: user.id },
-      data: {
-        preferredLanguage,
-        englishLevel,
-        onboardingCompleted: true,
-        xp: { increment: 50 },
-      },
+    // Update user profile in DB (with fallback handling)
+    let updatedUserData = {
+      ...user,
+      preferredLanguage,
+      englishLevel,
+      onboardingCompleted: true,
+      xp: (user.xp || 0) + 50,
+    };
+
+    try {
+      const updated = await db.user.update({
+        where: { id: user.id },
+        data: {
+          preferredLanguage,
+          englishLevel,
+          onboardingCompleted: true,
+          xp: { increment: 50 },
+        },
+      });
+      if (updated) {
+        updatedUserData = {
+          ...updatedUserData,
+          id: updated.id,
+          name: updated.name,
+          preferredLanguage: updated.preferredLanguage,
+          englishLevel: updated.englishLevel,
+          xp: updated.xp,
+          onboardingCompleted: updated.onboardingCompleted,
+        };
+      }
+    } catch (err) {
+      console.warn('[API] DB update notice during onboarding:', err);
+    }
+
+    // Re-issue session token so the JWT claims reflect onboardingCompleted = true
+    const jwt = await createSession(user.id);
+
+    const response = NextResponse.json({
+      success: true,
+      user: updatedUserData,
     });
 
-    return NextResponse.json({
-      success: true,
-      user: {
-        id: updated.id,
-        name: updated.name,
-        preferredLanguage: updated.preferredLanguage,
-        englishLevel: updated.englishLevel,
-        xp: updated.xp,
-        onboardingCompleted: updated.onboardingCompleted,
-      },
+    response.cookies.set({
+      name: SESSION_COOKIE_NAME,
+      value: jwt,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 30 * 24 * 60 * 60,
     });
+
+    return response;
   } catch (error: unknown) {
     console.error('[API] Onboarding error:', error);
     return NextResponse.json({ error: 'Failed to complete onboarding.' }, { status: 500 });

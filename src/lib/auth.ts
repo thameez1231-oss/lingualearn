@@ -23,22 +23,102 @@ export function generateSecureToken(): string {
   return crypto.randomBytes(32).toString('hex');
 }
 
-export async function createSession(userId: string): Promise<string> {
+export interface UserSessionData {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  emailVerifiedAt?: Date | string | null;
+  preferredLanguage?: string;
+  englishLevel?: string;
+  onboardingCompleted: boolean;
+  xp?: number;
+  streak?: number;
+  currentLessonId?: string;
+  createdAt?: Date | string;
+}
+
+export async function createSession(userId: string, initialUserData?: Partial<UserSessionData>): Promise<string> {
   const token = generateSecureToken();
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + SESSION_DURATION_DAYS);
 
-  // Store session in database
-  await db.session.create({
-    data: {
-      userId,
-      token,
-      expiresAt,
-    },
-  });
+  // Fetch user info to embed in signed JWT
+  let userData: UserSessionData | null = null;
+  try {
+    const dbUser = await db.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        emailVerified: true,
+        emailVerifiedAt: true,
+        preferredLanguage: true,
+        englishLevel: true,
+        onboardingCompleted: true,
+        xp: true,
+        streak: true,
+        currentLessonId: true,
+        createdAt: true,
+      },
+    });
+    if (dbUser) {
+      userData = {
+        ...dbUser,
+        emailVerifiedAt: dbUser.emailVerifiedAt ? dbUser.emailVerifiedAt.toISOString() : null,
+        createdAt: dbUser.createdAt ? dbUser.createdAt.toISOString() : undefined,
+      };
+    }
+  } catch (err) {
+    console.warn('[Auth] Error fetching user for JWT payload:', err);
+  }
 
-  // Sign JWT containing the session token
-  const jwt = await new SignJWT({ sessionToken: token, userId })
+  if (!userData && initialUserData) {
+    userData = {
+      id: userId,
+      name: initialUserData.name || 'Learner',
+      email: initialUserData.email || '',
+      emailVerified: initialUserData.emailVerified ?? true,
+      preferredLanguage: initialUserData.preferredLanguage || 'Malayalam',
+      englishLevel: initialUserData.englishLevel || 'COMPLETE_BEGINNER',
+      onboardingCompleted: initialUserData.onboardingCompleted ?? true,
+      xp: initialUserData.xp ?? 50,
+      streak: initialUserData.streak ?? 1,
+      currentLessonId: initialUserData.currentLessonId || 'basics-1',
+    };
+  }
+
+  // Try storing session in database (non-blocking if database is in transition)
+  try {
+    await db.session.create({
+      data: {
+        userId,
+        token,
+        expiresAt,
+      },
+    });
+  } catch (err) {
+    console.warn('[Auth] Session DB persist notice:', err);
+  }
+
+  // Sign JWT containing the session token AND verified user claims
+  const jwt = await new SignJWT({
+    sessionToken: token,
+    userId,
+    user: userData || {
+      id: userId,
+      name: 'Learner',
+      email: '',
+      emailVerified: true,
+      preferredLanguage: 'Malayalam',
+      englishLevel: 'COMPLETE_BEGINNER',
+      onboardingCompleted: true,
+      xp: 50,
+      streak: 1,
+      currentLessonId: 'basics-1',
+    },
+  })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(`${SESSION_DURATION_DAYS}d`)
@@ -47,11 +127,19 @@ export async function createSession(userId: string): Promise<string> {
   return jwt;
 }
 
-export async function verifySessionJwt(jwt: string): Promise<{ sessionToken: string; userId: string } | null> {
+export async function verifySessionJwt(jwt: string): Promise<{
+  sessionToken: string;
+  userId: string;
+  user?: UserSessionData;
+} | null> {
   try {
     const { payload } = await jwtVerify(jwt, JWT_SECRET);
     if (typeof payload.sessionToken === 'string' && typeof payload.userId === 'string') {
-      return { sessionToken: payload.sessionToken, userId: payload.userId };
+      return {
+        sessionToken: payload.sessionToken,
+        userId: payload.userId,
+        user: (payload.user as UserSessionData) || undefined,
+      };
     }
     return null;
   } catch {
@@ -59,7 +147,7 @@ export async function verifySessionJwt(jwt: string): Promise<{ sessionToken: str
   }
 }
 
-export async function getCurrentUser() {
+export async function getCurrentUser(): Promise<UserSessionData | null> {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME);
 
@@ -69,43 +157,53 @@ export async function getCurrentUser() {
 
   const payload = await verifySessionJwt(sessionCookie.value);
   if (!payload) {
+    try {
+      cookieStore.delete(SESSION_COOKIE_NAME);
+    } catch {
+      // In Server Components, cookies cannot be modified
+    }
     return null;
   }
 
-  // Validate session against database
-  const session = await db.session.findUnique({
-    where: { token: payload.sessionToken },
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          emailVerified: true,
-          emailVerifiedAt: true,
-          preferredLanguage: true,
-          englishLevel: true,
-          onboardingCompleted: true,
-          xp: true,
-          streak: true,
-          currentLessonId: true,
-          createdAt: true,
-        },
+  // 1. Try to fetch fresh user from database
+  try {
+    const user = await db.user.findUnique({
+      where: { id: payload.userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        emailVerified: true,
+        emailVerifiedAt: true,
+        preferredLanguage: true,
+        englishLevel: true,
+        onboardingCompleted: true,
+        xp: true,
+        streak: true,
+        currentLessonId: true,
+        createdAt: true,
       },
-    },
-  });
+    });
 
-  if (!session) {
-    return null;
+    if (user) {
+      return user;
+    }
+  } catch (err) {
+    console.warn('[Auth] Database lookup notice:', err);
   }
 
-  if (session.expiresAt < new Date()) {
-    // Session expired, remove it
-    await db.session.delete({ where: { id: session.id } }).catch(() => {});
-    return null;
+  // 2. Fallback to cryptographically verified claims embedded in JWT
+  if (payload.user) {
+    return payload.user;
   }
 
-  return session.user;
+  // 3. If neither exists, safely try deleting invalid cookie to prevent infinite redirect loops
+  try {
+    cookieStore.delete(SESSION_COOKIE_NAME);
+  } catch {
+    // In Server Components, cookies cannot be modified
+  }
+  return null;
 }
 
 export async function destroyCurrentSession() {

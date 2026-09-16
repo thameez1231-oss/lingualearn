@@ -76,7 +76,17 @@ export async function POST(req: Request) {
     }
 
     // Immediately create session so user is logged in
-    const jwt = await createSession(user.id);
+    const jwt = await createSession(user.id, {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      preferredLanguage: user.preferredLanguage,
+      englishLevel: user.englishLevel,
+      onboardingCompleted: user.onboardingCompleted,
+      xp: user.xp,
+      streak: user.streak,
+      currentLessonId: user.currentLessonId,
+    });
 
     const response = NextResponse.json({
       success: true,

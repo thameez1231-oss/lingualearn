@@ -48,10 +48,25 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // 2. If logged in and visiting login/signup, redirect to dashboard
+  // 2. If visiting auth routes (login/signup)
   const isAuthRoute = AUTH_ONLY_ROUTES.some((route) => pathname.startsWith(route));
-  if (isAuthRoute && isAuthenticated) {
-    return NextResponse.redirect(new URL('/dashboard', req.url));
+  if (isAuthRoute) {
+    // If arriving with a redirect query param, or logout/clear signal,
+    // clear any existing session cookie so the user is NEVER trapped in a redirect loop
+    if (
+      req.nextUrl.searchParams.has('redirect') ||
+      req.nextUrl.searchParams.has('logout') ||
+      req.nextUrl.searchParams.has('clear')
+    ) {
+      const response = NextResponse.next();
+      response.cookies.delete(SESSION_COOKIE_NAME);
+      return response;
+    }
+
+    // Otherwise, if already authenticated, take them straight to the dashboard
+    if (isAuthenticated) {
+      return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
   }
 
   return NextResponse.next();

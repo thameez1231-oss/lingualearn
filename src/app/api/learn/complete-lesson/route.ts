@@ -47,8 +47,9 @@ export async function POST(req: Request) {
     });
 
     // 2. Save learned words to database
+    const preferredLang = user.preferredLanguage || 'Malayalam';
     for (const vocab of lesson.vocabulary) {
-      const nativeTranslation = vocab.translations[user.preferredLanguage] || vocab.translations['Malayalam'] || '';
+      const nativeTranslation = vocab.translations[preferredLang] || vocab.translations['Malayalam'] || '';
       await db.learnedWord.upsert({
         where: {
           userId_word: {
