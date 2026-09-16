@@ -46,8 +46,13 @@ export default function SignupPage() {
         return;
       }
 
-      // Success -> Redirect to verify email notice
-      router.push(`/verify-notice?email=${encodeURIComponent(email)}`);
+      // Success -> Instantly authenticated! Redirect to onboarding
+      if (data.user?.onboardingCompleted) {
+        router.push('/dashboard');
+      } else {
+        router.push('/onboarding');
+      }
+      router.refresh();
     } catch {
       setError('Network error. Please check your connection and try again.');
       setLoading(false);
@@ -76,9 +81,21 @@ export default function SignupPage() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0">
         <div className="bg-white py-8 px-6 shadow-xl shadow-slate-200/50 rounded-3xl border border-slate-200/80 sm:px-10">
           {error && (
-            <div className="mb-5 p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2.5 text-xs text-rose-700 font-medium">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
-              <span>{error}</span>
+            <div className="mb-5 p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-start gap-2.5 text-xs text-rose-700 font-medium">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <span>{error}</span>
+                {error.includes('already exists') && (
+                  <div className="mt-2 pt-2 border-t border-rose-200">
+                    <Link
+                      href="/login"
+                      className="font-bold text-indigo-700 hover:text-indigo-900 underline inline-flex items-center gap-1"
+                    >
+                      <span>Click here to Log In instead →</span>
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 

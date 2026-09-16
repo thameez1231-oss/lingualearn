@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { hashPassword, generateSecureToken } from '@/lib/auth';
+import { hashPassword, generateSecureToken, createSession, SESSION_COOKIE_NAME } from '@/lib/auth';
 import { sendVerificationEmail } from '@/lib/email';
 
 export async function POST(req: Request) {
@@ -35,45 +35,76 @@ export async function POST(req: Request) {
 
     if (existing) {
       return NextResponse.json(
-        { error: 'An account with this email address already exists.' },
+        { error: 'An account with this email address already exists. Please log in.' },
         { status: 409 }
       );
     }
 
     const passwordHash = await hashPassword(password);
+    const hasSmtp = Boolean(process.env.SMTP_HOST && process.env.SMTP_USER);
 
-    // Create user
+    // Create user: auto-verified if no external SMTP is configured (zero lockouts), or marked unverified if SMTP is ready
     const user = await db.user.create({
       data: {
         name: name.trim(),
         email: emailNorm,
         passwordHash,
-        emailVerified: false,
+        emailVerified: !hasSmtp,
+        emailVerifiedAt: !hasSmtp ? new Date() : null,
       },
     });
 
-    // Generate real verification token (expires in 24h)
-    const token = generateSecureToken();
-    const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 24);
+    // Attempt sending verification email in background (never blocks or crashes account creation)
+    let previewUrl: string | null = null;
+    try {
+      const token = generateSecureToken();
+      const expiresAt = new Date();
+      expiresAt.setHours(expiresAt.getHours() + 24);
 
-    await db.emailVerificationToken.create({
-      data: {
-        userId: user.id,
-        token,
-        expiresAt,
-      },
-    });
+      await db.emailVerificationToken.create({
+        data: {
+          userId: user.id,
+          token,
+          expiresAt,
+        },
+      });
 
-    // Send real verification email
-    const emailResult = await sendVerificationEmail(user.email, user.name, token);
+      const emailResult = await sendVerificationEmail(user.email, user.name, token);
+      previewUrl = emailResult?.previewUrl || null;
+    } catch (mailErr) {
+      console.warn('[API] Background verification email dispatch notice:', mailErr);
+    }
 
-    return NextResponse.json({
+    // Immediately create session so user is logged in
+    const jwt = await createSession(user.id);
+
+    const response = NextResponse.json({
       success: true,
-      message: 'Account created! Please check your email for the verification link.',
-      email: user.email,
-      previewUrl: emailResult.previewUrl,
+      message: 'Account created successfully!',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        preferredLanguage: user.preferredLanguage,
+        englishLevel: user.englishLevel,
+        onboardingCompleted: user.onboardingCompleted,
+        emailVerified: user.emailVerified,
+      },
+      previewUrl,
     });
+
+    // Set authentication session cookie
+    response.cookies.set({
+      name: SESSION_COOKIE_NAME,
+      value: jwt,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 30 * 24 * 60 * 60, // 30 days
+    });
+
+    return response;
   } catch (error: unknown) {
     console.error('[API] Signup error:', error);
     return NextResponse.json(

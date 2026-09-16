@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Invalid email or password.' },
+        { error: 'No account found with this email. Please check your email or create an account.' },
         { status: 401 }
       );
     }
@@ -28,20 +28,8 @@ export async function POST(req: Request) {
     const isValid = await verifyPassword(password, user.passwordHash);
     if (!isValid) {
       return NextResponse.json(
-        { error: 'Invalid email or password.' },
+        { error: 'Incorrect password. Please try again or click "Forgot Password".' },
         { status: 401 }
-      );
-    }
-
-    // Check if email has been verified
-    if (!user.emailVerified) {
-      return NextResponse.json(
-        {
-          error: 'Please verify your email first.',
-          requiresVerification: true,
-          email: user.email,
-        },
-        { status: 403 }
       );
     }
 

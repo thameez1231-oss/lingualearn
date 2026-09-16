@@ -92,6 +92,17 @@ export function generatePhoneticGuide(englishSentence: string): string {
 function naturalizeEnglish(rawText: string): string {
   let cleaned = rawText.trim();
 
+  // Strip XML/HTML tags (e.g. <g id="1"> from translation APIs)
+  cleaned = cleaned.replace(/<[^>]+>/g, '').trim();
+
+  // Decode common HTML entities
+  cleaned = cleaned
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+
   // Remove surrounding quotes if model added them
   cleaned = cleaned.replace(/^["']|["']$/g, '').trim();
 

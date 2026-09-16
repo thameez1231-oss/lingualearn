@@ -34,13 +34,7 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        if (data.requiresVerification) {
-          setRequiresVerification(true);
-          setUnverifiedEmail(data.email || email);
-          setError('Please verify your email first.');
-        } else {
-          setError(data.error || 'Invalid email or password.');
-        }
+        setError(data.error || 'Invalid email or password.');
         setLoading(false);
         return;
       }
@@ -106,20 +100,24 @@ export default function LoginPage() {
               <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
               <div className="flex-1">
                 <span>{error}</span>
-                {requiresVerification && (
-                  <div className="mt-2.5 pt-2 border-t border-rose-200/60 flex items-center justify-between">
-                    <span className="text-[11px] text-rose-600 font-normal">
-                      Need another link?
-                    </span>
-                    <button
-                      type="button"
-                      onClick={handleResend}
-                      disabled={resending}
-                      className="inline-flex items-center gap-1 font-bold text-xs text-indigo-700 hover:text-indigo-800 underline disabled:opacity-50"
+                {error.includes('No account found') && (
+                  <div className="mt-2 pt-2 border-t border-rose-200">
+                    <Link
+                      href="/signup"
+                      className="font-bold text-indigo-700 hover:text-indigo-900 underline inline-flex items-center gap-1"
                     >
-                      <RefreshCw className={`w-3 h-3 ${resending ? 'animate-spin' : ''}`} />
-                      <span>Resend verification email</span>
-                    </button>
+                      <span>Create a free account now →</span>
+                    </Link>
+                  </div>
+                )}
+                {error.includes('Incorrect password') && (
+                  <div className="mt-2 pt-2 border-t border-rose-200">
+                    <Link
+                      href="/forgot-password"
+                      className="font-bold text-indigo-700 hover:text-indigo-900 underline inline-flex items-center gap-1"
+                    >
+                      <span>Reset your password →</span>
+                    </Link>
                   </div>
                 )}
               </div>
@@ -193,6 +191,21 @@ export default function LoginPage() {
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
+              </button>
+            </div>
+
+            {/* Quick Demo Login Helper */}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail('demo@lingualearn.com');
+                  setPassword('Password123!');
+                }}
+                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-semibold text-indigo-700 bg-indigo-50/70 hover:bg-indigo-100/80 border border-indigo-200/60 transition-all cursor-pointer"
+                title="Pre-fills demo account credentials"
+              >
+                <span>⚡ Fill Demo Account (demo@lingualearn.com)</span>
               </button>
             </div>
           </form>
