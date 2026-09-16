@@ -13,7 +13,7 @@ import {
   LogOut,
   Flame,
   Award,
-  Sparkles,
+  Users,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -29,6 +29,29 @@ interface SidebarProps {
 export function Sidebar({ user }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const [badgeCount, setBadgeCount] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    if (!user) return;
+    let active = true;
+    const fetchBadge = async () => {
+      try {
+        const res = await fetch('/api/friends/badge');
+        if (res.ok) {
+          const data = await res.json();
+          if (active) setBadgeCount(data.count || 0);
+        }
+      } catch {
+        // silent fail
+      }
+    };
+    fetchBadge();
+    const interval = setInterval(fetchBadge, 15000);
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
+  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -45,6 +68,7 @@ export function Sidebar({ user }: SidebarProps) {
     { label: 'Learn', href: '/learn', icon: BookOpen },
     { label: 'Speak', href: '/speak', icon: Mic, highlight: true },
     { label: 'AI Tutor', href: '/tutor', icon: MessageSquare },
+    { label: 'Friends', href: '/friends', icon: Users, badge: badgeCount },
     { label: 'Words', href: '/words', icon: BookMarked },
     { label: 'Profile', href: '/profile', icon: User },
   ];
@@ -105,11 +129,15 @@ export function Sidebar({ user }: SidebarProps) {
                   }`}
                 />
                 <span>{item.label}</span>
-                {item.highlight && (
+                {item.badge && item.badge > 0 ? (
+                  <span className="ml-auto min-w-[20px] h-5 px-1.5 flex items-center justify-center rounded-full bg-indigo-600 text-white font-bold text-[11px] shadow-sm animate-pulse">
+                    {item.badge > 99 ? '99+' : item.badge}
+                  </span>
+                ) : item.highlight ? (
                   <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-bold uppercase tracking-wide">
                     Live
                   </span>
-                )}
+                ) : null}
               </Link>
             );
           })}

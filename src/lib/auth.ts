@@ -181,11 +181,18 @@ export async function getCurrentUser(): Promise<UserSessionData | null> {
         xp: true,
         streak: true,
         currentLessonId: true,
+        avatar: true,
+        lastSeenAt: true,
         createdAt: true,
       },
     });
 
     if (user) {
+      // Async touch lastSeenAt for active presence indicator without blocking request
+      db.user.update({
+        where: { id: user.id },
+        data: { lastSeenAt: new Date() },
+      }).catch(() => {});
       return user;
     }
   } catch (err) {

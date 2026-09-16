@@ -16,6 +16,7 @@ import {
   ChevronRight,
   TrendingUp,
   Target,
+  Users,
 } from 'lucide-react';
 
 export default async function DashboardPage() {
@@ -261,6 +262,34 @@ export default async function DashboardPage() {
               </Link>
             </div>
           </div>
+        </div>
+
+        {/* Practice with Friends Banner */}
+        <div className="bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 rounded-3xl p-6 sm:p-7 text-white shadow-lg relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-5">
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/20 shrink-0">
+              <Users className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[11px] font-bold uppercase tracking-wider mb-1">
+                <Sparkles className="w-3 h-3" />
+                <span>New Feature</span>
+              </div>
+              <h3 className="text-lg sm:text-xl font-extrabold text-white">
+                Learn & Chat with Friends
+              </h3>
+              <p className="text-xs text-indigo-100 max-w-md mt-0.5">
+                Connect with fellow learners, send friend requests, practice English together, and chat in real time.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/friends"
+            className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white text-indigo-900 font-bold text-sm shadow-md hover:bg-indigo-50 active:scale-95 transition-all relative z-10"
+          >
+            <Users className="w-4 h-4 text-indigo-600" />
+            <span>Open Friends & Chat →</span>
+          </Link>
         </div>
 
         {/* 3. Daily Goals & Quick Stats Bar */}
