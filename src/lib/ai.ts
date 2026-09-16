@@ -853,7 +853,6 @@ Return PURE JSON ONLY with this schema:
   }
 
   const cleanLower = englishMeaning.toLowerCase().replace(/[^\w\s]/g, ' ').trim();
-  const lowerWords = cleanLower.split(/\s+/).filter(Boolean);
 
   let replyEnglish = '';
   let replyNative = '';

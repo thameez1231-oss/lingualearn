@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import type { User } from '@prisma/client';
 import { verifyPassword, createSession, SESSION_COOKIE_NAME } from '@/lib/auth';
 
 export async function POST(req: Request) {
@@ -56,7 +57,7 @@ export async function POST(req: Request) {
           currentLessonId: 'everyday-intro',
           createdAt: new Date(),
           updatedAt: new Date(),
-        } as any;
+        } as unknown as User;
       }
     }
 

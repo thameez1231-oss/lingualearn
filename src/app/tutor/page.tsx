@@ -10,7 +10,6 @@ import {
   Bot,
   User,
   Lightbulb,
-  CheckCircle2,
   RefreshCw,
   Loader2,
   Mic,
@@ -60,6 +59,40 @@ function cleanDisplay(text?: string): string {
   return cleaned;
 }
 
+interface SpeechRecognitionResultItem {
+  transcript: string;
+}
+
+interface SpeechRecognitionResultList {
+  [index: number]: {
+    [index: number]: SpeechRecognitionResultItem;
+  };
+}
+
+interface SpeechRecognitionEvent {
+  results?: SpeechRecognitionResultList;
+}
+
+interface BrowserSpeechRecognition {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  onstart: (() => void) | null;
+  onend: (() => void) | null;
+  onerror: (() => void) | null;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  start: () => void;
+}
+
+const DEFAULT_WELCOME_MSG: ChatMessage = {
+  id: 'msg-welcome',
+  sender: 'tutor',
+  text: 'Hello! I am Coach Maya, your personal AI English tutor. We can practice speaking, chatting, or checking grammar. You can type in English, Malayalam, or Manglish! What would you like to talk about today?',
+  nativeTranslation: 'ഹലോ! ഞാൻ കോച്ച് മായയാണ്, നിങ്ങളുടെ ഇംഗ്ലീഷ് അധ്യാപിക. എന്ത് സംസാരിക്കാനാണ് നിങ്ങൾക്ക് താല്പര്യം?',
+  audioText: 'Hello! I am Coach Maya, your personal AI English tutor. What would you like to talk about today?',
+  timestamp: 'Just now',
+};
+
 export default function TutorPage() {
   const [user, setUser] = useState<{
     id: string;
@@ -71,7 +104,7 @@ export default function TutorPage() {
     englishLevel?: string;
   } | null>(null);
 
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([DEFAULT_WELCOME_MSG]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -82,7 +115,6 @@ export default function TutorPage() {
     'What is the difference between see and watch?',
   ]);
   const chatEndRef = useRef<HTMLDivElement>(null);
-  const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -90,6 +122,18 @@ export default function TutorPage() {
       .then((data) => {
         if (data?.user) {
           setUser(data.user);
+          const welcomeName = data.user.name ? data.user.name.split(' ')[0] : 'there';
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === 'msg-welcome'
+                ? {
+                    ...m,
+                    text: `Hello ${welcomeName}! I am Coach Maya, your personal AI English tutor. We can practice speaking, chatting, or checking grammar. You can type in English, Malayalam, or Manglish! What would you like to talk about today?`,
+                    audioText: `Hello ${welcomeName}! I am Coach Maya, your personal AI English tutor. What would you like to talk about today?`,
+                  }
+                : m
+            )
+          );
         }
       })
       .catch(() => {});
@@ -99,29 +143,14 @@ export default function TutorPage() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
-  // Initial welcome greeting from Coach Maya
-  useEffect(() => {
-    const welcomeName = user?.name ? user.name.split(' ')[0] : 'there';
-    setMessages([
-      {
-        id: 'msg-welcome',
-        sender: 'tutor',
-        text: `Hello ${welcomeName}! I am Coach Maya, your personal AI English tutor. We can practice speaking, chatting, or checking grammar. You can type in English, Malayalam, or Manglish! What would you like to talk about today?`,
-        nativeTranslation: 'ഹലോ! ഞാൻ കോച്ച് മായയാണ്, നിങ്ങളുടെ ഇംഗ്ലീഷ് അധ്യാപിക. എന്ത് സംസാരിക്കാനാണ് നിങ്ങൾക്ക് താല്പര്യം?',
-        audioText: `Hello ${welcomeName}! I am Coach Maya, your personal AI English tutor. What would you like to talk about today?`,
-        timestamp: 'Just now',
-      },
-    ]);
-  }, [user]);
-
   const toggleListening = () => {
     if (typeof window === 'undefined') return;
 
-    const SpeechRecognition =
-      (window as unknown as { SpeechRecognition?: any }).SpeechRecognition ||
-      (window as unknown as { webkitSpeechRecognition?: any }).webkitSpeechRecognition;
+    const SpeechRecognitionClass =
+      (window as unknown as { SpeechRecognition?: new () => BrowserSpeechRecognition }).SpeechRecognition ||
+      (window as unknown as { webkitSpeechRecognition?: new () => BrowserSpeechRecognition }).webkitSpeechRecognition;
 
-    if (!SpeechRecognition) {
+    if (!SpeechRecognitionClass) {
       alert('Speech recognition is not supported in this browser. Please use Chrome or Edge.');
       return;
     }
@@ -132,7 +161,7 @@ export default function TutorPage() {
     }
 
     try {
-      const recognition = new SpeechRecognition();
+      const recognition = new SpeechRecognitionClass();
       recognition.lang = getSpeechCodeForLanguage(user?.preferredLanguage || 'Malayalam');
       recognition.continuous = false;
       recognition.interimResults = false;
@@ -141,7 +170,7 @@ export default function TutorPage() {
       recognition.onend = () => setIsListening(false);
       recognition.onerror = () => setIsListening(false);
 
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
         const transcript = event.results?.[0]?.[0]?.transcript;
         if (transcript) {
           setInput(transcript);

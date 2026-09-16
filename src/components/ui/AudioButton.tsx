@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Loader2 } from 'lucide-react';
+import { Volume2, Loader2 } from 'lucide-react';
 
 interface AudioButtonProps {
   text: string;
