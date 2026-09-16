@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
-import { db } from '@/lib/db';
+import { db, ensureDatabaseSchema } from '@/lib/db';
 
 export async function POST(req: Request) {
   try {
+    await ensureDatabaseSchema(db);
+
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -19,7 +21,7 @@ export async function POST(req: Request) {
       where: { id: requestId },
       include: {
         sender: {
-          select: { id: true, name: true },
+          select: { id: true, name: true, email: true },
         },
       },
     });
@@ -38,6 +40,32 @@ export async function POST(req: Request) {
     }
 
     if (action === 'ACCEPT') {
+      // Ensure both users exist in database before creating friendship
+      await Promise.all([
+        db.user.upsert({
+          where: { id: user.id },
+          update: {},
+          create: {
+            id: user.id,
+            name: user.name || 'Learner',
+            email: user.email || `user_${user.id}@lingualearn.app`,
+            passwordHash: 'jwt_managed_user',
+            onboardingCompleted: true,
+          },
+        }).catch(() => {}),
+        db.user.upsert({
+          where: { id: request.senderId },
+          update: {},
+          create: {
+            id: request.senderId,
+            name: request.sender?.name || 'Learner',
+            email: request.sender?.email || `user_${request.senderId}@lingualearn.app`,
+            passwordHash: 'jwt_managed_user',
+            onboardingCompleted: true,
+          },
+        }).catch(() => {}),
+      ]);
+
       // In transaction: update request to ACCEPTED, create bidirectional friendship rows
       await db.$transaction([
         db.friendRequest.update({
@@ -90,8 +118,13 @@ export async function POST(req: Request) {
         message: 'Friend request declined.',
       });
     }
-  } catch (error) {
-    console.error('[API] Respond to friend request error:', error);
-    return NextResponse.json({ error: 'Failed to process response.' }, { status: 500 });
+  } catch (error: unknown) {
+    const errMessage = error instanceof Error ? error.message : 'Failed to process response.';
+    const errStack = error instanceof Error ? error.stack : undefined;
+    console.error('[API] Respond to friend request error:', errMessage, errStack);
+    return NextResponse.json({
+      error: errMessage,
+      details: process.env.NODE_ENV !== 'production' ? errMessage : undefined,
+    }, { status: 500 });
   }
 }

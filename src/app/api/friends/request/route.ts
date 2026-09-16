@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
-import { db } from '@/lib/db';
+import { db, ensureDatabaseSchema } from '@/lib/db';
 
 export async function POST(req: Request) {
   try {
+    await ensureDatabaseSchema(db);
+
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -19,6 +21,21 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'You cannot send a friend request to yourself.' }, { status: 400 });
     }
 
+    // Ensure current user exists in database to satisfy foreign key constraints
+    await db.user.upsert({
+      where: { id: user.id },
+      update: {},
+      create: {
+        id: user.id,
+        name: user.name || 'Learner',
+        email: user.email || `user_${user.id}@lingualearn.app`,
+        passwordHash: 'jwt_managed_user',
+        preferredLanguage: user.preferredLanguage || 'Malayalam',
+        englishLevel: user.englishLevel || 'BEGINNER',
+        onboardingCompleted: true,
+      },
+    }).catch(() => {});
+
     // Verify target user exists
     const targetUser = await db.user.findUnique({
       where: { id: targetUserId },
@@ -26,21 +43,24 @@ export async function POST(req: Request) {
     });
 
     if (!targetUser) {
-      return NextResponse.json({ error: 'User not found.' }, { status: 404 });
+      return NextResponse.json({ error: 'User not found in system.' }, { status: 404 });
     }
 
-    // Check if already friends
-    const existingFriendship = await db.friendship.findUnique({
+    // Check if already friends in either direction
+    const existingFriendship = await db.friendship.findFirst({
       where: {
-        userId_friendId: {
-          userId: user.id,
-          friendId: targetUserId,
-        },
+        OR: [
+          { userId: user.id, friendId: targetUserId },
+          { userId: targetUserId, friendId: user.id },
+        ],
       },
     });
 
     if (existingFriendship) {
-      return NextResponse.json({ error: 'You are already friends with this user.' }, { status: 400 });
+      return NextResponse.json({
+        error: `You are already friends with ${targetUser.name}.`,
+        relationshipStatus: 'FRIENDS',
+      }, { status: 400 });
     }
 
     // Check if target user has already sent a pending request to current user -> auto-accept
@@ -54,17 +74,37 @@ export async function POST(req: Request) {
     });
 
     if (reciprocalRequest && reciprocalRequest.status === 'PENDING') {
-      // Accept reciprocal request and establish friendship
+      // Accept reciprocal request and establish friendship using safe upserts
       await db.$transaction([
         db.friendRequest.update({
           where: { id: reciprocalRequest.id },
           data: { status: 'ACCEPTED' },
         }),
-        db.friendship.createMany({
-          data: [
-            { userId: user.id, friendId: targetUserId },
-            { userId: targetUserId, friendId: user.id },
-          ],
+        db.friendship.upsert({
+          where: {
+            userId_friendId: {
+              userId: user.id,
+              friendId: targetUserId,
+            },
+          },
+          update: {},
+          create: {
+            userId: user.id,
+            friendId: targetUserId,
+          },
+        }),
+        db.friendship.upsert({
+          where: {
+            userId_friendId: {
+              userId: targetUserId,
+              friendId: user.id,
+            },
+          },
+          update: {},
+          create: {
+            userId: targetUserId,
+            friendId: user.id,
+          },
         }),
       ]);
 
@@ -87,10 +127,12 @@ export async function POST(req: Request) {
 
     if (existingRequest && existingRequest.status === 'PENDING') {
       return NextResponse.json({
+        success: true,
         error: 'Friend request is already pending.',
         relationshipStatus: 'PENDING_SENT',
         requestId: existingRequest.id,
-      }, { status: 400 });
+        message: `Friend request to ${targetUser.name} is already pending.`,
+      });
     }
 
     // Create or re-open friend request
@@ -116,8 +158,13 @@ export async function POST(req: Request) {
       requestId: request.id,
       message: `Friend request sent to ${targetUser.name}!`,
     });
-  } catch (error) {
-    console.error('[API] Send friend request error:', error);
-    return NextResponse.json({ error: 'Failed to send friend request.' }, { status: 500 });
+  } catch (error: unknown) {
+    const errMessage = error instanceof Error ? error.message : 'Failed to send friend request.';
+    const errStack = error instanceof Error ? error.stack : undefined;
+    console.error('[API] Send friend request error:', errMessage, errStack);
+    return NextResponse.json({
+      error: errMessage,
+      details: process.env.NODE_ENV !== 'production' ? errMessage : undefined,
+    }, { status: 500 });
   }
 }

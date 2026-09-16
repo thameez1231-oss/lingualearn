@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
-import { db } from '@/lib/db';
+import { db, ensureDatabaseSchema } from '@/lib/db';
 
 function sanitizeMessage(text: string): string {
   return text
@@ -10,6 +10,7 @@ function sanitizeMessage(text: string): string {
 
 export async function GET(req: Request) {
   try {
+    await ensureDatabaseSchema(db);
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -120,10 +121,24 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    await ensureDatabaseSchema(db);
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Ensure sender exists in DB
+    await db.user.upsert({
+      where: { id: user.id },
+      update: {},
+      create: {
+        id: user.id,
+        name: user.name || 'Learner',
+        email: user.email || `user_${user.id}@lingualearn.app`,
+        passwordHash: 'jwt_managed_user',
+        onboardingCompleted: true,
+      },
+    }).catch(() => {});
 
     const { receiverId, content } = await req.json();
 

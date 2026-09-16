@@ -106,6 +106,8 @@ function FriendsContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<FriendUser[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [addingUserId, setAddingUserId] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   // Loading & Polling States
   const [isLoadingList, setIsLoadingList] = useState(true);
@@ -281,6 +283,8 @@ function FriendsContent() {
 
   // Send Friend Request
   const handleSendRequest = async (targetUserId: string) => {
+    setAddingUserId(targetUserId);
+    setStatusMessage(null);
     try {
       const res = await fetch('/api/friends/request', {
         method: 'POST',
@@ -306,13 +310,20 @@ function FriendsContent() {
         if (data.relationshipStatus === 'FRIENDS') {
           fetchFriends();
           fetchConversations();
+          setStatusMessage({ text: data.message || 'You are now friends!', type: 'success' });
+        } else {
+          setStatusMessage({ text: data.message || 'Friend request sent successfully!', type: 'success' });
         }
         fetchRequests();
       } else {
-        alert(data.error || 'Failed to send friend request.');
+        const errorMsg = data.error || data.details || 'Unable to send friend request. Please try again.';
+        setStatusMessage({ text: errorMsg, type: 'error' });
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Send request error:', err);
+      setStatusMessage({ text: 'Unable to send friend request. Please check your connection and try again.', type: 'error' });
+    } finally {
+      setAddingUserId(null);
     }
   };
 
@@ -849,6 +860,27 @@ function FriendsContent() {
                         )}
                       </div>
 
+                      {/* Status Feedback Banner */}
+                      {statusMessage && (
+                        <div
+                          className={`p-3 rounded-2xl text-xs font-semibold flex items-center justify-between transition-all ${
+                            statusMessage.type === 'success'
+                              ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-xs'
+                              : 'bg-rose-50 text-rose-800 border border-rose-200 shadow-xs'
+                          }`}
+                        >
+                          <span className="flex-1 mr-2">{statusMessage.text}</span>
+                          <button
+                            type="button"
+                            onClick={() => setStatusMessage(null)}
+                            className="p-1 hover:opacity-75 text-xs cursor-pointer text-slate-500"
+                            title="Dismiss"
+                          >
+                            <X className="w-3.5 h-3.5" aria-hidden="true" />
+                          </button>
+                        </div>
+                      )}
+
                       {/* Results List */}
                       {isSearching ? (
                         <div className="p-6 text-center text-slate-400 flex items-center justify-center gap-2">
@@ -901,11 +933,16 @@ function FriendsContent() {
                                 ) : (
                                   <button
                                     type="button"
+                                    disabled={addingUserId === userResult.id}
                                     onClick={() => handleSendRequest(userResult.id)}
-                                    className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-xs transition-colors cursor-pointer inline-flex items-center gap-1"
+                                    className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold text-xs rounded-xl shadow-xs transition-colors cursor-pointer inline-flex items-center gap-1"
                                   >
-                                    <UserPlus className="w-3 h-3" aria-hidden="true" />
-                                    <span>Add</span>
+                                    {addingUserId === userResult.id ? (
+                                      <Loader2 className="w-3 h-3 animate-spin" aria-hidden="true" />
+                                    ) : (
+                                      <UserPlus className="w-3 h-3" aria-hidden="true" />
+                                    )}
+                                    <span>{addingUserId === userResult.id ? 'Adding...' : 'Add'}</span>
                                   </button>
                                 )}
                               </div>

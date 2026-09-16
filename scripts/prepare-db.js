@@ -20,6 +20,7 @@ if (dbUrl.startsWith('postgres://') || dbUrl.startsWith('postgresql://')) {
   console.log('[prepare-db] Syncing schema and seeding tables...');
   try {
     execSync('npx prisma db push --skip-generate', { stdio: 'inherit' });
+    execSync('npx prisma generate', { stdio: 'inherit' });
     execSync('npx tsx prisma/seed.ts', { stdio: 'inherit' });
   } catch (err) {
     console.warn('[prepare-db] Sync/seed warning:', err.message);
