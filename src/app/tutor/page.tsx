@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AppShell } from '@/components/layout/AppShell';
 import { AudioButton } from '@/components/ui/AudioButton';
+import { getSpeechCodeForLanguage } from '@/lib/languages';
 import {
   Send,
   Sparkles,
@@ -13,6 +14,7 @@ import {
   RefreshCw,
   Loader2,
   Mic,
+  MicOff,
 } from 'lucide-react';
 
 interface ChatMessage {
@@ -43,7 +45,15 @@ export default function TutorPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([
+    'How do I introduce myself in English?',
+    'Let us practice ordering food in a cafe.',
+    'I am go to school yesterday.',
+    'What is the difference between see and watch?',
+  ]);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -51,16 +61,23 @@ export default function TutorPage() {
       .then((data) => {
         if (data?.user) {
           setUser(data.user);
+          const lang = data.user.preferredLanguage || 'Malayalam';
+          const greetingNative =
+            lang === 'Malayalam'
+              ? `ഹലോ ${data.user.name}! ഞാൻ നിങ്ങളുടെ ഇംഗ്ലീഷ് അധ്യാപിക മായയാണ്. ഇന്ന് നിങ്ങൾക്ക് സുഖമാണോ?`
+              : lang === 'Hindi'
+              ? `नमस्ते ${data.user.name}! मैं कोच माया हूँ, आपकी निजी अंग्रेजी शिक्षक। आज आप कैसे हैं?`
+              : lang === 'Tamil'
+              ? `வணக்கம் ${data.user.name}! நான் உங்கள் ஆங்கில ஆசிரியர் மாயா. இன்று எப்படி இருக்கிறீர்கள்?`
+              : undefined;
+
           // Initial greeting from Coach Maya
           setMessages([
             {
               id: 'msg-1',
               sender: 'tutor',
               text: `Hello ${data.user.name}! I am Coach Maya, your personal English tutor. How are you doing today?`,
-              nativeTranslation:
-                data.user.preferredLanguage === 'Malayalam'
-                  ? `ഹലോ ${data.user.name}! ഞാൻ നിങ്ങളുടെ ഇംഗ്ലീഷ് അധ്യാപിക മായയാണ്. ഇന്ന് നിങ്ങൾക്ക് സുഖമാണോ?`
-                  : undefined,
+              nativeTranslation: greetingNative,
               audioText: `Hello ${data.user.name}! I am Coach Maya, your personal English tutor. How are you doing today?`,
               timestamp: 'Just now',
             },
@@ -74,9 +91,59 @@ export default function TutorPage() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+
+    const SpeechRec =
+      (window as unknown as { SpeechRecognition?: any; webkitSpeechRecognition?: any })
+        .SpeechRecognition ||
+      (window as unknown as { SpeechRecognition?: any; webkitSpeechRecognition?: any })
+        .webkitSpeechRecognition;
+
+    if (!SpeechRec) {
+      alert('Speech recognition is not supported in this browser. Please type your message.');
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRec();
+      const langCode = getSpeechCodeForLanguage(user?.preferredLanguage || 'Malayalam');
+      recognition.lang = langCode || 'en-US';
+      recognition.interimResults = true;
+      recognition.continuous = false;
+
+      recognition.onstart = () => setIsListening(true);
+      recognition.onresult = (event: any) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        if (transcript) {
+          setInput(transcript);
+        }
+      };
+      recognition.onerror = () => setIsListening(false);
+      recognition.onend = () => setIsListening(false);
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch {
+      setIsListening(false);
+    }
+  };
+
   const handleSend = async (messageText?: string) => {
     const textToSend = messageText || input;
     if (!textToSend.trim() || loading) return;
+
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+    }
 
     const userMsg: ChatMessage = {
       id: `user-${crypto.randomUUID()}`,
@@ -95,7 +162,7 @@ export default function TutorPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: textToSend,
-          history: messages.slice(-4).map((m) => ({
+          history: messages.slice(-6).map((m) => ({
             role: m.sender === 'user' ? 'user' : 'assistant',
             text: m.text,
           })),
@@ -115,6 +182,10 @@ export default function TutorPage() {
         };
         setMessages((prev) => [...prev, tutorMsg]);
 
+        if (Array.isArray(data.response.suggestions) && data.response.suggestions.length > 0) {
+          setSuggestions(data.response.suggestions);
+        }
+
         if (data.awardedXp && user) {
           setUser({ ...user, xp: (user.xp || 0) + data.awardedXp });
         }
@@ -125,13 +196,6 @@ export default function TutorPage() {
       setLoading(false);
     }
   };
-
-  const quickPrompts = [
-    'How do I introduce myself?',
-    'I am hungry. How do I order food?',
-    'I am go to school.', // triggers smart grammar correction
-    user?.preferredLanguage === 'Malayalam' ? 'എനിക്ക് സുഖമാണ്' : 'I am doing well',
-  ];
 
   return (
     <AppShell
@@ -266,16 +330,17 @@ export default function TutorPage() {
           <div ref={chatEndRef} />
         </div>
 
-        {/* Quick Prompts Bar */}
+        {/* Dynamic Contextual Suggestions Bar */}
         <div className="py-2 flex items-center gap-2 overflow-x-auto no-scrollbar">
-          {quickPrompts.map((prompt, i) => (
+          {suggestions.map((prompt, i) => (
             <button
               key={i}
               type="button"
               onClick={() => handleSend(prompt)}
-              className="px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 rounded-full text-xs font-medium text-slate-700 whitespace-nowrap active:scale-95 transition-all shadow-xs"
+              className="px-3.5 py-1.5 bg-white hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 border border-slate-200 rounded-full text-xs font-medium text-slate-700 whitespace-nowrap active:scale-95 transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
             >
-              {prompt}
+              <Sparkles className="w-3 h-3 text-indigo-500 shrink-0" />
+              <span>{prompt}</span>
             </button>
           ))}
         </div>
@@ -289,17 +354,32 @@ export default function TutorPage() {
             }}
             className="flex items-center gap-2 p-1.5 bg-white border border-slate-200 rounded-2xl shadow-sm focus-within:ring-2 focus-within:ring-indigo-500"
           >
+            {/* Voice Input Microphone Button */}
+            <button
+              type="button"
+              onClick={toggleListening}
+              className={`p-2.5 rounded-xl transition-all cursor-pointer ${
+                isListening
+                  ? 'bg-rose-500 text-white animate-pulse shadow-md shadow-rose-200'
+                  : 'text-slate-400 hover:text-indigo-600 hover:bg-indigo-50'
+              }`}
+              title={isListening ? 'Listening... click to stop' : 'Tap to speak to Coach Maya'}
+            >
+              {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+            </button>
+
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Speak or type in your language or English..."
-              className="flex-1 px-4 py-2.5 text-sm bg-transparent focus:outline-none text-slate-900 placeholder:text-slate-400 font-medium"
+              placeholder={isListening ? 'Listening to your voice...' : 'Speak or type in your language or English...'}
+              className="flex-1 px-3 py-2.5 text-sm bg-transparent focus:outline-none text-slate-900 placeholder:text-slate-400 font-medium"
             />
+
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="p-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-all disabled:opacity-50 shadow-sm"
+              className="p-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-all disabled:opacity-50 shadow-sm cursor-pointer"
               title="Send message"
             >
               <Send className="w-4 h-4" />

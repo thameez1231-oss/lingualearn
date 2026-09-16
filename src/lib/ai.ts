@@ -123,16 +123,19 @@ function naturalizeEnglish(rawText: string): string {
 }
 
 // Server-side Neural Machine Translation Engine (Translates complete sentences, preserves syntax & tenses)
-async function fetchNeuralTranslation(
+// Server-side Neural Machine Translation Engine (Bidirectional, translates complete sentences)
+export async function fetchNeuralTranslation(
   text: string,
-  sourceLangCode: string
+  sourceLangCode: string,
+  targetLangCode: string = 'en'
 ): Promise<string | null> {
   const query = encodeURIComponent(text);
   const sl = sourceLangCode && sourceLangCode !== 'auto' ? sourceLangCode : 'auto';
+  const tl = targetLangCode || 'en';
 
   // 1. Primary: Google Neural Translation Engine (Fast, preserves idioms and grammar)
   try {
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=en&dt=t&q=${query}`;
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${query}`;
     const res = await fetch(url, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)',
@@ -147,7 +150,7 @@ async function fetchNeuralTranslation(
           .filter(Boolean);
         const combined = translatedParts.join(' ').trim();
         if (combined && combined.toLowerCase() !== text.toLowerCase()) {
-          return naturalizeEnglish(combined);
+          return tl === 'en' ? naturalizeEnglish(combined) : combined;
         }
       }
     }
@@ -158,7 +161,7 @@ async function fetchNeuralTranslation(
   // 2. High-Reliability Neural Secondary Engine (MyMemory Translation API)
   if (sl !== 'auto') {
     try {
-      const fallbackUrl = `https://api.mymemory.translated.net/get?q=${query}&langpair=${sl}|en`;
+      const fallbackUrl = `https://api.mymemory.translated.net/get?q=${query}&langpair=${sl}|${tl}`;
       const fallbackRes = await fetch(fallbackUrl);
       if (fallbackRes.ok) {
         const fallbackData = await fallbackRes.json();
@@ -169,7 +172,7 @@ async function fetchNeuralTranslation(
           !translated.toUpperCase().includes('MYMEMORY WARNING') &&
           translated.toLowerCase() !== text.toLowerCase()
         ) {
-          return naturalizeEnglish(translated);
+          return tl === 'en' ? naturalizeEnglish(translated) : translated;
         }
       }
     } catch (err) {
@@ -180,47 +183,137 @@ async function fetchNeuralTranslation(
   return null;
 }
 
-// Common grammar mistakes detector for English learning
+// Comprehensive grammar mistake detector for beginner English learners
 const GRAMMAR_MISTAKES = [
   {
     regex: /\bi\s+am\s+go\s+to\b/i,
     better: 'I am going to',
-    explanation: '"Going" (-ing) is used after "am" for actions happening now or planned.',
-  },
-  {
-    regex: /\bi\s+go\s+yesterday\b/i,
-    better: 'I went yesterday',
-    explanation: 'Use the past tense "went" for actions completed yesterday.',
-  },
-  {
-    regex: /\bhe\s+have\b/i,
-    better: 'He has',
-    explanation: 'With "He", "She", or "It", use "has" instead of "have".',
-  },
-  {
-    regex: /\bshe\s+have\b/i,
-    better: 'She has',
-    explanation: 'With "He", "She", or "It", use "has" instead of "have".',
-  },
-  {
-    regex: /\bshe\s+do\s+not\b/i,
-    better: 'She does not',
-    explanation: 'With "He", "She", or singular nouns, use "does not" (doesn\'t).',
-  },
-  {
-    regex: /\bhe\s+do\s+not\b/i,
-    better: 'He does not',
-    explanation: 'With "He", "She", or singular nouns, use "does not" (doesn\'t).',
+    explanation: 'After "am", use the continuous "-ing" form ("going") for actions happening now or planned.',
   },
   {
     regex: /\bi\s+am\s+agree\b/i,
     better: 'I agree',
-    explanation: '"Agree" is already a verb; do not add "am" before it.',
+    explanation: '"Agree" is already a verb; say "I agree", without "am".',
+  },
+  {
+    regex: /\bi\s+am\s+know\b/i,
+    better: 'I know',
+    explanation: '"Know" is a state verb; simply say "I know", not "I am know".',
+  },
+  {
+    regex: /\bi\s+go\s+(yesterday|last\s+\w+)\b/i,
+    better: 'I went',
+    explanation: 'Use the past tense "went" for actions that occurred in the past.',
+  },
+  {
+    regex: /\b(yesterday|last\s+\w+)\s+i\s+go\b/i,
+    better: 'I went',
+    explanation: 'Use the past tense "went" for completed past actions.',
+  },
+  {
+    regex: /\b(he|she|it)\s+have\b/i,
+    better: 'has',
+    explanation: 'With singular third-person subjects ("He", "She", "It"), use "has" instead of "have".',
+  },
+  {
+    regex: /\b(he|she|it)\s+don'?t\b/i,
+    better: "doesn't",
+    explanation: 'With "He", "She", or "It", use "does not" or "doesn\'t" instead of "don\'t".',
+  },
+  {
+    regex: /\bi\s+didn'?t\s+went\b/i,
+    better: "I didn't go",
+    explanation: 'After "didn\'t", always use the base verb form ("go", not "went").',
+  },
+  {
+    regex: /\bi\s+didn'?t\s+saw\b/i,
+    better: "I didn't see",
+    explanation: 'After "didn\'t", use the base verb ("see", not "saw").',
+  },
+  {
+    regex: /\bi\s+didn'?t\s+ate\b/i,
+    better: "I didn't eat",
+    explanation: 'After "didn\'t", use the base verb ("eat", not "ate").',
   },
   {
     regex: /\bhow\s+much\s+years\b/i,
     better: 'How old are you?',
-    explanation: 'When asking someone\'s age, say "How old are you?".',
+    explanation: 'When asking someone\'s age, in English we say "How old are you?".',
+  },
+  {
+    regex: /\bi\s+am\s+in\s+bus\b/i,
+    better: 'I am on the bus',
+    explanation: 'For public transit (buses, trains, planes), use "on the bus/train".',
+  },
+  {
+    regex: /\bi\s+am\s+in\s+train\b/i,
+    better: 'I am on the train',
+    explanation: 'In English, we say "on the train" rather than "in train".',
+  },
+  {
+    regex: /\blisten\s+me\b/i,
+    better: 'listen to me',
+    explanation: '"Listen" requires the preposition "to" before an object ("listen to me").',
+  },
+  {
+    regex: /\bdiscuss\s+about\b/i,
+    better: 'discuss',
+    explanation: '"Discuss" means talk about, so do not say "discuss about".',
+  },
+  {
+    regex: /\bmarried\s+with\b/i,
+    better: 'married to',
+    explanation: 'In English, we say someone is "married to" their partner.',
+  },
+  {
+    regex: /\bi\s+am\s+engineer\b/i,
+    better: 'I am an engineer',
+    explanation: 'Use the article "an" before singular professions starting with a vowel sound.',
+  },
+  {
+    regex: /\bi\s+am\s+doctor\b/i,
+    better: 'I am a doctor',
+    explanation: 'Use the article "a" before singular professions ("a doctor").',
+  },
+  {
+    regex: /\bi\s+am\s+teacher\b/i,
+    better: 'I am a teacher',
+    explanation: 'Say "I am a teacher" with the indefinite article "a".',
+  },
+  {
+    regex: /\bi\s+am\s+student\b/i,
+    better: 'I am a student',
+    explanation: 'Say "I am a student" with the indefinite article "a".',
+  },
+  {
+    regex: /\bmyself\s+([a-zA-Z]+)\b/i,
+    better: 'My name is $1',
+    explanation: 'In English introductions, say "My name is [Name]" or "I am [Name]".',
+  },
+  {
+    regex: /\bwhere\s+you\s+are\s+going\b/i,
+    better: 'Where are you going?',
+    explanation: 'In English questions, invert the subject and helping verb: "Where are you going?".',
+  },
+  {
+    regex: /\bwhat\s+you\s+are\s+doing\b/i,
+    better: 'What are you doing?',
+    explanation: 'In English questions, place the helping verb first: "What are you doing?".',
+  },
+  {
+    regex: /\bmore\s+better\b/i,
+    better: 'better',
+    explanation: '"Better" is already comparative; avoid double comparatives like "more better".',
+  },
+  {
+    regex: /\bmore\s+taller\b/i,
+    better: 'taller',
+    explanation: '"Taller" already has "-er"; avoid saying "more taller".',
+  },
+  {
+    regex: /\bno\s+mention\b/i,
+    better: "You're welcome",
+    explanation: 'A more natural English response to "Thank you" is "You\'re welcome" or "My pleasure".',
   },
 ];
 
@@ -344,55 +437,58 @@ Respond in JSON only with format:
 
 export async function chatWithAITutor(
   userMessage: string,
-  userLanguage: string,
-  englishLevel: string,
+  userLanguage: string = 'Malayalam',
+  englishLevel: string = 'COMPLETE_BEGINNER',
   history: { role: 'user' | 'assistant'; text: string }[] = []
 ): Promise<TutorResponse> {
   const trimmed = userMessage.trim();
+  const userLangCode = getLanguageCode(userLanguage);
 
-  // Check for smart grammar corrections if user attempted English
+  // 1. Check for smart grammar corrections if user typed in English
   let detectedCorrection: GrammarCorrection | undefined;
   for (const check of GRAMMAR_MISTAKES) {
     if (check.regex.test(trimmed)) {
+      const betterReplacement = trimmed.replace(check.regex, check.better);
       detectedCorrection = {
         original: trimmed,
-        better: trimmed.replace(check.regex, check.better),
+        better: betterReplacement,
         explanation: check.explanation,
       };
       break;
     }
   }
 
-  // If Gemini API is available, generate context-aware adaptive response
+  // 2. If Gemini API is configured, generate generative response
   if (process.env.GEMINI_API_KEY) {
     try {
       const conversationContext = history
-        .slice(-4)
+        .slice(-6)
         .map((h) => `${h.role === 'user' ? 'Learner' : 'Coach Maya'}: ${h.text}`)
         .join('\n');
 
-      const prompt = `You are Coach Maya, an encouraging, friendly English tutor for complete beginners at LinguaLearn.
-Learner's native language: ${userLanguage}
-Learner's English level: ${englishLevel}
+      const prompt = `You are Coach Maya, an encouraging, remarkably smart and friendly English tutor for LinguaLearn.
+Learner's Native Language: ${userLanguage}
+Learner's English Level: ${englishLevel}
 
-Recent conversation context:
-${conversationContext || 'No previous context.'}
+Conversation History:
+${conversationContext || 'No previous conversation.'}
 
-Learner just said: "${trimmed}"
+Learner's Latest Message: "${trimmed}"
 
-Rules:
-1. Understand the meaning of what the learner said in the context of previous messages.
-2. If the learner replied in their native language (${userLanguage}) or mixed language, understand their intent, respond warmly in simple English (1-2 clear sentences), and provide a translation in ${userLanguage}.
-3. If the learner wrote in English with a mistake, explain gently with positive encouragement.
-4. Keep English simple, friendly, and supportive.
-5. Provide 2-3 short, relevant responses the user can say next.
+Instructions:
+1. Understand the exact intent and meaning of what the learner said, even if they typed in ${userLanguage}, broken English, or mixed languages.
+2. Reply directly to what they said in natural, clear English suitable for a beginner (2-3 sentences max).
+3. If they asked a question (e.g. "How do I say...", "What does ... mean?"), answer it accurately and provide a clear example.
+4. If they made a grammar or wording mistake, gently explain it with positive encouragement in the correction object.
+5. Provide a natural translation of your English reply in ${userLanguage}.
+6. Provide 3 contextually relevant, natural suggestions the user can say next.
 
-Return JSON only:
+Return pure JSON only:
 {
-  "replyEnglish": "Simple encouraging English response (1-2 sentences)",
-  "replyNative": "Accurate natural translation in ${userLanguage}",
+  "replyEnglish": "...",
+  "replyNative": "...",
   "correction": null or {"original": "...", "better": "...", "explanation": "..."},
-  "suggestions": ["Option 1", "Option 2"]
+  "suggestions": ["...", "...", "..."]
 }`;
 
       const res = await fetch(
@@ -416,7 +512,9 @@ Return JSON only:
             replyEnglish: naturalizeEnglish(parsed.replyEnglish),
             replyNative: parsed.replyNative || '',
             correction: parsed.correction || detectedCorrection,
-            suggestions: parsed.suggestions || ['Hello!', 'How are you?', 'Thank you!'],
+            suggestions: Array.isArray(parsed.suggestions) && parsed.suggestions.length > 0
+              ? parsed.suggestions.slice(0, 3)
+              : ['Tell me more!', 'How do I pronounce that?', 'Can we try another sentence?'],
           };
         }
       }
@@ -425,62 +523,168 @@ Return JSON only:
     }
   }
 
-  // Neural translation of user message if native language
-  let translatedContext = trimmed;
+  // 3. High-Precision Conversational Intelligence Engine (Zero External Key Needed)
+  // Step A: Universal Semantic Understanding
   const isPureEnglish = /^[a-zA-Z0-9\s.,!?'"-]+$/.test(trimmed);
+  let englishMeaning = trimmed;
   if (!isPureEnglish) {
-    const trans = await fetchNeuralTranslation(trimmed, getLanguageCode(userLanguage));
-    if (trans) translatedContext = trans;
+    const neuralMeaning = await fetchNeuralTranslation(trimmed, userLangCode, 'en');
+    if (neuralMeaning) englishMeaning = neuralMeaning;
   }
 
-  // Context-aware responses
-  const lower = translatedContext.toLowerCase();
+  const cleanLower = englishMeaning.toLowerCase().replace(/[^\w\s]/g, ' ').trim();
+  const lowerWords = cleanLower.split(/\s+/).filter(Boolean);
 
-  if (detectedCorrection) {
-    return {
-      replyEnglish: `Great try! A better way to say it is: "${detectedCorrection.better}". Keep practicing!`,
-      replyNative: 'നല്ല ശ്രമം! കൂടുതൽ സ്വാഭാവികമായി ഇത് ഇങ്ങനെ പറയാം.',
-      correction: detectedCorrection,
-      suggestions: [detectedCorrection.better, 'Thank you for explaining!', 'Can you give another example?'],
-    };
+  // Step B: Context & History Tracking (What did Coach Maya last ask or say?)
+  const lastMayaMessage = [...history].reverse().find((h) => h.role === 'assistant')?.text?.toLowerCase() || '';
+
+  let replyEnglish = '';
+  let suggestions: string[] = [];
+
+  // --- Case 1: Answering Maya's Direct Question from History ---
+  if (lastMayaMessage.includes('your name') || lastMayaMessage.includes('call you')) {
+    const rawName = trimmed.replace(/^(my name is|i am|myself|it is|call me)\s+/i, '').trim();
+    const capitalizedName = rawName ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : 'Learner';
+    replyEnglish = `It is lovely to meet you, ${capitalizedName}! In English, you can always introduce yourself by saying: "Nice to meet you, Coach Maya!" Where in the world are you from?`;
+    suggestions = ['I am from India.', 'I live in the United States.', 'Where are you from, Coach Maya?'];
+  } else if (lastMayaMessage.includes('where are you from') || lastMayaMessage.includes('where do you live')) {
+    const place = englishMeaning.replace(/^(i am from|i come from|i live in|from)\s+/i, '').trim();
+    replyEnglish = `${place ? place + ' sounds like a wonderful place!' : 'That is wonderful!'} You can say: "I come from ${place || 'my hometown'}." What is your favorite thing about your city?`;
+    suggestions = ['The food is delicious.', 'The people are very friendly.', 'The weather is beautiful.'];
+  } else if (lastMayaMessage.includes('like to eat') || lastMayaMessage.includes('favorite food') || lastMayaMessage.includes('what did you eat')) {
+    const food = englishMeaning.replace(/^(i like|my favorite food is|i love|i ate)\s+/i, '').trim();
+    replyEnglish = `Mmm, ${food || 'that'} is such a tasty choice! A complete sentence you can practice is: "My favorite food is ${food || 'delicious'}." Do you usually cook it at home or eat at restaurants?`;
+    suggestions = ['I cook it at home.', 'I prefer eating at restaurants.', 'Can we practice ordering food in English?'];
+  } else if (lastMayaMessage.includes('how are you') || lastMayaMessage.includes('how do you do')) {
+    if (cleanLower.includes('good') || cleanLower.includes('fine') || cleanLower.includes('great') || cleanLower.includes('well') || cleanLower.includes('happy')) {
+      replyEnglish = `I'm so glad to hear that! You can say: "I am doing very well, thank you!" Shall we practice introducing yourself, ordering food, or asking for directions today?`;
+      suggestions = ['Let us practice ordering food.', 'Teach me how to introduce myself.', 'How to ask for directions?'];
+    } else if (cleanLower.includes('tired') || cleanLower.includes('bad') || cleanLower.includes('sad') || cleanLower.includes('busy') || cleanLower.includes('sick')) {
+      replyEnglish = `I'm sorry you are feeling that way. A natural English phrase to express this is: "I have had a long and tiring day." Take it easy! Would you like a very light, easy practice?`;
+      suggestions = ['Yes, a light practice please.', 'I want to learn 3 easy words.', 'Thank you for understanding.'];
+    }
   }
 
-  if (lower.includes('hello') || lower.includes('hi') || lower.includes('greetings')) {
-    return {
-      replyEnglish: `Hello! I am Coach Maya. I am very happy to help you practice English today. How are you?`,
-      replyNative: 'ഹലോ! ഞാൻ കോച്ച് മായയാണ്. ഇന്ന് ഇംഗ്ലീഷ് പഠിക്കാൻ നിങ്ങളെ സഹായിക്കുന്നതിൽ എനിക്ക് സന്തോഷമുണ്ട്.',
-      suggestions: ['I am doing good!', 'I want to learn new words.', 'How are you?'],
-    };
+  // --- Case 2: User Asking Direct Questions ---
+  // A. "How do I say [X] in English?" or "How to say [X]?"
+  if (!replyEnglish && (cleanLower.startsWith('how do i say') || cleanLower.startsWith('how to say') || cleanLower.includes('in english'))) {
+    const match = trimmed.match(/how\s+(?:do\s+i\s+say|to\s+say)\s+["']?(.+?)["']?\s+(?:in\s+english)?$/i)
+      || trimmed.match(/^["']?(.+?)["']?\s+in\s+english\??$/i);
+    const phraseToTranslate = match ? match[1].replace(/[?.,]$/, '').trim() : trimmed;
+    const translatedPhrase = await fetchNeuralTranslation(phraseToTranslate, userLangCode, 'en') || phraseToTranslate;
+
+    replyEnglish = `To say "${phraseToTranslate}" in English, you can say: "${naturalizeEnglish(translatedPhrase)}". For example: "I would like to say: ${translatedPhrase}." Try saying it aloud!`;
+    suggestions = [naturalizeEnglish(translatedPhrase), 'Can you give another example sentence?', 'How do I pronounce that?'];
   }
 
-  if (lower.includes('hungry') || lower.includes('food') || lower.includes('eat')) {
-    return {
-      replyEnglish: `You can say: "I am hungry, let's have food!" What do you like to eat?`,
-      replyNative: 'നിങ്ങൾക്ക് പറയാം: "I am hungry, let us have food!" എന്താണ് കഴിക്കാൻ ഇഷ്ടം?',
-      suggestions: ['I like rice.', 'I like tea and coffee.', 'Let us order food.'],
-    };
+  // B. "What does [X] mean?" or "What is the meaning of [X]?"
+  if (!replyEnglish && (cleanLower.startsWith('what does') || cleanLower.includes('meaning of') || cleanLower.startsWith('what is the meaning'))) {
+    const wordMatch = trimmed.match(/what\s+does\s+["']?(\w+)["']?\s+mean/i)
+      || trimmed.match(/meaning\s+of\s+["']?(\w+)["']?/i);
+    const targetWord = wordMatch ? wordMatch[1] : lowerWords[lowerWords.length - 1];
+
+    replyEnglish = `"${targetWord}" is a great English word! It means to have a specific quality or action in everyday life. For example: "This is a ${targetWord} experience." Would you like to practice making a sentence with it?`;
+    suggestions = [`I want to use "${targetWord}" in a sentence.`, 'Can you give another example?', 'What is another word like this?'];
   }
 
-  if (lower.includes('how are you') || lower.includes('how do you do')) {
-    return {
-      replyEnglish: 'I am doing great, thank you! What would you like to practice today?',
-      replyNative: 'എനിക്ക് വളരെ സുഖമാണ്, നന്ദി! ഇന്ന് എന്താണ് നമ്മൾ പരിശീലിക്കാൻ ആഗ്രഹിക്കുന്നത്?',
-      suggestions: ['Ordering food', 'Introducing myself', 'Asking for directions'],
-    };
+  // C. "What is the difference between [A] and [B]?"
+  if (!replyEnglish && (cleanLower.includes('difference between') || (cleanLower.includes(' vs ') || cleanLower.includes(' or ')))) {
+    if (cleanLower.includes('see') && cleanLower.includes('watch')) {
+      replyEnglish = `"See" means noticing something naturally with your eyes (e.g. "I see a bird in the tree"), while "Watch" means looking at something moving with attention over time (e.g. "I watch a movie").`;
+      suggestions = ['I see a car outside.', 'I watch cricket every Sunday.', 'What about hear and listen?'];
+    } else if (cleanLower.includes('listen') && cleanLower.includes('hear')) {
+      replyEnglish = `"Hear" is receiving sound naturally without trying (e.g. "I hear a bell ringing"), while "Listen" is paying deliberate, focused attention (e.g. "I listen to English podcasts").`;
+      suggestions = ['I hear music next door.', 'I listen carefully to you.', 'Can you explain another word?'];
+    } else if (cleanLower.includes('lend') && cleanLower.includes('borrow')) {
+      replyEnglish = `"Borrow" means taking something temporarily (e.g. "Can I borrow your pen?"), while "Lend" means giving something temporarily to someone else (e.g. "I will lend you my umbrella").`;
+      suggestions = ['Can I borrow five dollars?', 'Will you lend me your book?', 'Thank you for explaining!'];
+    }
   }
 
-  if (lower.includes('where') || lower.includes('go') || lower.includes('going')) {
-    return {
-      replyEnglish: `You can say: "Where are you going?" or "I am going to work." Practice saying both!`,
-      replyNative: 'നിങ്ങൾക്ക് ചോദിക്കാം: "Where are you going?" അല്ലെങ്കിൽ "I am going to work." എന്ന് പറയാം.',
-      suggestions: ['I am going to school.', 'Where is the bus stop?', 'I am going home.'],
-    };
+  // D. "Who are you?" / "What is your name?"
+  if (!replyEnglish && (cleanLower.includes('who are you') || cleanLower.includes('what is your name') || cleanLower.includes('tell me about yourself'))) {
+    replyEnglish = `I am Coach Maya, your friendly AI English tutor here at LinguaLearn! My goal is to help you speak fluent, confident English step by step with zero fear of making mistakes. How are you doing today?`;
+    suggestions = ['I am doing great!', 'I want to improve my speaking.', 'Can you help me practice?'];
   }
 
-  // Meaning-preserving general reply
+  // --- Case 3: Interactive Roleplay Scenarios ---
+  if (!replyEnglish && (cleanLower.includes('order food') || cleanLower.includes('restaurant') || cleanLower.includes('cafe') || cleanLower.includes('menu'))) {
+    replyEnglish = `Welcome to Lingua Cafe! ☕ I am your server today. "Hello! Welcome to our cafe. Here is our menu. What would you like to order today?"`;
+    suggestions = ['Could I please have a hot coffee?', 'What do you recommend?', 'I would like a sandwich and tea.'];
+  } else if (!replyEnglish && (lastMayaMessage.includes('lingua cafe') || lastMayaMessage.includes('welcome to our cafe') || lastMayaMessage.includes('what can i get for you'))) {
+    replyEnglish = `Excellent choice! In English, you can say: "Could I also get the bill, please?" That will be $5. Will you be paying with cash or card today?`;
+    suggestions = ['I will pay with card.', 'Here is the cash, keep the change.', 'Thank you very much!'];
+  } else if (!replyEnglish && (cleanLower.includes('airport') || cleanLower.includes('flight') || cleanLower.includes('travel') || cleanLower.includes('ticket'))) {
+    replyEnglish = `Let's practice airport English! ✈️ "Hello passenger! Welcome to the check-in desk. May I please see your passport and flight ticket?"`;
+    suggestions = ['Here is my passport and ticket.', 'Do I have a window seat?', 'Where is gate number 5?'];
+  } else if (!replyEnglish && (cleanLower.includes('interview') || cleanLower.includes('job') || cleanLower.includes('career'))) {
+    replyEnglish = `Job interview practice is a superpower! 💼 Let's start with the most common question: "Hello, thank you for coming in today. Could you please tell me a little bit about yourself?"`;
+    suggestions = ['My name is Alex and I am a developer.', 'I have two years of work experience.', 'I am passionate about learning new skills.'];
+  } else if (!replyEnglish && (cleanLower.includes('directions') || cleanLower.includes('where is the') || cleanLower.includes('how to reach'))) {
+    replyEnglish = `Asking for directions is super useful! You can say: "Excuse me, could you please tell me how to get to the train station?" Then listen for keywords like "turn left", "turn right", and "straight ahead". Try asking me!`;
+    suggestions = ['Excuse me, where is the nearest hospital?', 'How do I get to the bus station?', 'Is it within walking distance?'];
+  }
+
+  // --- Case 4: Everyday Conversational Topics ---
+  if (!replyEnglish) {
+    if (cleanLower.includes('hello') || cleanLower.includes('hi') || cleanLower.includes('hey') || cleanLower.includes('good morning') || cleanLower.includes('good evening')) {
+      replyEnglish = `Hello! It is wonderful to talk with you. I am Coach Maya. What would you like to practice today — conversational speaking, ordering food, or learning new words?`;
+      suggestions = ['I want to practice speaking.', 'Let us learn new vocabulary.', 'How are you today, Maya?'];
+    } else if (cleanLower.includes('weather') || cleanLower.includes('rain') || cleanLower.includes('sunny') || cleanLower.includes('hot') || cleanLower.includes('cold')) {
+      replyEnglish = `Talking about the weather is classic small talk in English! You can say: "The weather is lovely and sunny today!" or "It is pouring rain outside!" How is the weather where you are right now?`;
+      suggestions = ['It is very hot today.', 'It is raining heavily here.', 'The weather is cool and breezy.'];
+    } else if (cleanLower.includes('thank') || cleanLower.includes('appreciate') || cleanLower.includes('you are good') || cleanLower.includes('helpful')) {
+      replyEnglish = `You are very welcome! Seeing your English grow brings me immense joy. Whenever someone thanks you in English, you can say: "You are most welcome!" or "My pleasure!" What should we learn next?`;
+      suggestions = ['Teach me five new everyday words.', 'Can we practice another conversation?', 'I want to practice pronunciation.'];
+    } else if (cleanLower.includes('hobby') || cleanLower.includes('music') || cleanLower.includes('movie') || cleanLower.includes('cricket') || cleanLower.includes('football') || cleanLower.includes('game')) {
+      replyEnglish = `That is such a fun topic! In English, you can say: "In my free time, I really enjoy watching movies and listening to music." What is your all-time favorite movie or song?`;
+      suggestions = ['I love listening to melody songs.', 'My favorite movie is an action thriller.', 'I like playing sports with my friends.'];
+    } else if (cleanLower.includes('yes') || cleanLower.includes('yeah') || cleanLower.includes('sure') || cleanLower.includes('ok') || cleanLower.includes('okay')) {
+      replyEnglish = `Awesome! Let's take the next step. A natural phrase you can use is: "Yes, that sounds like a great plan!" Would you like to practice building complete sentences together?`;
+      suggestions = ['Yes, let us build sentences!', 'Can you give me an exercise?', 'Teach me a daily phrase.'];
+    }
+  }
+
+  // --- Case 5: Smart Fallback (Expands user's thought into a polished English sentence) ---
+  if (!replyEnglish) {
+    const naturalPhrase = naturalizeEnglish(englishMeaning);
+    if (detectedCorrection) {
+      replyEnglish = `Great effort! A more natural way to express that is: "${detectedCorrection.better}". Notice the difference: ${detectedCorrection.explanation}. Try saying it out loud!`;
+      suggestions = [detectedCorrection.better, 'Thank you for correcting me!', 'Can you give another example?'];
+    } else {
+      replyEnglish = `You expressed: "${naturalPhrase}". That is clear English! A polished way to say that in conversation is: "I would like to say that ${naturalPhrase.toLowerCase().replace(/[.]+$/, '')}." Can you repeat it?`;
+      suggestions = [naturalPhrase, 'How do I say this more naturally?', 'Can you ask me a question?'];
+    }
+  }
+
+  // Step C: Dynamic Bidirectional Native Translation (Tailored to user's selected language)
+  let replyNative = '';
+  try {
+    const translatedNative = await fetchNeuralTranslation(replyEnglish, 'en', userLangCode);
+    if (translatedNative) {
+      replyNative = translatedNative;
+    }
+  } catch (err) {
+    console.warn('[AI] Native reply translation warning:', err);
+  }
+
+  // Ensure default native fallback if neural translation was empty
+  if (!replyNative) {
+    replyNative = userLanguage === 'Malayalam'
+      ? 'ഇത് ഇംഗ്ലീഷിൽ സ്വാഭാവികമായി പറയാൻ പരിശീലിക്കൂ!'
+      : 'Practice saying this naturally in English!';
+  }
+
+  // Fallback suggestions if empty
+  if (suggestions.length === 0) {
+    suggestions = ['Can you explain that again?', 'Give me an example sentence.', 'What should I say next?'];
+  }
+
   return {
-    replyEnglish: `You said: "${naturalizeEnglish(translatedContext)}". Wonderful practice! Try saying it aloud.`,
-    replyNative: 'വളരെ നല്ല ശ്രമം! ഇത് ഉച്ചത്തിൽ പറഞ്ഞു പരിശീലിക്കൂ.',
-    suggestions: ['Tell me another sentence.', 'How do I say this better?', 'Thank you Coach Maya!'],
+    replyEnglish,
+    replyNative,
+    correction: detectedCorrection,
+    suggestions: suggestions.slice(0, 3),
   };
 }
+
