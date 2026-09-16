@@ -490,7 +490,12 @@ export async function translateNativeToEnglish(
   // 3. High-Quality AI LLM Translation (Tier 1: Google Gemini API)
   const geminiKey = process.env.GEMINI_API_KEY?.trim();
   if (geminiKey) {
-    const candidateModels = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+    const candidateModels = [
+      'gemini-3.5-flash-lite',
+      'gemini-3.6-flash',
+      'gemini-3.5-flash',
+      'gemini-flash-latest',
+    ];
     for (const model of candidateModels) {
       try {
         const strictInstruction = `You are a highly accurate multilingual translation engine.
@@ -613,7 +618,12 @@ export async function chatWithAITutor(
   // 2. If Gemini API is configured, generate generative response
   const geminiKey = process.env.GEMINI_API_KEY?.trim();
   if (geminiKey) {
-    const candidateModels = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+    const candidateModels = [
+      'gemini-3.5-flash-lite',
+      'gemini-3.6-flash',
+      'gemini-3.5-flash',
+      'gemini-flash-latest',
+    ];
     for (const model of candidateModels) {
       try {
         const conversationContext = history
