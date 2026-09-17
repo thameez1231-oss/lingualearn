@@ -13,215 +13,355 @@ export interface DictionaryEntry {
 
 export const DICTIONARY_DATA: DictionaryEntry[] = [
   {
-    id: 'd-apple',
-    word: 'Apple',
-    partOfSpeech: 'noun',
-    phonetic: 'AP-pul',
-    emoji: '🍎',
-    simpleDefinition: 'A round fruit with red, green, or yellow skin and a white inside.',
-    exampleSentence: 'She eats a sweet red apple every morning.',
-    exampleTranslation: 'അവൾ എല്ലാ ദിവസവും രാവിലെ ഒരു മധുരമുള്ള ചുവന്ന ആപ്പിൾ കഴിക്കുന്നു.',
-    translations: {
-      Malayalam: 'ആപ്പിൾ',
-      Hindi: 'सेब',
-      Tamil: 'ஆப்பிள்',
-      Telugu: 'ఆపిల్',
-      Spanish: 'Manzana',
-      French: 'Pomme',
-      German: 'Apfel',
-      Arabic: 'تفاحة',
+    "id": "word-0",
+    "word": "Hello",
+    "partOfSpeech": "noun",
+    "phonetic": "heh-LOH",
+    "emoji": "??",
+    "simpleDefinition": "A common greeting.",
+    "exampleSentence": "I understand the meaning of Hello.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
     },
-    category: 'food',
+    "category": "basics"
   },
   {
-    id: 'd-beautiful',
-    word: 'Beautiful',
-    partOfSpeech: 'adjective',
-    phonetic: 'BYOO-tih-ful',
-    emoji: '🌸',
-    simpleDefinition: 'Pleasing the senses or mind aesthetically; very pretty.',
-    exampleSentence: 'She has a beautiful dress.',
-    exampleTranslation: 'അവൾക്ക് മനോഹരമായ ഒരു വസ്ത്രമുണ്ട്.',
-    translations: {
-      Malayalam: 'മനോഹരമായ / സുന്ദരമായ',
-      Hindi: 'सुंदर / खूबसूरत',
-      Tamil: 'அழகான',
-      Telugu: 'అందమైన',
-      Spanish: 'Hermoso / Hermosa',
-      French: 'Beau / Belle',
-      German: 'Schön',
-      Arabic: 'جميل',
+    "id": "word-1",
+    "word": "Please",
+    "partOfSpeech": "noun",
+    "phonetic": "PLEEZ",
+    "emoji": "??",
+    "simpleDefinition": "Used to ask politely.",
+    "exampleSentence": "I understand the meaning of Please.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
     },
-    category: 'emotions',
+    "category": "basics"
   },
   {
-    id: 'd-water',
-    word: 'Water',
-    partOfSpeech: 'noun',
-    phonetic: 'WAH-ter',
-    emoji: '💧',
-    simpleDefinition: 'A clear liquid that has no color or taste when pure; essential for life.',
-    exampleSentence: 'Please drink plenty of water.',
-    exampleTranslation: 'ദയവായി ധാരാളം വെള്ളം കുടിക്കുക.',
-    translations: {
-      Malayalam: 'വെള്ളം',
-      Hindi: 'पानी / जल',
-      Tamil: 'தண்ணீர்',
-      Telugu: 'మంచి నీరు',
-      Spanish: 'Agua',
-      French: 'Eau',
-      German: 'Wasser',
-      Arabic: 'ماء',
+    "id": "word-2",
+    "word": "Thank you",
+    "partOfSpeech": "noun",
+    "phonetic": "THANGK yoo",
+    "emoji": "??",
+    "simpleDefinition": "Expression of gratitude.",
+    "exampleSentence": "I understand the meaning of Thank you.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
     },
-    category: 'food',
+    "category": "basics"
   },
   {
-    id: 'd-friend',
-    word: 'Friend',
-    partOfSpeech: 'noun',
-    phonetic: 'frend',
-    emoji: '🤝',
-    simpleDefinition: 'A person whom one knows and with whom one has a bond of mutual affection.',
-    exampleSentence: 'He is my best friend from school.',
-    exampleTranslation: 'അവൻ സ്കൂൾ മുതലുള്ള എന്റെ ഉറ്റ സുഹൃത്താണ്.',
-    translations: {
-      Malayalam: 'സുഹൃത്ത് / കൂട്ടുകാരൻ',
-      Hindi: 'दोस्त / मित्र',
-      Tamil: 'நண்பன்',
-      Telugu: 'స్నేహితుడు',
-      Spanish: 'Amigo',
-      French: 'Ami',
-      German: 'Freund',
-      Arabic: 'صديق',
+    "id": "word-3",
+    "word": "Water",
+    "partOfSpeech": "noun",
+    "phonetic": "WAH-ter",
+    "emoji": "??",
+    "simpleDefinition": "Clear liquid for drinking.",
+    "exampleSentence": "I understand the meaning of Water.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
     },
-    category: 'family',
+    "category": "food"
   },
   {
-    id: 'd-book',
-    word: 'Book',
-    partOfSpeech: 'noun',
-    phonetic: 'buuk',
-    emoji: '📖',
-    simpleDefinition: 'A set of printed or written pages bound together.',
-    exampleSentence: 'I love to read English books.',
-    exampleTranslation: 'എനിക്ക് ഇംഗ്ലീഷ് പുസ്തകങ്ങൾ വായിക്കാൻ ഇഷ്ടമാണ്.',
-    translations: {
-      Malayalam: 'പുസ്തകം',
-      Hindi: 'किताब / पुस्तक',
-      Tamil: 'புத்தகம்',
-      Telugu: 'పుస్తకం',
-      Spanish: 'Libro',
-      French: 'Livre',
-      German: 'Buch',
-      Arabic: 'كتاب',
+    "id": "word-4",
+    "word": "Food",
+    "partOfSpeech": "noun",
+    "phonetic": "FOOD",
+    "emoji": "??",
+    "simpleDefinition": "Things people eat.",
+    "exampleSentence": "I understand the meaning of Food.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
     },
-    category: 'everyday',
+    "category": "food"
   },
   {
-    id: 'd-happy',
-    word: 'Happy',
-    partOfSpeech: 'adjective',
-    phonetic: 'HAP-ee',
-    emoji: '😊',
-    simpleDefinition: 'Feeling or showing pleasure or contentment.',
-    exampleSentence: 'We are very happy today.',
-    exampleTranslation: 'ഞങ്ങൾ ഇന്ന് വളരെ സന്തോഷവതികളാണ്.',
-    translations: {
-      Malayalam: 'സന്തോഷമുള്ള',
-      Hindi: 'खुश / प्रसन्न',
-      Tamil: 'மகிழ்ச்சியான',
-      Telugu: 'సంతోషంగా',
-      Spanish: 'Feliz',
-      French: 'Heureux',
-      German: 'Glücklich',
-      Arabic: 'سعيد',
+    "id": "word-5",
+    "word": "Friend",
+    "partOfSpeech": "noun",
+    "phonetic": "FREND",
+    "emoji": "??",
+    "simpleDefinition": "A person you like and know well.",
+    "exampleSentence": "I understand the meaning of Friend.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
     },
-    category: 'emotions',
+    "category": "family"
   },
   {
-    id: 'd-house',
-    word: 'House',
-    partOfSpeech: 'noun',
-    phonetic: 'hows',
-    emoji: '🏠',
-    simpleDefinition: 'A building for human habitation, especially one that consists of a ground floor and one or more upper storeys.',
-    exampleSentence: 'This house has three big rooms.',
-    exampleTranslation: 'ഈ വീട്ടിൽ മൂന്ന് വലിയ മുറികളുണ്ട്.',
-    translations: {
-      Malayalam: 'വീട്',
-      Hindi: 'घर / मकान',
-      Tamil: 'வீடு',
-      Telugu: 'ఇల్లు',
-      Spanish: 'Casa',
-      French: 'Maison',
-      German: 'Haus',
-      Arabic: 'منزل',
+    "id": "word-6",
+    "word": "Family",
+    "partOfSpeech": "noun",
+    "phonetic": "FAM-ih-lee",
+    "emoji": "???????????",
+    "simpleDefinition": "Parents and children.",
+    "exampleSentence": "I understand the meaning of Family.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
     },
-    category: 'places',
+    "category": "family"
   },
   {
-    id: 'd-school',
-    word: 'School',
-    partOfSpeech: 'noun',
-    phonetic: 'skool',
-    emoji: '🏫',
-    simpleDefinition: 'An institution for educating children.',
-    exampleSentence: 'The children go to school by bus.',
-    exampleTranslation: 'കുട്ടികൾ ബസിലാണ് സ്കൂളിൽ പോകുന്നത്.',
-    translations: {
-      Malayalam: 'സ്കൂൾ / വിദ്യാലയം',
-      Hindi: 'स्कूल / विद्यालय',
-      Tamil: 'பள்ளி',
-      Telugu: 'పాఠశాల',
-      Spanish: 'Escuela',
-      French: 'École',
-      German: 'Schule',
-      Arabic: 'مدرسة',
+    "id": "word-7",
+    "word": "Time",
+    "partOfSpeech": "noun",
+    "phonetic": "TYM",
+    "emoji": "?",
+    "simpleDefinition": "Measured in hours and minutes.",
+    "exampleSentence": "I understand the meaning of Time.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
     },
-    category: 'places',
+    "category": "everyday"
   },
   {
-    id: 'd-morning',
-    word: 'Morning',
-    partOfSpeech: 'noun',
-    phonetic: 'MOR-ning',
-    emoji: '🌅',
-    simpleDefinition: 'The period of time between midnight and noon, especially from sunrise to noon.',
-    exampleSentence: 'I wake up early in the morning.',
-    exampleTranslation: 'ഞാൻ രാവിലെ നേരത്തെ ഉണരും.',
-    translations: {
-      Malayalam: 'പ്രഭാതം / രാവിലെ',
-      Hindi: 'सुबह / प्रातःकाल',
-      Tamil: 'காலை',
-      Telugu: 'ఉదయం',
-      Spanish: 'Mañana',
-      French: 'Matin',
-      German: 'Morgen',
-      Arabic: 'صباح',
+    "id": "word-8",
+    "word": "Money",
+    "partOfSpeech": "noun",
+    "phonetic": "MUN-ee",
+    "emoji": "??",
+    "simpleDefinition": "Coins and banknotes used to buy things.",
+    "exampleSentence": "I understand the meaning of Money.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
     },
-    category: 'everyday',
+    "category": "everyday"
   },
   {
-    id: 'd-speak',
-    word: 'Speak',
-    partOfSpeech: 'verb',
-    phonetic: 'speek',
-    emoji: '🗣️',
-    simpleDefinition: 'Say something in order to convey information or express a feeling.',
-    exampleSentence: 'I want to speak English fluently.',
-    exampleTranslation: 'എനിക്ക് ഒഴുക്കോടെ ഇംഗ്ലീഷ് സംസാരിക്കണം.',
-    translations: {
-      Malayalam: 'സംസാരിക്കുക',
-      Hindi: 'बोलना',
-      Tamil: 'பேசு',
-      Telugu: 'మాట్లాడు',
-      Spanish: 'Hablar',
-      French: 'Parler',
-      German: 'Sprechen',
-      Arabic: 'تحدث',
+    "id": "word-9",
+    "word": "Work",
+    "partOfSpeech": "noun",
+    "phonetic": "WERK",
+    "emoji": "??",
+    "simpleDefinition": "Activity involving mental or physical effort.",
+    "exampleSentence": "I understand the meaning of Work.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
     },
-    category: 'action',
+    "category": "action"
   },
+  {
+    "id": "word-10",
+    "word": "Learn",
+    "partOfSpeech": "noun",
+    "phonetic": "LERN",
+    "emoji": "??",
+    "simpleDefinition": "Gain knowledge or skill.",
+    "exampleSentence": "I understand the meaning of Learn.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "action"
+  },
+  {
+    "id": "word-11",
+    "word": "Happy",
+    "partOfSpeech": "noun",
+    "phonetic": "HAP-ee",
+    "emoji": "??",
+    "simpleDefinition": "Feeling or showing pleasure.",
+    "exampleSentence": "I understand the meaning of Happy.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "emotions"
+  },
+  {
+    "id": "word-12",
+    "word": "Sad",
+    "partOfSpeech": "noun",
+    "phonetic": "SAD",
+    "emoji": "??",
+    "simpleDefinition": "Feeling sorrow.",
+    "exampleSentence": "I understand the meaning of Sad.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "emotions"
+  },
+  {
+    "id": "word-13",
+    "word": "Beautiful",
+    "partOfSpeech": "noun",
+    "phonetic": "BYOO-tih-ful",
+    "emoji": "?",
+    "simpleDefinition": "Pleasing the senses or mind.",
+    "exampleSentence": "I understand the meaning of Beautiful.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "adjectives"
+  },
+  {
+    "id": "word-14",
+    "word": "Important",
+    "partOfSpeech": "noun",
+    "phonetic": "im-POR-tunt",
+    "emoji": "?",
+    "simpleDefinition": "Of great significance or value.",
+    "exampleSentence": "I understand the meaning of Important.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "adjectives"
+  },
+  {
+    "id": "word-15",
+    "word": "Experience",
+    "partOfSpeech": "noun",
+    "phonetic": "ik-SPEER-ee-uns",
+    "emoji": "??",
+    "simpleDefinition": "Knowledge gained through doing things.",
+    "exampleSentence": "I understand the meaning of Experience.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "advanced"
+  },
+  {
+    "id": "word-16",
+    "word": "Opportunity",
+    "partOfSpeech": "noun",
+    "phonetic": "op-er-TOO-nih-tee",
+    "emoji": "??",
+    "simpleDefinition": "A chance to do something.",
+    "exampleSentence": "I understand the meaning of Opportunity.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "advanced"
+  },
+  {
+    "id": "word-17",
+    "word": "Negotiate",
+    "partOfSpeech": "noun",
+    "phonetic": "nih-GO-shee-ayt",
+    "emoji": "??",
+    "simpleDefinition": "Discuss to reach an agreement.",
+    "exampleSentence": "I understand the meaning of Negotiate.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "business"
+  },
+  {
+    "id": "word-18",
+    "word": "Strategy",
+    "partOfSpeech": "noun",
+    "phonetic": "STRAT-uh-jee",
+    "emoji": "??",
+    "simpleDefinition": "A plan of action.",
+    "exampleSentence": "I understand the meaning of Strategy.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "business"
+  },
+  {
+    "id": "word-19",
+    "word": "Ubiquitous",
+    "partOfSpeech": "noun",
+    "phonetic": "yoo-BIK-wih-tus",
+    "emoji": "??",
+    "simpleDefinition": "Found everywhere.",
+    "exampleSentence": "I understand the meaning of Ubiquitous.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "expert"
+  },
+  {
+    "id": "word-20",
+    "word": "Ephemeral",
+    "partOfSpeech": "noun",
+    "phonetic": "ih-FEM-er-ul",
+    "emoji": "?",
+    "simpleDefinition": "Lasting for a very short time.",
+    "exampleSentence": "I understand the meaning of Ephemeral.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "expert"
+  },
+  {
+    "id": "word-21",
+    "word": "Paradigm",
+    "partOfSpeech": "noun",
+    "phonetic": "PAIR-uh-dime",
+    "emoji": "??",
+    "simpleDefinition": "A typical example or pattern.",
+    "exampleSentence": "I understand the meaning of Paradigm.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "expert"
+  },
+  {
+    "id": "word-22",
+    "word": "Eloquent",
+    "partOfSpeech": "noun",
+    "phonetic": "EL-uh-kwunt",
+    "emoji": "???",
+    "simpleDefinition": "Fluent or persuasive in speaking.",
+    "exampleSentence": "I understand the meaning of Eloquent.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "expert"
+  },
+  {
+    "id": "word-23",
+    "word": "Resilient",
+    "partOfSpeech": "noun",
+    "phonetic": "rih-ZIL-yunt",
+    "emoji": "??",
+    "simpleDefinition": "Able to withstand or recover quickly.",
+    "exampleSentence": "I understand the meaning of Resilient.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "expert"
+  },
+  {
+    "id": "word-24",
+    "word": "Meticulous",
+    "partOfSpeech": "noun",
+    "phonetic": "muh-TIK-yuh-lus",
+    "emoji": "??",
+    "simpleDefinition": "Showing great attention to detail.",
+    "exampleSentence": "I understand the meaning of Meticulous.",
+    "exampleTranslation": "Comprendo el significado.",
+    "translations": {
+      "Spanish": "Traducci�n"
+    },
+    "category": "expert"
+  }
 ];
 
 export function searchDictionary(query: string, language: string = 'Malayalam'): DictionaryEntry[] {

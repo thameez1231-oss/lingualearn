@@ -30,33 +30,39 @@ export default async function LearnOverviewPage() {
   const modules = [
     {
       id: 'basics',
-      title: '🟢 English Basics',
+      title: '🌱 A1 - Beginner Basics',
       desc: 'Alphabet, Numbers 1-10, Colors, Days & Simple Everyday Words',
       lessons: LESSONS_DATA.filter((l) => l.moduleId === 'basics'),
     },
     {
       id: 'everyday',
-      title: '🔵 Everyday English',
+      title: '☕ A2 - Pre-Intermediate',
       desc: 'Greetings, Introducing Yourself, Ordering Food & Cafe English',
       lessons: LESSONS_DATA.filter((l) => l.moduleId === 'everyday'),
     },
     {
-      id: 'speaking',
-      title: '🟡 Speaking & Conversation',
-      desc: 'Asking Questions (What, Where, Who), Common Answers & Small Talk',
-      lessons: LESSONS_DATA.filter((l) => l.moduleId === 'speaking'),
-    },
-    {
       id: 'grammar',
-      title: '🟣 Grammar Made Simple',
+      title: '📘 B1 - Intermediate',
       desc: 'Am, Is, Are, Simple Sentences & Action Verbs without confusing rules',
       lessons: LESSONS_DATA.filter((l) => l.moduleId === 'grammar'),
     },
     {
-      id: 'vocabulary',
-      title: '🟠 Essential Vocabulary',
-      desc: 'Top 100 Most Used English Words with Visual Flashcards',
-      lessons: LESSONS_DATA.filter((l) => l.moduleId === 'vocabulary'),
+      id: 'speaking',
+      title: '🗣️ B2 - Upper-Intermediate',
+      desc: 'Complex conversations, hypothetical scenarios, and fluency practice',
+      lessons: LESSONS_DATA.filter((l) => l.moduleId === 'speaking'),
+    },
+    {
+      id: 'business',
+      title: '💼 C1 - Advanced Professional',
+      desc: 'Corporate English, meeting vocabulary, emails, and presentations',
+      lessons: LESSONS_DATA.filter((l) => l.moduleId === 'business'),
+    },
+    {
+      id: 'expert',
+      title: '👑 C2 - Mastery & Idioms',
+      desc: 'Native-level slang, nuanced expressions, and complex vocabulary',
+      lessons: LESSONS_DATA.filter((l) => l.moduleId === 'expert'),
     },
   ];
 
