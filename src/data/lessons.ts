@@ -44,7 +44,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "basics-lesson-1",
     "moduleId": "basics",
     "moduleTitle": "A1 - Beginner",
-    "moduleBadge": "?? Beginner",
+    "moduleBadge": "🌱 Beginner",
     "title": "Mastery Part 1",
     "subtitle": "Learn essential A1 - Beginner concepts.",
     "icon": "book",
@@ -55,7 +55,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-basics-1",
         "word": "Concept 1",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -90,7 +90,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "basics-lesson-2",
     "moduleId": "basics",
     "moduleTitle": "A1 - Beginner",
-    "moduleBadge": "?? Beginner",
+    "moduleBadge": "🌱 Beginner",
     "title": "Mastery Part 2",
     "subtitle": "Learn essential A1 - Beginner concepts.",
     "icon": "book",
@@ -101,7 +101,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-basics-2",
         "word": "Concept 2",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -136,7 +136,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "basics-lesson-3",
     "moduleId": "basics",
     "moduleTitle": "A1 - Beginner",
-    "moduleBadge": "?? Beginner",
+    "moduleBadge": "🌱 Beginner",
     "title": "Mastery Part 3",
     "subtitle": "Learn essential A1 - Beginner concepts.",
     "icon": "book",
@@ -147,7 +147,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-basics-3",
         "word": "Concept 3",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -182,7 +182,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "everyday-lesson-1",
     "moduleId": "everyday",
     "moduleTitle": "A2 - Pre-Intermediate",
-    "moduleBadge": "? Everyday",
+    "moduleBadge": "☕ Everyday",
     "title": "Mastery Part 1",
     "subtitle": "Learn essential A2 - Pre-Intermediate concepts.",
     "icon": "book",
@@ -193,7 +193,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-everyday-1",
         "word": "Concept 1",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -228,7 +228,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "everyday-lesson-2",
     "moduleId": "everyday",
     "moduleTitle": "A2 - Pre-Intermediate",
-    "moduleBadge": "? Everyday",
+    "moduleBadge": "☕ Everyday",
     "title": "Mastery Part 2",
     "subtitle": "Learn essential A2 - Pre-Intermediate concepts.",
     "icon": "book",
@@ -239,7 +239,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-everyday-2",
         "word": "Concept 2",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -274,7 +274,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "everyday-lesson-3",
     "moduleId": "everyday",
     "moduleTitle": "A2 - Pre-Intermediate",
-    "moduleBadge": "? Everyday",
+    "moduleBadge": "☕ Everyday",
     "title": "Mastery Part 3",
     "subtitle": "Learn essential A2 - Pre-Intermediate concepts.",
     "icon": "book",
@@ -285,7 +285,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-everyday-3",
         "word": "Concept 3",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -320,7 +320,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "grammar-lesson-1",
     "moduleId": "grammar",
     "moduleTitle": "B1 - Intermediate",
-    "moduleBadge": "?? Intermediate",
+    "moduleBadge": "📘 Intermediate",
     "title": "Mastery Part 1",
     "subtitle": "Learn essential B1 - Intermediate concepts.",
     "icon": "book",
@@ -331,7 +331,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-grammar-1",
         "word": "Concept 1",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -366,7 +366,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "grammar-lesson-2",
     "moduleId": "grammar",
     "moduleTitle": "B1 - Intermediate",
-    "moduleBadge": "?? Intermediate",
+    "moduleBadge": "📘 Intermediate",
     "title": "Mastery Part 2",
     "subtitle": "Learn essential B1 - Intermediate concepts.",
     "icon": "book",
@@ -377,7 +377,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-grammar-2",
         "word": "Concept 2",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -412,7 +412,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "grammar-lesson-3",
     "moduleId": "grammar",
     "moduleTitle": "B1 - Intermediate",
-    "moduleBadge": "?? Intermediate",
+    "moduleBadge": "📘 Intermediate",
     "title": "Mastery Part 3",
     "subtitle": "Learn essential B1 - Intermediate concepts.",
     "icon": "book",
@@ -423,7 +423,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-grammar-3",
         "word": "Concept 3",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -458,7 +458,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "speaking-lesson-1",
     "moduleId": "speaking",
     "moduleTitle": "B2 - Upper-Intermediate",
-    "moduleBadge": "??? Advanced",
+    "moduleBadge": "🗣️ Advanced",
     "title": "Mastery Part 1",
     "subtitle": "Learn essential B2 - Upper-Intermediate concepts.",
     "icon": "book",
@@ -469,7 +469,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-speaking-1",
         "word": "Concept 1",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -504,7 +504,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "speaking-lesson-2",
     "moduleId": "speaking",
     "moduleTitle": "B2 - Upper-Intermediate",
-    "moduleBadge": "??? Advanced",
+    "moduleBadge": "🗣️ Advanced",
     "title": "Mastery Part 2",
     "subtitle": "Learn essential B2 - Upper-Intermediate concepts.",
     "icon": "book",
@@ -515,7 +515,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-speaking-2",
         "word": "Concept 2",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -550,7 +550,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "speaking-lesson-3",
     "moduleId": "speaking",
     "moduleTitle": "B2 - Upper-Intermediate",
-    "moduleBadge": "??? Advanced",
+    "moduleBadge": "🗣️ Advanced",
     "title": "Mastery Part 3",
     "subtitle": "Learn essential B2 - Upper-Intermediate concepts.",
     "icon": "book",
@@ -561,7 +561,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-speaking-3",
         "word": "Concept 3",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -596,7 +596,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "business-lesson-1",
     "moduleId": "business",
     "moduleTitle": "C1 - Advanced Professional",
-    "moduleBadge": "?? Professional",
+    "moduleBadge": "💼 Professional",
     "title": "Mastery Part 1",
     "subtitle": "Learn essential C1 - Advanced Professional concepts.",
     "icon": "book",
@@ -607,7 +607,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-business-1",
         "word": "Concept 1",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -642,7 +642,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "business-lesson-2",
     "moduleId": "business",
     "moduleTitle": "C1 - Advanced Professional",
-    "moduleBadge": "?? Professional",
+    "moduleBadge": "💼 Professional",
     "title": "Mastery Part 2",
     "subtitle": "Learn essential C1 - Advanced Professional concepts.",
     "icon": "book",
@@ -653,7 +653,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-business-2",
         "word": "Concept 2",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -688,7 +688,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "business-lesson-3",
     "moduleId": "business",
     "moduleTitle": "C1 - Advanced Professional",
-    "moduleBadge": "?? Professional",
+    "moduleBadge": "💼 Professional",
     "title": "Mastery Part 3",
     "subtitle": "Learn essential C1 - Advanced Professional concepts.",
     "icon": "book",
@@ -699,7 +699,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-business-3",
         "word": "Concept 3",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -734,7 +734,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "expert-lesson-1",
     "moduleId": "expert",
     "moduleTitle": "C2 - Mastery & Idioms",
-    "moduleBadge": "?? Expert",
+    "moduleBadge": "👑 Expert",
     "title": "Mastery Part 1",
     "subtitle": "Learn essential C2 - Mastery & Idioms concepts.",
     "icon": "book",
@@ -745,7 +745,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-expert-1",
         "word": "Concept 1",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -780,7 +780,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "expert-lesson-2",
     "moduleId": "expert",
     "moduleTitle": "C2 - Mastery & Idioms",
-    "moduleBadge": "?? Expert",
+    "moduleBadge": "👑 Expert",
     "title": "Mastery Part 2",
     "subtitle": "Learn essential C2 - Mastery & Idioms concepts.",
     "icon": "book",
@@ -791,7 +791,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-expert-2",
         "word": "Concept 2",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },
@@ -826,7 +826,7 @@ export const LESSONS_DATA: Lesson[] = [
     "id": "expert-lesson-3",
     "moduleId": "expert",
     "moduleTitle": "C2 - Mastery & Idioms",
-    "moduleBadge": "?? Expert",
+    "moduleBadge": "👑 Expert",
     "title": "Mastery Part 3",
     "subtitle": "Learn essential C2 - Mastery & Idioms concepts.",
     "icon": "book",
@@ -837,7 +837,7 @@ export const LESSONS_DATA: Lesson[] = [
         "id": "v-expert-3",
         "word": "Concept 3",
         "phonetic": "kon-sept",
-        "emoji": "??",
+        "emoji": "📝",
         "translations": {
           "Spanish": "Concepto"
         },

@@ -17,12 +17,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Hello",
     "partOfSpeech": "noun",
     "phonetic": "heh-LOH",
-    "emoji": "??",
+    "emoji": "👋",
     "simpleDefinition": "A common greeting.",
     "exampleSentence": "I understand the meaning of Hello.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "basics"
   },
@@ -31,12 +31,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Please",
     "partOfSpeech": "noun",
     "phonetic": "PLEEZ",
-    "emoji": "??",
+    "emoji": "🙏",
     "simpleDefinition": "Used to ask politely.",
     "exampleSentence": "I understand the meaning of Please.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "basics"
   },
@@ -45,12 +45,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Thank you",
     "partOfSpeech": "noun",
     "phonetic": "THANGK yoo",
-    "emoji": "??",
+    "emoji": "😊",
     "simpleDefinition": "Expression of gratitude.",
     "exampleSentence": "I understand the meaning of Thank you.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "basics"
   },
@@ -59,12 +59,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Water",
     "partOfSpeech": "noun",
     "phonetic": "WAH-ter",
-    "emoji": "??",
+    "emoji": "💧",
     "simpleDefinition": "Clear liquid for drinking.",
     "exampleSentence": "I understand the meaning of Water.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "food"
   },
@@ -73,12 +73,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Food",
     "partOfSpeech": "noun",
     "phonetic": "FOOD",
-    "emoji": "??",
+    "emoji": "🍞",
     "simpleDefinition": "Things people eat.",
     "exampleSentence": "I understand the meaning of Food.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "food"
   },
@@ -87,12 +87,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Friend",
     "partOfSpeech": "noun",
     "phonetic": "FREND",
-    "emoji": "??",
+    "emoji": "🤝",
     "simpleDefinition": "A person you like and know well.",
     "exampleSentence": "I understand the meaning of Friend.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "family"
   },
@@ -101,12 +101,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Family",
     "partOfSpeech": "noun",
     "phonetic": "FAM-ih-lee",
-    "emoji": "???????????",
+    "emoji": "👪",
     "simpleDefinition": "Parents and children.",
     "exampleSentence": "I understand the meaning of Family.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "family"
   },
@@ -115,12 +115,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Time",
     "partOfSpeech": "noun",
     "phonetic": "TYM",
-    "emoji": "?",
+    "emoji": "⌚",
     "simpleDefinition": "Measured in hours and minutes.",
     "exampleSentence": "I understand the meaning of Time.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "everyday"
   },
@@ -129,12 +129,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Money",
     "partOfSpeech": "noun",
     "phonetic": "MUN-ee",
-    "emoji": "??",
+    "emoji": "💵",
     "simpleDefinition": "Coins and banknotes used to buy things.",
     "exampleSentence": "I understand the meaning of Money.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "everyday"
   },
@@ -143,12 +143,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Work",
     "partOfSpeech": "noun",
     "phonetic": "WERK",
-    "emoji": "??",
+    "emoji": "💼",
     "simpleDefinition": "Activity involving mental or physical effort.",
     "exampleSentence": "I understand the meaning of Work.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "action"
   },
@@ -157,12 +157,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Learn",
     "partOfSpeech": "noun",
     "phonetic": "LERN",
-    "emoji": "??",
+    "emoji": "📖",
     "simpleDefinition": "Gain knowledge or skill.",
     "exampleSentence": "I understand the meaning of Learn.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "action"
   },
@@ -171,12 +171,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Happy",
     "partOfSpeech": "noun",
     "phonetic": "HAP-ee",
-    "emoji": "??",
+    "emoji": "😄",
     "simpleDefinition": "Feeling or showing pleasure.",
     "exampleSentence": "I understand the meaning of Happy.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "emotions"
   },
@@ -185,12 +185,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Sad",
     "partOfSpeech": "noun",
     "phonetic": "SAD",
-    "emoji": "??",
+    "emoji": "😢",
     "simpleDefinition": "Feeling sorrow.",
     "exampleSentence": "I understand the meaning of Sad.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "emotions"
   },
@@ -199,12 +199,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Beautiful",
     "partOfSpeech": "noun",
     "phonetic": "BYOO-tih-ful",
-    "emoji": "?",
+    "emoji": "✨",
     "simpleDefinition": "Pleasing the senses or mind.",
     "exampleSentence": "I understand the meaning of Beautiful.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "adjectives"
   },
@@ -213,12 +213,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Important",
     "partOfSpeech": "noun",
     "phonetic": "im-POR-tunt",
-    "emoji": "?",
+    "emoji": "❗",
     "simpleDefinition": "Of great significance or value.",
     "exampleSentence": "I understand the meaning of Important.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "adjectives"
   },
@@ -227,12 +227,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Experience",
     "partOfSpeech": "noun",
     "phonetic": "ik-SPEER-ee-uns",
-    "emoji": "??",
+    "emoji": "🧠",
     "simpleDefinition": "Knowledge gained through doing things.",
     "exampleSentence": "I understand the meaning of Experience.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "advanced"
   },
@@ -241,12 +241,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Opportunity",
     "partOfSpeech": "noun",
     "phonetic": "op-er-TOO-nih-tee",
-    "emoji": "??",
+    "emoji": "🌟",
     "simpleDefinition": "A chance to do something.",
     "exampleSentence": "I understand the meaning of Opportunity.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "advanced"
   },
@@ -255,12 +255,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Negotiate",
     "partOfSpeech": "noun",
     "phonetic": "nih-GO-shee-ayt",
-    "emoji": "??",
+    "emoji": "👔",
     "simpleDefinition": "Discuss to reach an agreement.",
     "exampleSentence": "I understand the meaning of Negotiate.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "business"
   },
@@ -269,12 +269,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Strategy",
     "partOfSpeech": "noun",
     "phonetic": "STRAT-uh-jee",
-    "emoji": "??",
+    "emoji": "📈",
     "simpleDefinition": "A plan of action.",
     "exampleSentence": "I understand the meaning of Strategy.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "business"
   },
@@ -283,12 +283,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Ubiquitous",
     "partOfSpeech": "noun",
     "phonetic": "yoo-BIK-wih-tus",
-    "emoji": "??",
+    "emoji": "🌍",
     "simpleDefinition": "Found everywhere.",
     "exampleSentence": "I understand the meaning of Ubiquitous.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "expert"
   },
@@ -297,12 +297,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Ephemeral",
     "partOfSpeech": "noun",
     "phonetic": "ih-FEM-er-ul",
-    "emoji": "?",
+    "emoji": "⏳",
     "simpleDefinition": "Lasting for a very short time.",
     "exampleSentence": "I understand the meaning of Ephemeral.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "expert"
   },
@@ -311,12 +311,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Paradigm",
     "partOfSpeech": "noun",
     "phonetic": "PAIR-uh-dime",
-    "emoji": "??",
+    "emoji": "🧩",
     "simpleDefinition": "A typical example or pattern.",
     "exampleSentence": "I understand the meaning of Paradigm.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "expert"
   },
@@ -325,12 +325,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Eloquent",
     "partOfSpeech": "noun",
     "phonetic": "EL-uh-kwunt",
-    "emoji": "???",
+    "emoji": "🗣️",
     "simpleDefinition": "Fluent or persuasive in speaking.",
     "exampleSentence": "I understand the meaning of Eloquent.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "expert"
   },
@@ -339,12 +339,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Resilient",
     "partOfSpeech": "noun",
     "phonetic": "rih-ZIL-yunt",
-    "emoji": "??",
+    "emoji": "💪",
     "simpleDefinition": "Able to withstand or recover quickly.",
     "exampleSentence": "I understand the meaning of Resilient.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "expert"
   },
@@ -353,12 +353,12 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "word": "Meticulous",
     "partOfSpeech": "noun",
     "phonetic": "muh-TIK-yuh-lus",
-    "emoji": "??",
+    "emoji": "🔎",
     "simpleDefinition": "Showing great attention to detail.",
     "exampleSentence": "I understand the meaning of Meticulous.",
     "exampleTranslation": "Comprendo el significado.",
     "translations": {
-      "Spanish": "Traducci�n"
+      "Spanish": "Traducción"
     },
     "category": "expert"
   }
