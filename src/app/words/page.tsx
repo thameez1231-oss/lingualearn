@@ -153,9 +153,22 @@ export default function WordsPage() {
           />
         </div>
 
-        {/* Word Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {displayedWords.map((item) => {
+        {/* Word Cards Grouped by Level/Category */}
+        <div className="space-y-10">
+          {Object.entries(
+            displayedWords.reduce((acc, item) => {
+              const cat = item.category.toUpperCase();
+              if (!acc[cat]) acc[cat] = [];
+              acc[cat].push(item);
+              return acc;
+            }, {} as Record<string, DictionaryEntry[]>)
+          ).map(([category, items]) => (
+            <div key={category} className="space-y-4">
+              <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700 pb-2">
+                {category} LEVEL
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {items.map((item) => {
             const isSaved = savedWords.includes(item.word.toLowerCase());
             const nativeWord =
               item.translations[user?.preferredLanguage || 'Malayalam'] ||
@@ -234,7 +247,10 @@ export default function WordsPage() {
                 </div>
               </div>
             );
-          })}
+                })}
+              </div>
+            </div>
+          ))}
         </div>
 
         {displayedWords.length === 0 && !loading && (
