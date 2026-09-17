@@ -20,6 +20,8 @@ export function DevMailboxDrawer() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (process.env.NODE_ENV === 'production') return;
+
     let ignore = false;
     const loadData = () => {
       fetch('/api/dev/emails')
@@ -29,22 +31,21 @@ export function DevMailboxDrawer() {
             setEmails(data.emails);
           }
         })
-        .catch(console.error);
+        .catch(() => {});
     };
 
     if (isOpen) {
       loadData();
     }
+    const interval = setInterval(loadData, 8000);
     return () => {
       ignore = true;
+      clearInterval(interval);
     };
   }, [isOpen]);
 
-  if (process.env.NODE_ENV === 'production') {
-    return null;
-  }
-
   const fetchEmails = async () => {
+    if (process.env.NODE_ENV === 'production') return;
     try {
       setLoading(true);
       const res = await fetch('/api/dev/emails');
@@ -59,26 +60,9 @@ export function DevMailboxDrawer() {
     }
   };
 
-  useEffect(() => {
-    let ignore = false;
-    const loadData = () => {
-      fetch('/api/dev/emails')
-        .then((res) => (res.ok ? res.json() : null))
-        .then((data) => {
-          if (!ignore && data?.emails) {
-            setEmails(data.emails);
-          }
-        })
-        .catch(() => {});
-    };
-
-    loadData();
-    const interval = setInterval(loadData, 8000);
-    return () => {
-      ignore = true;
-      clearInterval(interval);
-    };
-  }, []);
+  if (process.env.NODE_ENV === 'production') {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-20 md:bottom-6 right-4 z-50">
