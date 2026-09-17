@@ -45,24 +45,52 @@ export const LESSONS_DATA: Lesson[] = [
     "moduleId": "basics",
     "moduleTitle": "A1 - Beginner",
     "moduleBadge": "🌱 Beginner",
-    "title": "Mastery Part 1",
-    "subtitle": "Learn essential A1 - Beginner concepts.",
+    "title": "Essential Greetings",
+    "subtitle": "Learn the most important words to say hello and be polite.",
     "icon": "book",
     "xpReward": 100,
-    "estimatedMinutes": 10,
+    "estimatedMinutes": 5,
     "vocabulary": [
       {
         "id": "v-basics-1",
-        "word": "Concept 1",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
+        "word": "Hello",
+        "phonetic": "heh-LOH",
+        "emoji": "👋",
         "translations": {
-          "Malayalam": "ആശയം"
+          "Malayalam": "ഹലോ"
         },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
+        "exampleSentence": "Hello, how are you today?",
+        "examplePhonetic": "heh-LOH, how are yoo tuh-DAY?",
         "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
+          "Malayalam": "ഹലോ, നിങ്ങൾക്ക് ഇന്ന് സുഖമാണോ?"
+        }
+      },
+      {
+        "id": "v-basics-2",
+        "word": "Please",
+        "phonetic": "PLEEZ",
+        "emoji": "🙏",
+        "translations": {
+          "Malayalam": "ദയവായി"
+        },
+        "exampleSentence": "Can I have some water, please?",
+        "examplePhonetic": "Kan I hav sum WAH-ter, PLEEZ?",
+        "exampleTranslations": {
+          "Malayalam": "ദയവായി എനിക്ക് കുറച്ചു വെള്ളം തരുമോ?"
+        }
+      },
+      {
+        "id": "v-basics-3",
+        "word": "Thank you",
+        "phonetic": "THANGK yoo",
+        "emoji": "😊",
+        "translations": {
+          "Malayalam": "നന്ദി"
+        },
+        "exampleSentence": "Thank you for your help.",
+        "examplePhonetic": "THANGK yoo for yor help.",
+        "exampleTranslations": {
+          "Malayalam": "നിങ്ങളുടെ സഹായത്തിന് നന്ദി."
         }
       }
     ],
@@ -70,111 +98,39 @@ export const LESSONS_DATA: Lesson[] = [
       {
         "id": "ex-basics-1",
         "type": "multiple_choice",
-        "question": "Choose the correct application for A1 - Beginner.",
-        "hint": "Review the rules.",
+        "question": "Which word do you use to greet someone?",
+        "hint": "Think of the word that starts with H.",
         "options": [
           {
-            "text": "Correct Application",
+            "text": "Hello",
             "isCorrect": true
           },
           {
-            "text": "Incorrect Application",
+            "text": "Please",
+            "isCorrect": false
+          },
+          {
+            "text": "Water",
             "isCorrect": false
           }
         ],
-        "explanation": "It is the correct standard usage."
-      }
-    ]
-  },
-  {
-    "id": "basics-lesson-2",
-    "moduleId": "basics",
-    "moduleTitle": "A1 - Beginner",
-    "moduleBadge": "🌱 Beginner",
-    "title": "Mastery Part 2",
-    "subtitle": "Learn essential A1 - Beginner concepts.",
-    "icon": "book",
-    "xpReward": 200,
-    "estimatedMinutes": 20,
-    "vocabulary": [
-      {
-        "id": "v-basics-2",
-        "word": "Concept 2",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
-        "translations": {
-          "Malayalam": "ആശയം"
-        },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
-        "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
-        }
-      }
-    ],
-    "exercises": [
+        "explanation": "We use \"Hello\" to greet people."
+      },
       {
         "id": "ex-basics-2",
-        "type": "multiple_choice",
-        "question": "Choose the correct application for A1 - Beginner.",
-        "hint": "Review the rules.",
-        "options": [
-          {
-            "text": "Correct Application",
-            "isCorrect": true
-          },
-          {
-            "text": "Incorrect Application",
-            "isCorrect": false
-          }
+        "type": "sentence_builder",
+        "question": "Translate: \"ദയവായി എനിക്ക് കുറച്ചു വെള്ളം തരുമോ?\"",
+        "scrambledWords": [
+          "Can",
+          "I",
+          "have",
+          "water",
+          "please",
+          "the",
+          "running"
         ],
-        "explanation": "It is the correct standard usage."
-      }
-    ]
-  },
-  {
-    "id": "basics-lesson-3",
-    "moduleId": "basics",
-    "moduleTitle": "A1 - Beginner",
-    "moduleBadge": "🌱 Beginner",
-    "title": "Mastery Part 3",
-    "subtitle": "Learn essential A1 - Beginner concepts.",
-    "icon": "book",
-    "xpReward": 300,
-    "estimatedMinutes": 30,
-    "vocabulary": [
-      {
-        "id": "v-basics-3",
-        "word": "Concept 3",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
-        "translations": {
-          "Malayalam": "ആശയം"
-        },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
-        "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
-        }
-      }
-    ],
-    "exercises": [
-      {
-        "id": "ex-basics-3",
-        "type": "multiple_choice",
-        "question": "Choose the correct application for A1 - Beginner.",
-        "hint": "Review the rules.",
-        "options": [
-          {
-            "text": "Correct Application",
-            "isCorrect": true
-          },
-          {
-            "text": "Incorrect Application",
-            "isCorrect": false
-          }
-        ],
-        "explanation": "It is the correct standard usage."
+        "correctSentence": "Can I have water please",
+        "explanation": "This is a polite way to ask for water."
       }
     ]
   },
@@ -183,136 +139,62 @@ export const LESSONS_DATA: Lesson[] = [
     "moduleId": "everyday",
     "moduleTitle": "A2 - Pre-Intermediate",
     "moduleBadge": "☕ Everyday",
-    "title": "Mastery Part 1",
-    "subtitle": "Learn essential A2 - Pre-Intermediate concepts.",
+    "title": "At the Cafe",
+    "subtitle": "Learn how to order food and drinks confidently.",
     "icon": "book",
-    "xpReward": 100,
-    "estimatedMinutes": 10,
+    "xpReward": 150,
+    "estimatedMinutes": 8,
     "vocabulary": [
       {
-        "id": "v-everyday-1",
-        "word": "Concept 1",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
+        "id": "v-cafe-1",
+        "word": "Coffee",
+        "phonetic": "KOF-ee",
+        "emoji": "☕",
         "translations": {
-          "Malayalam": "ആശയം"
+          "Malayalam": "കോഫി"
         },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
+        "exampleSentence": "I would like a cup of coffee.",
+        "examplePhonetic": "I wood lyk a kup ov KOF-ee.",
         "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
+          "Malayalam": "എനിക്ക് ഒരു കപ്പ് കോഫി വേണം."
+        }
+      },
+      {
+        "id": "v-cafe-2",
+        "word": "Menu",
+        "phonetic": "MEN-yoo",
+        "emoji": "📖",
+        "translations": {
+          "Malayalam": "മെനു"
+        },
+        "exampleSentence": "Could you bring the menu, please?",
+        "examplePhonetic": "Kood yoo bring the MEN-yoo, PLEEZ?",
+        "exampleTranslations": {
+          "Malayalam": "ദയവായി മെനു കൊണ്ടുവരുമോ?"
         }
       }
     ],
     "exercises": [
       {
-        "id": "ex-everyday-1",
+        "id": "ex-cafe-1",
         "type": "multiple_choice",
-        "question": "Choose the correct application for A2 - Pre-Intermediate.",
-        "hint": "Review the rules.",
+        "question": "What do you ask for to see the list of food?",
+        "hint": "It is a book with food options.",
         "options": [
           {
-            "text": "Correct Application",
+            "text": "The Menu",
             "isCorrect": true
           },
           {
-            "text": "Incorrect Application",
+            "text": "The Water",
             "isCorrect": false
-          }
-        ],
-        "explanation": "It is the correct standard usage."
-      }
-    ]
-  },
-  {
-    "id": "everyday-lesson-2",
-    "moduleId": "everyday",
-    "moduleTitle": "A2 - Pre-Intermediate",
-    "moduleBadge": "☕ Everyday",
-    "title": "Mastery Part 2",
-    "subtitle": "Learn essential A2 - Pre-Intermediate concepts.",
-    "icon": "book",
-    "xpReward": 200,
-    "estimatedMinutes": 20,
-    "vocabulary": [
-      {
-        "id": "v-everyday-2",
-        "word": "Concept 2",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
-        "translations": {
-          "Malayalam": "ആശയം"
-        },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
-        "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
-        }
-      }
-    ],
-    "exercises": [
-      {
-        "id": "ex-everyday-2",
-        "type": "multiple_choice",
-        "question": "Choose the correct application for A2 - Pre-Intermediate.",
-        "hint": "Review the rules.",
-        "options": [
-          {
-            "text": "Correct Application",
-            "isCorrect": true
           },
           {
-            "text": "Incorrect Application",
+            "text": "The Coffee",
             "isCorrect": false
           }
         ],
-        "explanation": "It is the correct standard usage."
-      }
-    ]
-  },
-  {
-    "id": "everyday-lesson-3",
-    "moduleId": "everyday",
-    "moduleTitle": "A2 - Pre-Intermediate",
-    "moduleBadge": "☕ Everyday",
-    "title": "Mastery Part 3",
-    "subtitle": "Learn essential A2 - Pre-Intermediate concepts.",
-    "icon": "book",
-    "xpReward": 300,
-    "estimatedMinutes": 30,
-    "vocabulary": [
-      {
-        "id": "v-everyday-3",
-        "word": "Concept 3",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
-        "translations": {
-          "Malayalam": "ആശയം"
-        },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
-        "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
-        }
-      }
-    ],
-    "exercises": [
-      {
-        "id": "ex-everyday-3",
-        "type": "multiple_choice",
-        "question": "Choose the correct application for A2 - Pre-Intermediate.",
-        "hint": "Review the rules.",
-        "options": [
-          {
-            "text": "Correct Application",
-            "isCorrect": true
-          },
-          {
-            "text": "Incorrect Application",
-            "isCorrect": false
-          }
-        ],
-        "explanation": "It is the correct standard usage."
+        "explanation": "A menu lists all the food items."
       }
     ]
   },
@@ -321,136 +203,62 @@ export const LESSONS_DATA: Lesson[] = [
     "moduleId": "grammar",
     "moduleTitle": "B1 - Intermediate",
     "moduleBadge": "📘 Intermediate",
-    "title": "Mastery Part 1",
-    "subtitle": "Learn essential B1 - Intermediate concepts.",
+    "title": "Action Verbs (Present Continuous)",
+    "subtitle": "Learn how to describe things happening right now.",
     "icon": "book",
-    "xpReward": 100,
+    "xpReward": 200,
     "estimatedMinutes": 10,
     "vocabulary": [
       {
-        "id": "v-grammar-1",
-        "word": "Concept 1",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
+        "id": "v-gram-1",
+        "word": "Eating",
+        "phonetic": "EE-ting",
+        "emoji": "🍽️",
         "translations": {
-          "Malayalam": "ആശയം"
+          "Malayalam": "കഴിക്കുന്നു"
         },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
+        "exampleSentence": "She is eating an apple.",
+        "examplePhonetic": "She is EE-ting an AP-pul.",
         "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
+          "Malayalam": "അവൾ ഒരു ആപ്പിൾ കഴിക്കുകയാണ്."
+        }
+      },
+      {
+        "id": "v-gram-2",
+        "word": "Running",
+        "phonetic": "RUN-ing",
+        "emoji": "🏃",
+        "translations": {
+          "Malayalam": "ഓടുന്നു"
+        },
+        "exampleSentence": "The boy is running fast.",
+        "examplePhonetic": "The boy is RUN-ing fast.",
+        "exampleTranslations": {
+          "Malayalam": "ആൺകുട്ടി വേഗത്തിൽ ഓടുകയാണ്."
         }
       }
     ],
     "exercises": [
       {
-        "id": "ex-grammar-1",
+        "id": "ex-gram-1",
         "type": "multiple_choice",
-        "question": "Choose the correct application for B1 - Intermediate.",
-        "hint": "Review the rules.",
+        "question": "Fill in the blank: \"She ___ an apple right now.\"",
+        "hint": "Use the present continuous tense.",
         "options": [
           {
-            "text": "Correct Application",
+            "text": "is eating",
             "isCorrect": true
           },
           {
-            "text": "Incorrect Application",
+            "text": "eat",
             "isCorrect": false
-          }
-        ],
-        "explanation": "It is the correct standard usage."
-      }
-    ]
-  },
-  {
-    "id": "grammar-lesson-2",
-    "moduleId": "grammar",
-    "moduleTitle": "B1 - Intermediate",
-    "moduleBadge": "📘 Intermediate",
-    "title": "Mastery Part 2",
-    "subtitle": "Learn essential B1 - Intermediate concepts.",
-    "icon": "book",
-    "xpReward": 200,
-    "estimatedMinutes": 20,
-    "vocabulary": [
-      {
-        "id": "v-grammar-2",
-        "word": "Concept 2",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
-        "translations": {
-          "Malayalam": "ആശയം"
-        },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
-        "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
-        }
-      }
-    ],
-    "exercises": [
-      {
-        "id": "ex-grammar-2",
-        "type": "multiple_choice",
-        "question": "Choose the correct application for B1 - Intermediate.",
-        "hint": "Review the rules.",
-        "options": [
-          {
-            "text": "Correct Application",
-            "isCorrect": true
           },
           {
-            "text": "Incorrect Application",
+            "text": "ate",
             "isCorrect": false
           }
         ],
-        "explanation": "It is the correct standard usage."
-      }
-    ]
-  },
-  {
-    "id": "grammar-lesson-3",
-    "moduleId": "grammar",
-    "moduleTitle": "B1 - Intermediate",
-    "moduleBadge": "📘 Intermediate",
-    "title": "Mastery Part 3",
-    "subtitle": "Learn essential B1 - Intermediate concepts.",
-    "icon": "book",
-    "xpReward": 300,
-    "estimatedMinutes": 30,
-    "vocabulary": [
-      {
-        "id": "v-grammar-3",
-        "word": "Concept 3",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
-        "translations": {
-          "Malayalam": "ആശയം"
-        },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
-        "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
-        }
-      }
-    ],
-    "exercises": [
-      {
-        "id": "ex-grammar-3",
-        "type": "multiple_choice",
-        "question": "Choose the correct application for B1 - Intermediate.",
-        "hint": "Review the rules.",
-        "options": [
-          {
-            "text": "Correct Application",
-            "isCorrect": true
-          },
-          {
-            "text": "Incorrect Application",
-            "isCorrect": false
-          }
-        ],
-        "explanation": "It is the correct standard usage."
+        "explanation": "\"is eating\" describes an action happening right now."
       }
     ]
   },
@@ -459,136 +267,62 @@ export const LESSONS_DATA: Lesson[] = [
     "moduleId": "speaking",
     "moduleTitle": "B2 - Upper-Intermediate",
     "moduleBadge": "🗣️ Advanced",
-    "title": "Mastery Part 1",
-    "subtitle": "Learn essential B2 - Upper-Intermediate concepts.",
+    "title": "Airport & Travel",
+    "subtitle": "Navigate airports and flights without fear.",
     "icon": "book",
-    "xpReward": 100,
-    "estimatedMinutes": 10,
+    "xpReward": 250,
+    "estimatedMinutes": 12,
     "vocabulary": [
       {
-        "id": "v-speaking-1",
-        "word": "Concept 1",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
+        "id": "v-trav-1",
+        "word": "Luggage",
+        "phonetic": "LUG-ij",
+        "emoji": "🧳",
         "translations": {
-          "Malayalam": "ആശയം"
+          "Malayalam": "ലഗേജ്"
         },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
+        "exampleSentence": "Where can I collect my luggage?",
+        "examplePhonetic": "Wair kan I kuh-LEKT my LUG-ij?",
         "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
+          "Malayalam": "എന്റെ ലഗേജ് എനിക്ക് എവിടെ നിന്ന് ലഭിക്കും?"
+        }
+      },
+      {
+        "id": "v-trav-2",
+        "word": "Boarding Pass",
+        "phonetic": "BOR-ding pas",
+        "emoji": "🎫",
+        "translations": {
+          "Malayalam": "ബോർഡിംഗ് പാസ്"
+        },
+        "exampleSentence": "Please show your boarding pass at the gate.",
+        "examplePhonetic": "PLEEZ shoh yor BOR-ding pas at the gayt.",
+        "exampleTranslations": {
+          "Malayalam": "ദയവായി ഗേറ്റിൽ നിങ്ങളുടെ ബോർഡിംഗ് പാസ് കാണിക്കുക."
         }
       }
     ],
     "exercises": [
       {
-        "id": "ex-speaking-1",
+        "id": "ex-trav-1",
         "type": "multiple_choice",
-        "question": "Choose the correct application for B2 - Upper-Intermediate.",
-        "hint": "Review the rules.",
+        "question": "What document do you need to enter the airplane?",
+        "hint": "It has your seat number on it.",
         "options": [
           {
-            "text": "Correct Application",
+            "text": "Boarding Pass",
             "isCorrect": true
           },
           {
-            "text": "Incorrect Application",
+            "text": "Luggage",
             "isCorrect": false
-          }
-        ],
-        "explanation": "It is the correct standard usage."
-      }
-    ]
-  },
-  {
-    "id": "speaking-lesson-2",
-    "moduleId": "speaking",
-    "moduleTitle": "B2 - Upper-Intermediate",
-    "moduleBadge": "🗣️ Advanced",
-    "title": "Mastery Part 2",
-    "subtitle": "Learn essential B2 - Upper-Intermediate concepts.",
-    "icon": "book",
-    "xpReward": 200,
-    "estimatedMinutes": 20,
-    "vocabulary": [
-      {
-        "id": "v-speaking-2",
-        "word": "Concept 2",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
-        "translations": {
-          "Malayalam": "ആശയം"
-        },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
-        "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
-        }
-      }
-    ],
-    "exercises": [
-      {
-        "id": "ex-speaking-2",
-        "type": "multiple_choice",
-        "question": "Choose the correct application for B2 - Upper-Intermediate.",
-        "hint": "Review the rules.",
-        "options": [
-          {
-            "text": "Correct Application",
-            "isCorrect": true
           },
           {
-            "text": "Incorrect Application",
+            "text": "Menu",
             "isCorrect": false
           }
         ],
-        "explanation": "It is the correct standard usage."
-      }
-    ]
-  },
-  {
-    "id": "speaking-lesson-3",
-    "moduleId": "speaking",
-    "moduleTitle": "B2 - Upper-Intermediate",
-    "moduleBadge": "🗣️ Advanced",
-    "title": "Mastery Part 3",
-    "subtitle": "Learn essential B2 - Upper-Intermediate concepts.",
-    "icon": "book",
-    "xpReward": 300,
-    "estimatedMinutes": 30,
-    "vocabulary": [
-      {
-        "id": "v-speaking-3",
-        "word": "Concept 3",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
-        "translations": {
-          "Malayalam": "ആശയം"
-        },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
-        "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
-        }
-      }
-    ],
-    "exercises": [
-      {
-        "id": "ex-speaking-3",
-        "type": "multiple_choice",
-        "question": "Choose the correct application for B2 - Upper-Intermediate.",
-        "hint": "Review the rules.",
-        "options": [
-          {
-            "text": "Correct Application",
-            "isCorrect": true
-          },
-          {
-            "text": "Incorrect Application",
-            "isCorrect": false
-          }
-        ],
-        "explanation": "It is the correct standard usage."
+        "explanation": "A boarding pass allows you to board the flight."
       }
     ]
   },
@@ -597,136 +331,58 @@ export const LESSONS_DATA: Lesson[] = [
     "moduleId": "business",
     "moduleTitle": "C1 - Advanced Professional",
     "moduleBadge": "💼 Professional",
-    "title": "Mastery Part 1",
-    "subtitle": "Learn essential C1 - Advanced Professional concepts.",
-    "icon": "book",
-    "xpReward": 100,
-    "estimatedMinutes": 10,
-    "vocabulary": [
-      {
-        "id": "v-business-1",
-        "word": "Concept 1",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
-        "translations": {
-          "Malayalam": "ആശയം"
-        },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
-        "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
-        }
-      }
-    ],
-    "exercises": [
-      {
-        "id": "ex-business-1",
-        "type": "multiple_choice",
-        "question": "Choose the correct application for C1 - Advanced Professional.",
-        "hint": "Review the rules.",
-        "options": [
-          {
-            "text": "Correct Application",
-            "isCorrect": true
-          },
-          {
-            "text": "Incorrect Application",
-            "isCorrect": false
-          }
-        ],
-        "explanation": "It is the correct standard usage."
-      }
-    ]
-  },
-  {
-    "id": "business-lesson-2",
-    "moduleId": "business",
-    "moduleTitle": "C1 - Advanced Professional",
-    "moduleBadge": "💼 Professional",
-    "title": "Mastery Part 2",
-    "subtitle": "Learn essential C1 - Advanced Professional concepts.",
-    "icon": "book",
-    "xpReward": 200,
-    "estimatedMinutes": 20,
-    "vocabulary": [
-      {
-        "id": "v-business-2",
-        "word": "Concept 2",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
-        "translations": {
-          "Malayalam": "ആശയം"
-        },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
-        "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
-        }
-      }
-    ],
-    "exercises": [
-      {
-        "id": "ex-business-2",
-        "type": "multiple_choice",
-        "question": "Choose the correct application for C1 - Advanced Professional.",
-        "hint": "Review the rules.",
-        "options": [
-          {
-            "text": "Correct Application",
-            "isCorrect": true
-          },
-          {
-            "text": "Incorrect Application",
-            "isCorrect": false
-          }
-        ],
-        "explanation": "It is the correct standard usage."
-      }
-    ]
-  },
-  {
-    "id": "business-lesson-3",
-    "moduleId": "business",
-    "moduleTitle": "C1 - Advanced Professional",
-    "moduleBadge": "💼 Professional",
-    "title": "Mastery Part 3",
-    "subtitle": "Learn essential C1 - Advanced Professional concepts.",
+    "title": "Corporate Meetings",
+    "subtitle": "Professional English for the modern workplace.",
     "icon": "book",
     "xpReward": 300,
-    "estimatedMinutes": 30,
+    "estimatedMinutes": 15,
     "vocabulary": [
       {
-        "id": "v-business-3",
-        "word": "Concept 3",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
+        "id": "v-bus-1",
+        "word": "Deadline",
+        "phonetic": "DED-lyn",
+        "emoji": "⏰",
         "translations": {
-          "Malayalam": "ആശയം"
+          "Malayalam": "അവസാന തീയതി"
         },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
+        "exampleSentence": "We must meet the project deadline.",
+        "examplePhonetic": "We must meet the PROJ-ekt DED-lyn.",
         "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
+          "Malayalam": "നാം പ്രോജക്ടിന്റെ അവസാന തീയതി പാലിക്കേണ്ടതുണ്ട്."
+        }
+      },
+      {
+        "id": "v-bus-2",
+        "word": "Strategy",
+        "phonetic": "STRAT-uh-jee",
+        "emoji": "📈",
+        "translations": {
+          "Malayalam": "തന്ത്രം"
+        },
+        "exampleSentence": "Our marketing strategy was highly effective.",
+        "examplePhonetic": "Owr MAR-ki-ting STRAT-uh-jee wuz HY-lee ih-FEK-tiv.",
+        "exampleTranslations": {
+          "Malayalam": "ഞങ്ങളുടെ മാർക്കറ്റിംഗ് തന്ത്രം വളരെ ഫലപ്രദമായിരുന്നു."
         }
       }
     ],
     "exercises": [
       {
-        "id": "ex-business-3",
-        "type": "multiple_choice",
-        "question": "Choose the correct application for C1 - Advanced Professional.",
-        "hint": "Review the rules.",
-        "options": [
-          {
-            "text": "Correct Application",
-            "isCorrect": true
-          },
-          {
-            "text": "Incorrect Application",
-            "isCorrect": false
-          }
+        "id": "ex-bus-1",
+        "type": "sentence_builder",
+        "question": "Translate: \"നാം പ്രോജക്ടിന്റെ അവസാന തീയതി പാലിക്കേണ്ടതുണ്ട്.\"",
+        "scrambledWords": [
+          "We",
+          "must",
+          "meet",
+          "the",
+          "project",
+          "deadline",
+          "hello",
+          "water"
         ],
-        "explanation": "It is the correct standard usage."
+        "correctSentence": "We must meet the project deadline",
+        "explanation": "A deadline is the latest time or date by which something should be completed."
       }
     ]
   },
@@ -735,141 +391,66 @@ export const LESSONS_DATA: Lesson[] = [
     "moduleId": "expert",
     "moduleTitle": "C2 - Mastery & Idioms",
     "moduleBadge": "👑 Expert",
-    "title": "Mastery Part 1",
-    "subtitle": "Learn essential C2 - Mastery & Idioms concepts.",
+    "title": "Native Idioms",
+    "subtitle": "Speak exactly like a native with common slang and idioms.",
     "icon": "book",
-    "xpReward": 100,
-    "estimatedMinutes": 10,
-    "vocabulary": [
-      {
-        "id": "v-expert-1",
-        "word": "Concept 1",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
-        "translations": {
-          "Malayalam": "ആശയം"
-        },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
-        "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
-        }
-      }
-    ],
-    "exercises": [
-      {
-        "id": "ex-expert-1",
-        "type": "multiple_choice",
-        "question": "Choose the correct application for C2 - Mastery & Idioms.",
-        "hint": "Review the rules.",
-        "options": [
-          {
-            "text": "Correct Application",
-            "isCorrect": true
-          },
-          {
-            "text": "Incorrect Application",
-            "isCorrect": false
-          }
-        ],
-        "explanation": "It is the correct standard usage."
-      }
-    ]
-  },
-  {
-    "id": "expert-lesson-2",
-    "moduleId": "expert",
-    "moduleTitle": "C2 - Mastery & Idioms",
-    "moduleBadge": "👑 Expert",
-    "title": "Mastery Part 2",
-    "subtitle": "Learn essential C2 - Mastery & Idioms concepts.",
-    "icon": "book",
-    "xpReward": 200,
+    "xpReward": 400,
     "estimatedMinutes": 20,
     "vocabulary": [
       {
-        "id": "v-expert-2",
-        "word": "Concept 2",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
+        "id": "v-exp-1",
+        "word": "Piece of cake",
+        "phonetic": "pees ov kayk",
+        "emoji": "🍰",
         "translations": {
-          "Malayalam": "ആശയം"
+          "Malayalam": "വളരെ എളുപ്പമുള്ള"
         },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
+        "exampleSentence": "The English exam was a piece of cake.",
+        "examplePhonetic": "The ING-glish ig-ZAM wuz a pees ov kayk.",
         "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
+          "Malayalam": "ഇംഗ്ലീഷ് പരീക്ഷ വളരെ എളുപ്പമുള്ള ഒന്നായിരുന്നു."
+        }
+      },
+      {
+        "id": "v-exp-2",
+        "word": "Under the weather",
+        "phonetic": "UN-der the WETH-er",
+        "emoji": "🤒",
+        "translations": {
+          "Malayalam": "സുഖമില്ലാത്ത"
+        },
+        "exampleSentence": "I am feeling a bit under the weather today.",
+        "examplePhonetic": "I am FEE-ling a bit UN-der the WETH-er tuh-DAY.",
+        "exampleTranslations": {
+          "Malayalam": "എനിക്കിന്ന് അല്പം സുഖമില്ലായ്മ തോന്നുന്നു."
         }
       }
     ],
     "exercises": [
       {
-        "id": "ex-expert-2",
+        "id": "ex-exp-1",
         "type": "multiple_choice",
-        "question": "Choose the correct application for C2 - Mastery & Idioms.",
-        "hint": "Review the rules.",
+        "question": "If something is very easy, what idiom do you use?",
+        "hint": "It involves a popular dessert.",
         "options": [
           {
-            "text": "Correct Application",
+            "text": "A piece of cake",
             "isCorrect": true
           },
           {
-            "text": "Incorrect Application",
+            "text": "Under the weather",
             "isCorrect": false
-          }
-        ],
-        "explanation": "It is the correct standard usage."
-      }
-    ]
-  },
-  {
-    "id": "expert-lesson-3",
-    "moduleId": "expert",
-    "moduleTitle": "C2 - Mastery & Idioms",
-    "moduleBadge": "👑 Expert",
-    "title": "Mastery Part 3",
-    "subtitle": "Learn essential C2 - Mastery & Idioms concepts.",
-    "icon": "book",
-    "xpReward": 300,
-    "estimatedMinutes": 30,
-    "vocabulary": [
-      {
-        "id": "v-expert-3",
-        "word": "Concept 3",
-        "phonetic": "kon-sept",
-        "emoji": "📝",
-        "translations": {
-          "Malayalam": "ആശയം"
-        },
-        "exampleSentence": "This is a key concept.",
-        "examplePhonetic": "This is a key kon-sept.",
-        "exampleTranslations": {
-          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
-        }
-      }
-    ],
-    "exercises": [
-      {
-        "id": "ex-expert-3",
-        "type": "multiple_choice",
-        "question": "Choose the correct application for C2 - Mastery & Idioms.",
-        "hint": "Review the rules.",
-        "options": [
-          {
-            "text": "Correct Application",
-            "isCorrect": true
           },
           {
-            "text": "Incorrect Application",
+            "text": "Break the ice",
             "isCorrect": false
           }
         ],
-        "explanation": "It is the correct standard usage."
+        "explanation": "\"Piece of cake\" is a native idiom meaning very easy."
       }
     ]
   }
 ];
-
 
 export function getLessonById(id: string): Lesson | undefined {
   return LESSONS_DATA.find((l) => l.id === id);
