@@ -46,15 +46,36 @@ export async function GET(req: Request) {
 
     const targetUserIds = users.map((u) => u.id);
 
-    // Fetch existing friendships
-    const existingFriendships = await db.friendship.findMany({
-      where: {
-        userId: user.id,
-        friendId: { in: targetUserIds },
-      },
-      select: { friendId: true },
-    });
-    const friendSet = new Set(existingFriendships.map((f) => f.friendId));
+    // Fetch existing friendships bidirectionally
+    const [existingFriendships, acceptedRequests] = await Promise.all([
+      db.friendship.findMany({
+        where: {
+          OR: [
+            { userId: user.id, friendId: { in: targetUserIds } },
+            { friendId: user.id, userId: { in: targetUserIds } },
+          ],
+        },
+        select: { userId: true, friendId: true },
+      }),
+      db.friendRequest.findMany({
+        where: {
+          status: 'ACCEPTED',
+          OR: [
+            { senderId: user.id, receiverId: { in: targetUserIds } },
+            { receiverId: user.id, senderId: { in: targetUserIds } },
+          ],
+        },
+        select: { senderId: true, receiverId: true },
+      }),
+    ]);
+
+    const friendSet = new Set<string>();
+    for (const f of existingFriendships) {
+      friendSet.add(f.userId === user.id ? f.friendId : f.userId);
+    }
+    for (const r of acceptedRequests) {
+      friendSet.add(r.senderId === user.id ? r.receiverId : r.senderId);
+    }
 
     // Fetch pending sent requests
     const sentRequests = await db.friendRequest.findMany({

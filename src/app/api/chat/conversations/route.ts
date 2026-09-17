@@ -10,27 +10,117 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 1. Fetch all accepted friends first
-    const friendships = await db.friendship.findMany({
-      where: { userId: user.id },
-      include: {
-        friend: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar: true,
-            preferredLanguage: true,
-            englishLevel: true,
-            streak: true,
-            xp: true,
-            lastSeenAt: true,
+    // 1. Fetch all accepted friends bidirectionally
+    const [friendshipsAsUser, friendshipsAsFriend, acceptedRequests] = await Promise.all([
+      db.friendship.findMany({
+        where: { userId: user.id },
+        include: {
+          friend: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              avatar: true,
+              preferredLanguage: true,
+              englishLevel: true,
+              streak: true,
+              xp: true,
+              lastSeenAt: true,
+            },
           },
         },
-      },
-    });
+      }),
+      db.friendship.findMany({
+        where: { friendId: user.id },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              avatar: true,
+              preferredLanguage: true,
+              englishLevel: true,
+              streak: true,
+              xp: true,
+              lastSeenAt: true,
+            },
+          },
+        },
+      }),
+      db.friendRequest.findMany({
+        where: {
+          status: 'ACCEPTED',
+          OR: [
+            { senderId: user.id },
+            { receiverId: user.id },
+          ],
+        },
+        include: {
+          sender: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              avatar: true,
+              preferredLanguage: true,
+              englishLevel: true,
+              streak: true,
+              xp: true,
+              lastSeenAt: true,
+            },
+          },
+          receiver: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              avatar: true,
+              preferredLanguage: true,
+              englishLevel: true,
+              streak: true,
+              xp: true,
+              lastSeenAt: true,
+            },
+          },
+        },
+      }),
+    ]);
 
-    const friendIds = friendships.map((f) => f.friend.id);
+    interface FriendSummary {
+      id: string;
+      name: string;
+      email: string;
+      avatar: string | null;
+      preferredLanguage: string;
+      englishLevel: string;
+      streak: number;
+      xp: number;
+      lastSeenAt: Date | null;
+    }
+
+    const friendsMap = new Map<string, { user: FriendSummary; createdAt: Date }>();
+
+    for (const f of friendshipsAsUser) {
+      if (f.friend && f.friend.id !== user.id) {
+        friendsMap.set(f.friend.id, { user: f.friend, createdAt: f.createdAt });
+      }
+    }
+
+    for (const f of friendshipsAsFriend) {
+      if (f.user && f.user.id !== user.id && !friendsMap.has(f.user.id)) {
+        friendsMap.set(f.user.id, { user: f.user, createdAt: f.createdAt });
+      }
+    }
+
+    for (const r of acceptedRequests) {
+      const other = r.senderId === user.id ? r.receiver : r.sender;
+      if (other && other.id !== user.id && !friendsMap.has(other.id)) {
+        friendsMap.set(other.id, { user: other, createdAt: r.updatedAt });
+      }
+    }
+
+    const friendIds = Array.from(friendsMap.keys());
     if (friendIds.length === 0) {
       return NextResponse.json({ conversations: [], totalUnread: 0 });
     }
@@ -82,7 +172,7 @@ export async function GET() {
     });
 
     const now = new Date().getTime();
-    const conversationMap = new Map<string, typeof conversations[0]>();
+    const conversationMap = new Map<string, (typeof conversations)[0]>();
 
     let totalUnread = 0;
 
@@ -113,27 +203,28 @@ export async function GET() {
     });
 
     // 3. For any accepted friends without conversation records yet, synthesize entry so they can be clicked
-    const friendsWithoutConversation = friendships
-      .filter((f) => !conversationMap.has(f.friend.id))
-      .map((f) => {
-        const isOnline = f.friend.lastSeenAt
-          ? now - new Date(f.friend.lastSeenAt).getTime() < 4 * 60 * 1000
+    const friendsWithoutConversation: typeof formattedExisting = [];
+    friendsMap.forEach(({ user: friendUser, createdAt }, friendId) => {
+      if (!conversationMap.has(friendId)) {
+        const isOnline = friendUser.lastSeenAt
+          ? now - new Date(friendUser.lastSeenAt).getTime() < 4 * 60 * 1000
           : false;
 
-        return {
-          id: `new-${f.friend.id}`,
-          friendId: f.friend.id,
-          friendName: f.friend.name,
-          friendEmail: f.friend.email,
-          friendAvatar: f.friend.avatar,
-          friendLanguage: f.friend.preferredLanguage,
-          friendLevel: f.friend.englishLevel,
+        friendsWithoutConversation.push({
+          id: `new-${friendId}`,
+          friendId,
+          friendName: friendUser.name,
+          friendEmail: friendUser.email,
+          friendAvatar: friendUser.avatar,
+          friendLanguage: friendUser.preferredLanguage,
+          friendLevel: friendUser.englishLevel,
           isOnline,
           lastMessageText: 'Say hello!',
-          lastMessageAt: f.createdAt,
+          lastMessageAt: createdAt,
           unreadCount: 0,
-        };
-      });
+        });
+      }
+    });
 
     const allConversations = [...formattedExisting, ...friendsWithoutConversation];
 

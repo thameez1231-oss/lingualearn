@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { db, ensureDatabaseSchema } from '@/lib/db';
+import { areUsersFriends } from '@/lib/friends';
 
 function sanitizeMessage(text: string): string {
   return text
@@ -24,33 +25,30 @@ export async function GET(req: Request) {
     }
 
     // Security Check: Verify that caller and target user are accepted friends!
-    const friendship = await db.friendship.findUnique({
-      where: {
-        userId_friendId: {
-          userId: user.id,
-          friendId,
-        },
-      },
-      include: {
-        friend: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar: true,
-            preferredLanguage: true,
-            englishLevel: true,
-            lastSeenAt: true,
-          },
-        },
-      },
-    });
+    const isFriend = await areUsersFriends(user.id, friendId);
 
-    if (!friendship) {
+    if (!isFriend) {
       return NextResponse.json(
         { error: 'You can only view messages with accepted friends.' },
         { status: 403 }
       );
+    }
+
+    const friendUser = await db.user.findUnique({
+      where: { id: friendId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatar: true,
+        preferredLanguage: true,
+        englishLevel: true,
+        lastSeenAt: true,
+      },
+    });
+
+    if (!friendUser) {
+      return NextResponse.json({ error: 'Friend user not found.' }, { status: 404 });
     }
 
     const [user1Id, user2Id] = [user.id, friendId].sort();
@@ -66,9 +64,17 @@ export async function GET(req: Request) {
     });
 
     if (!conversation) {
+      const now = new Date().getTime();
+      const isOnline = friendUser.lastSeenAt
+        ? now - new Date(friendUser.lastSeenAt).getTime() < 4 * 60 * 1000
+        : false;
+
       return NextResponse.json({
         messages: [],
-        friend: friendship.friend,
+        friend: {
+          ...friendUser,
+          isOnline,
+        },
       });
     }
 
@@ -93,8 +99,8 @@ export async function GET(req: Request) {
     });
 
     const now = new Date().getTime();
-    const isOnline = friendship.friend.lastSeenAt
-      ? now - new Date(friendship.friend.lastSeenAt).getTime() < 4 * 60 * 1000
+    const isOnline = friendUser.lastSeenAt
+      ? now - new Date(friendUser.lastSeenAt).getTime() < 4 * 60 * 1000
       : false;
 
     return NextResponse.json({
@@ -109,7 +115,7 @@ export async function GET(req: Request) {
         isMine: m.senderId === user.id,
       })),
       friend: {
-        ...friendship.friend,
+        ...friendUser,
         isOnline,
       },
     });
@@ -173,16 +179,9 @@ export async function POST(req: Request) {
     }
 
     // Security Check: Verify caller and receiver are accepted friends!
-    const friendship = await db.friendship.findUnique({
-      where: {
-        userId_friendId: {
-          userId: user.id,
-          friendId: receiverId,
-        },
-      },
-    });
+    const isFriend = await areUsersFriends(user.id, receiverId);
 
-    if (!friendship) {
+    if (!isFriend) {
       return NextResponse.json(
         { error: 'You can only message accepted friends.' },
         { status: 403 }

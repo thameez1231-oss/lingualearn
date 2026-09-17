@@ -71,6 +71,7 @@ interface ChatMessageItem {
   readAt?: string | null;
   createdAt: string;
   isMine: boolean;
+  status?: 'sending' | 'sent' | 'failed';
 }
 
 function FriendsContent() {
@@ -197,51 +198,73 @@ function FriendsContent() {
     }
   }, [directChatWith, friends]);
 
-  // Fetch messages when a friend is selected
-  const fetchMessages = useCallback(
-    async (isBackground = false) => {
-      if (!selectedFriend) return;
-      if (!isBackground) setIsLoadingChat(true);
-
-      try {
-        const res = await fetch(`/api/chat/messages?friendId=${selectedFriend.id}`);
-        if (res.ok) {
-          const data = await res.json();
-          setMessages(data.messages || []);
-          if (data.friend) {
-            setSelectedFriend((prev) => (prev ? { ...prev, ...data.friend } : data.friend));
-          }
-        }
-      } catch (err) {
-        console.error('Fetch messages error:', err);
-      } finally {
-        if (!isBackground) setIsLoadingChat(false);
-      }
-    },
-    [selectedFriend]
-  );
+  // Selected friend ref and loading trackers to avoid re-render loops
+  const selectedFriendRef = useRef<FriendUser | null>(null);
+  const currentLoadedFriendIdRef = useRef<string | null>(null);
+  const prevMessagesLengthRef = useRef(0);
 
   useEffect(() => {
-    if (selectedFriend) {
-      const timer = setTimeout(() => {
-        fetchMessages(false);
-      }, 0);
-      return () => clearTimeout(timer);
+    selectedFriendRef.current = selectedFriend;
+  }, [selectedFriend]);
+
+  // Fetch messages for a specific friend ID
+  const fetchMessages = useCallback(async (friendId: string, isBackground = false) => {
+    if (!friendId) return;
+    if (!isBackground) setIsLoadingChat(true);
+
+    try {
+      const res = await fetch(`/api/chat/messages?friendId=${encodeURIComponent(friendId)}`);
+      if (res.ok) {
+        const data = await res.json();
+        // Only update state if the user is still viewing this friend
+        if (selectedFriendRef.current?.id === friendId) {
+          setMessages(data.messages || []);
+          currentLoadedFriendIdRef.current = friendId;
+        }
+      }
+    } catch (err) {
+      console.error('Fetch messages error:', err);
+    } finally {
+      if (!isBackground) setIsLoadingChat(false);
     }
+  }, []);
+
+  // When selectedFriend changes, fetch messages once
+  useEffect(() => {
+    if (!selectedFriend) {
+      currentLoadedFriendIdRef.current = null;
+      return;
+    }
+
+    const friendId = selectedFriend.id;
+    const timer = setTimeout(() => {
+      fetchMessages(friendId, false);
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [selectedFriend, fetchMessages]);
 
-  // Active chat polling (every 2.5s)
+  // Active chat polling (every 3s) only when page is visible
   useEffect(() => {
     if (!selectedFriend) return;
+    const friendId = selectedFriend.id;
+
     const interval = setInterval(() => {
-      fetchMessages(true);
-    }, 2500);
+      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
+        return;
+      }
+      fetchMessages(friendId, true);
+    }, 3000);
+
     return () => clearInterval(interval);
   }, [selectedFriend, fetchMessages]);
 
   // Background overview polling (every 6s)
   useEffect(() => {
     const interval = setInterval(() => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
+        return;
+      }
       fetchConversations();
       fetchRequests();
     }, 6000);
@@ -251,9 +274,14 @@ function FriendsContent() {
   // Scroll to bottom on new messages
   useEffect(() => {
     if (messages.length > 0) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      if (messages.length !== prevMessagesLengthRef.current) {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        prevMessagesLengthRef.current = messages.length;
+      }
+    } else {
+      prevMessagesLengthRef.current = 0;
     }
-  }, [messages]);
+  }, [messages.length]);
 
   // Handle Search
   useEffect(() => {
@@ -409,28 +437,43 @@ function FriendsContent() {
     const content = messageInput.trim();
     if (!content) return;
 
+    const friendId = selectedFriend.id;
     // Optimistic message update for zero latency
     const tempId = `temp-${Date.now()}`;
     const optimisticMsg: ChatMessageItem = {
       id: tempId,
       senderId: user?.id || 'me',
-      receiverId: selectedFriend.id,
+      receiverId: friendId,
       content,
       isRead: false,
       createdAt: new Date().toISOString(),
       isMine: true,
+      status: 'sending',
     };
 
     setMessages((prev) => [...prev, optimisticMsg]);
     setMessageInput('');
     setIsSending(true);
 
+    // Update conversation item in sidebar optimistically
+    setConversations((prev) =>
+      prev.map((c) =>
+        c.friendId === friendId
+          ? {
+              ...c,
+              lastMessageText: content.slice(0, 100),
+              lastMessageAt: new Date().toISOString(),
+            }
+          : c
+      )
+    );
+
     try {
       const res = await fetch('/api/chat/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          receiverId: selectedFriend.id,
+          receiverId: friendId,
           content,
         }),
       });
@@ -439,24 +482,81 @@ function FriendsContent() {
       if (res.ok && data.message) {
         // Replace optimistic msg with real message
         setMessages((prev) =>
-          prev.map((m) => (m.id === tempId ? { ...data.message, isMine: true } : m))
+          prev.map((m) =>
+            m.id === tempId ? { ...data.message, isMine: true, status: 'sent' } : m
+          )
         );
         fetchConversations();
       } else {
-        // Rollback optimistic message if failed
-        setMessages((prev) => prev.filter((m) => m.id !== tempId));
-        alert(data.error || 'Failed to send message.');
+        // Mark optimistic message as failed rather than deleting it
+        setMessages((prev) =>
+          prev.map((m) => (m.id === tempId ? { ...m, status: 'failed' } : m))
+        );
+        setStatusMessage({
+          text: data.error || 'Failed to send message.',
+          type: 'error',
+        });
       }
     } catch (err) {
       console.error('Send message error:', err);
-      setMessages((prev) => prev.filter((m) => m.id !== tempId));
+      setMessages((prev) =>
+        prev.map((m) => (m.id === tempId ? { ...m, status: 'failed' } : m))
+      );
+      setStatusMessage({
+        text: 'Network error: could not deliver message. Tap Retry to resend.',
+        type: 'error',
+      });
     } finally {
       setIsSending(false);
     }
   };
 
+  // Retry sending a failed message
+  const handleRetryMessage = async (failedId: string, content: string) => {
+    if (!selectedFriend) return;
+    const friendId = selectedFriend.id;
+
+    setMessages((prev) =>
+      prev.map((m) => (m.id === failedId ? { ...m, status: 'sending' } : m))
+    );
+
+    try {
+      const res = await fetch('/api/chat/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          receiverId: friendId,
+          content,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.message) {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === failedId ? { ...data.message, isMine: true, status: 'sent' } : m
+          )
+        );
+        fetchConversations();
+      } else {
+        setMessages((prev) =>
+          prev.map((m) => (m.id === failedId ? { ...m, status: 'failed' } : m))
+        );
+        setStatusMessage({
+          text: data.error || 'Failed to retry message.',
+          type: 'error',
+        });
+      }
+    } catch {
+      setMessages((prev) =>
+        prev.map((m) => (m.id === failedId ? { ...m, status: 'failed' } : m))
+      );
+    }
+  };
+
   // Open Chat with a friend
   const openChatWithFriend = (friend: FriendUser) => {
+    setMessages([]);
     startTransition(() => {
       setSelectedFriend(friend);
     });
@@ -513,7 +613,7 @@ function FriendsContent() {
                 fetchFriends();
                 fetchConversations();
                 fetchRequests();
-                if (selectedFriend) fetchMessages(false);
+                if (selectedFriend) fetchMessages(selectedFriend.id, false);
               }}
               className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
               title="Refresh"
@@ -1043,6 +1143,14 @@ function FriendsContent() {
                 {/* Chat Top Header */}
                 <div className="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-white shrink-0">
                   <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedFriend(null)}
+                      className="md:hidden p-1.5 -ml-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+                      title="Back to conversations"
+                    >
+                      <ArrowLeft className="w-5 h-5" aria-hidden="true" />
+                    </button>
                     <div className="relative">
                       <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
                         {selectedFriend.name.charAt(0).toUpperCase()}
@@ -1118,6 +1226,9 @@ function FriendsContent() {
                         minute: '2-digit',
                       });
 
+                      const isFailed = msg.status === 'failed';
+                      const isSendingStatus = msg.status === 'sending';
+
                       return (
                         <div
                           key={msg.id}
@@ -1126,18 +1237,37 @@ function FriendsContent() {
                           <div
                             className={`max-w-[85%] sm:max-w-[70%] rounded-2xl px-4 py-2.5 text-sm shadow-xs break-words whitespace-pre-wrap select-text ${
                               isMine
-                                ? 'bg-indigo-600 text-white rounded-tr-none'
+                                ? isFailed
+                                  ? 'bg-rose-600 text-white rounded-tr-none'
+                                  : isSendingStatus
+                                  ? 'bg-indigo-500 text-white/90 rounded-tr-none'
+                                  : 'bg-indigo-600 text-white rounded-tr-none'
                                 : 'bg-white border border-slate-200 text-slate-900 rounded-tl-none'
                             }`}
                           >
                             {msg.content}
                           </div>
-                          <div className="flex items-center gap-1 text-[10px] text-slate-400 mt-1 px-1">
+                          <div className="flex items-center gap-1.5 text-[10px] text-slate-400 mt-1 px-1">
                             <span>{timeStr}</span>
                             {isMine && (
-                              <span className="text-indigo-600 font-bold">
-                                {msg.isRead ? '✓✓' : '✓'}
-                              </span>
+                              <>
+                                {isSendingStatus ? (
+                                  <Clock className="w-3 h-3 animate-pulse text-indigo-400" aria-label="Sending" />
+                                ) : isFailed ? (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRetryMessage(msg.id, msg.content)}
+                                    className="text-rose-600 font-bold hover:underline cursor-pointer flex items-center gap-0.5"
+                                    title="Click to retry"
+                                  >
+                                    <span>Failed • Retry</span>
+                                  </button>
+                                ) : (
+                                  <span className="text-indigo-600 font-bold">
+                                    {msg.isRead ? '✓✓' : '✓'}
+                                  </span>
+                                )}
+                              </>
                             )}
                           </div>
                         </div>
