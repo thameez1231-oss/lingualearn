@@ -26,8 +26,24 @@ export default async function LearnOverviewPage() {
 
   const completedMap = new Set(userProgress.map((p) => p.lessonId));
 
+  // Determine visible modules based on user's englishLevel
+  const getVisibleModules = (level?: string) => {
+    switch (level) {
+      case 'COMPLETE_BEGINNER':
+      case 'BEGINNER':
+        return ['basics', 'everyday'];
+      case 'INTERMEDIATE':
+        return ['grammar', 'speaking'];
+      case 'ADVANCED':
+        return ['business', 'expert'];
+      default:
+        return ['basics', 'everyday'];
+    }
+  };
+  const visibleModuleIds = getVisibleModules(user?.englishLevel);
+
   // Group lessons by module
-  const modules = [
+  const allModules = [
     {
       id: 'basics',
       title: '🌱 A1 - Beginner Basics',
@@ -65,6 +81,8 @@ export default async function LearnOverviewPage() {
       lessons: LESSONS_DATA.filter((l) => l.moduleId === 'expert'),
     },
   ];
+
+  const modules = allModules.filter(m => visibleModuleIds.includes(m.id));
 
   return (
     <AppShell

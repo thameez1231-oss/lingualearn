@@ -17,6 +17,7 @@ export default function WordsPage() {
     name: string;
     email: string;
     preferredLanguage?: string;
+    englishLevel?: string;
   } | null>(null);
 
   const [query, setQuery] = useState('');
@@ -93,9 +94,29 @@ export default function WordsPage() {
     }
   };
 
-  const displayedWords = filterSavedOnly
+  const getVisibleCategories = (level?: string) => {
+    switch (level) {
+      case 'COMPLETE_BEGINNER':
+      case 'BEGINNER':
+        return ['basics', 'everyday'];
+      case 'INTERMEDIATE':
+        return ['grammar', 'speaking'];
+      case 'ADVANCED':
+        return ['business', 'expert'];
+      default:
+        return ['basics', 'everyday'];
+    }
+  };
+
+  const visibleCategories = getVisibleCategories(user?.englishLevel);
+
+  let displayedWords = filterSavedOnly
     ? words.filter((w) => savedWords.includes(w.word.toLowerCase()))
     : words;
+    
+  // Filter by user's englishLevel
+  displayedWords = displayedWords.filter(w => visibleCategories.includes(w.category.toLowerCase()));
+
 
   return (
     <AppShell
