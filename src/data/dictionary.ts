@@ -20,9 +20,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "👋",
     "simpleDefinition": "A common greeting.",
     "exampleSentence": "I understand the meaning of Hello.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "ഹലോ"
     },
     "category": "basics"
   },
@@ -34,9 +34,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "🙏",
     "simpleDefinition": "Used to ask politely.",
     "exampleSentence": "I understand the meaning of Please.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "ദയവായി"
     },
     "category": "basics"
   },
@@ -48,9 +48,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "😊",
     "simpleDefinition": "Expression of gratitude.",
     "exampleSentence": "I understand the meaning of Thank you.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "നന്ദി"
     },
     "category": "basics"
   },
@@ -62,9 +62,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "💧",
     "simpleDefinition": "Clear liquid for drinking.",
     "exampleSentence": "I understand the meaning of Water.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "വെള്ളം"
     },
     "category": "food"
   },
@@ -76,9 +76,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "🍞",
     "simpleDefinition": "Things people eat.",
     "exampleSentence": "I understand the meaning of Food.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "ഭക്ഷണം"
     },
     "category": "food"
   },
@@ -90,9 +90,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "🤝",
     "simpleDefinition": "A person you like and know well.",
     "exampleSentence": "I understand the meaning of Friend.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "സുഹൃത്ത്"
     },
     "category": "family"
   },
@@ -104,9 +104,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "👪",
     "simpleDefinition": "Parents and children.",
     "exampleSentence": "I understand the meaning of Family.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "കുടുംബം"
     },
     "category": "family"
   },
@@ -118,9 +118,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "⌚",
     "simpleDefinition": "Measured in hours and minutes.",
     "exampleSentence": "I understand the meaning of Time.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "സമയം"
     },
     "category": "everyday"
   },
@@ -132,9 +132,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "💵",
     "simpleDefinition": "Coins and banknotes used to buy things.",
     "exampleSentence": "I understand the meaning of Money.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "പണം"
     },
     "category": "everyday"
   },
@@ -146,9 +146,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "💼",
     "simpleDefinition": "Activity involving mental or physical effort.",
     "exampleSentence": "I understand the meaning of Work.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "ജോലി"
     },
     "category": "action"
   },
@@ -160,9 +160,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "📖",
     "simpleDefinition": "Gain knowledge or skill.",
     "exampleSentence": "I understand the meaning of Learn.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "പഠിക്കുക"
     },
     "category": "action"
   },
@@ -174,9 +174,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "😄",
     "simpleDefinition": "Feeling or showing pleasure.",
     "exampleSentence": "I understand the meaning of Happy.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "സന്തോഷം"
     },
     "category": "emotions"
   },
@@ -188,9 +188,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "😢",
     "simpleDefinition": "Feeling sorrow.",
     "exampleSentence": "I understand the meaning of Sad.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "സങ്കടം"
     },
     "category": "emotions"
   },
@@ -202,9 +202,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "✨",
     "simpleDefinition": "Pleasing the senses or mind.",
     "exampleSentence": "I understand the meaning of Beautiful.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "മനോഹരം"
     },
     "category": "adjectives"
   },
@@ -216,9 +216,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "❗",
     "simpleDefinition": "Of great significance or value.",
     "exampleSentence": "I understand the meaning of Important.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "പ്രധാനം"
     },
     "category": "adjectives"
   },
@@ -230,9 +230,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "🧠",
     "simpleDefinition": "Knowledge gained through doing things.",
     "exampleSentence": "I understand the meaning of Experience.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "അനുഭവം"
     },
     "category": "advanced"
   },
@@ -244,9 +244,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "🌟",
     "simpleDefinition": "A chance to do something.",
     "exampleSentence": "I understand the meaning of Opportunity.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "അവസരം"
     },
     "category": "advanced"
   },
@@ -258,9 +258,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "👔",
     "simpleDefinition": "Discuss to reach an agreement.",
     "exampleSentence": "I understand the meaning of Negotiate.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "ചർച്ചചെയ്യുക"
     },
     "category": "business"
   },
@@ -272,9 +272,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "📈",
     "simpleDefinition": "A plan of action.",
     "exampleSentence": "I understand the meaning of Strategy.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "തന്ത്രം"
     },
     "category": "business"
   },
@@ -286,9 +286,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "🌍",
     "simpleDefinition": "Found everywhere.",
     "exampleSentence": "I understand the meaning of Ubiquitous.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "സർവ്വവ്യാപിയായ"
     },
     "category": "expert"
   },
@@ -300,9 +300,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "⏳",
     "simpleDefinition": "Lasting for a very short time.",
     "exampleSentence": "I understand the meaning of Ephemeral.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "ക്ഷണികമായ"
     },
     "category": "expert"
   },
@@ -314,9 +314,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "🧩",
     "simpleDefinition": "A typical example or pattern.",
     "exampleSentence": "I understand the meaning of Paradigm.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "മാതൃക"
     },
     "category": "expert"
   },
@@ -328,9 +328,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "🗣️",
     "simpleDefinition": "Fluent or persuasive in speaking.",
     "exampleSentence": "I understand the meaning of Eloquent.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "വാചാലനായ"
     },
     "category": "expert"
   },
@@ -342,9 +342,9 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "💪",
     "simpleDefinition": "Able to withstand or recover quickly.",
     "exampleSentence": "I understand the meaning of Resilient.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "പ്രതിരോധശേഷിയുള്ള"
     },
     "category": "expert"
   },
@@ -356,13 +356,14 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     "emoji": "🔎",
     "simpleDefinition": "Showing great attention to detail.",
     "exampleSentence": "I understand the meaning of Meticulous.",
-    "exampleTranslation": "Comprendo el significado.",
+    "exampleTranslation": "ഞാൻ ഇതിന്റെ അർത്ഥം മനസ്സിലാക്കുന്നു.",
     "translations": {
-      "Spanish": "Traducción"
+      "Malayalam": "സൂക്ഷ്മമായ"
     },
     "category": "expert"
   }
 ];
+
 
 export function searchDictionary(query: string, language: string = 'Malayalam'): DictionaryEntry[] {
   const q = query.trim().toLowerCase();

@@ -57,12 +57,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -103,12 +103,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -149,12 +149,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -195,12 +195,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -241,12 +241,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -287,12 +287,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -333,12 +333,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -379,12 +379,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -425,12 +425,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -471,12 +471,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -517,12 +517,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -563,12 +563,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -609,12 +609,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -655,12 +655,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -701,12 +701,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -747,12 +747,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -793,12 +793,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -839,12 +839,12 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kon-sept",
         "emoji": "📝",
         "translations": {
-          "Spanish": "Concepto"
+          "Malayalam": "ആശയം"
         },
         "exampleSentence": "This is a key concept.",
         "examplePhonetic": "This is a key kon-sept.",
         "exampleTranslations": {
-          "Spanish": "Este es un concepto clave."
+          "Malayalam": "ഇതൊരു പ്രധാന ആശയമാണ്."
         }
       }
     ],
@@ -869,6 +869,7 @@ export const LESSONS_DATA: Lesson[] = [
     ]
   }
 ];
+
 
 export function getLessonById(id: string): Lesson | undefined {
   return LESSONS_DATA.find((l) => l.id === id);
