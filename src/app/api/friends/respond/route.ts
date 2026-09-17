@@ -144,9 +144,78 @@ export async function POST(req: Request) {
         }),
       ]);
 
+      // 3. Fetch sender user profile details to return immediately
+      const senderUser = await db.user.findUnique({
+        where: { id: finalSenderId },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          avatar: true,
+          preferredLanguage: true,
+          englishLevel: true,
+          streak: true,
+          xp: true,
+          lastSeenAt: true,
+        },
+      });
+
+      // 4. Ensure canonical conversation record exists
+      const [user1Id, user2Id] = [user.id, finalSenderId].sort();
+      let conversation = await db.conversation.findUnique({
+        where: {
+          user1Id_user2Id: { user1Id, user2Id },
+        },
+      });
+
+      if (!conversation) {
+        conversation = await db.conversation.create({
+          data: {
+            user1Id,
+            user2Id,
+            lastMessageText: null,
+            lastMessageAt: new Date(),
+          },
+        }).catch(() => null);
+      }
+
+      const now = Date.now();
+      const isOnline = senderUser?.lastSeenAt
+        ? now - new Date(senderUser.lastSeenAt).getTime() < 4 * 60 * 1000
+        : false;
+
+      const friendPayload = {
+        id: finalSenderId,
+        name: senderUser?.name || finalSenderName,
+        email: senderUser?.email || finalSenderEmail,
+        avatar: senderUser?.avatar || null,
+        preferredLanguage: senderUser?.preferredLanguage || 'Malayalam',
+        englishLevel: senderUser?.englishLevel || 'Beginner',
+        streak: senderUser?.streak || 0,
+        xp: senderUser?.xp || 0,
+        isOnline,
+        friendsSince: new Date(),
+      };
+
+      const conversationPayload = {
+        id: conversation?.id || `conv-${user1Id}-${user2Id}`,
+        friendId: finalSenderId,
+        friendName: senderUser?.name || finalSenderName,
+        friendEmail: senderUser?.email || finalSenderEmail,
+        friendAvatar: senderUser?.avatar || null,
+        friendLanguage: senderUser?.preferredLanguage || 'Malayalam',
+        friendLevel: senderUser?.englishLevel || 'Beginner',
+        isOnline,
+        lastMessageText: conversation?.lastMessageText || 'No messages yet',
+        lastMessageAt: conversation?.lastMessageAt || new Date().toISOString(),
+        unreadCount: 0,
+      };
+
       return NextResponse.json({
         success: true,
         action: 'ACCEPTED',
+        friend: friendPayload,
+        conversation: conversationPayload,
         message: `You are now friends with ${finalSenderName}!`,
       });
     } else {

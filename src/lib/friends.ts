@@ -14,7 +14,7 @@ export async function areUsersFriends(userAId: string, userBId: string): Promise
   await ensureDatabaseSchema(db);
 
   // 1. Check Friendship table in both directions
-  const directFriendship = await db.friendship.findFirst({
+  const friendships = await db.friendship.findMany({
     where: {
       OR: [
         { userId: userAId, friendId: userBId },
@@ -23,8 +23,13 @@ export async function areUsersFriends(userAId: string, userBId: string): Promise
     },
   });
 
-  if (directFriendship) {
-    // If only one direction exists, auto-heal the second direction in the background
+  if (friendships.length >= 2) {
+    // Both directions already exist - fast return without DB writes
+    return true;
+  }
+
+  if (friendships.length === 1) {
+    // Only one direction exists, auto-heal the reciprocal direction
     ensureBidirectionalFriendship(userAId, userBId).catch(() => {});
     return true;
   }

@@ -74,9 +74,103 @@ interface ChatMessageItem {
   status?: 'sending' | 'sent' | 'failed';
 }
 
+// Session-based persistence helpers for instantaneous re-opening without React Compiler mutation issues
+function getCachedMessages(friendId: string): ChatMessageItem[] {
+  if (typeof window === 'undefined' || !friendId) return [];
+  try {
+    const raw = sessionStorage.getItem(`ll_msgs_${friendId}`);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function setCachedMessages(friendId: string, messages: ChatMessageItem[]): void {
+  if (typeof window === 'undefined' || !friendId) return;
+  try {
+    const slice = messages.slice(-50);
+    sessionStorage.setItem(`ll_msgs_${friendId}`, JSON.stringify(slice));
+  } catch {}
+}
+
+function getCachedDraft(friendId: string): string {
+  if (typeof window === 'undefined' || !friendId) return '';
+  try {
+    return sessionStorage.getItem(`ll_draft_${friendId}`) || '';
+  } catch {
+    return '';
+  }
+}
+
+function setCachedDraft(friendId: string, draft: string): void {
+  if (typeof window === 'undefined' || !friendId) return;
+  try {
+    if (!draft) {
+      sessionStorage.removeItem(`ll_draft_${friendId}`);
+    } else {
+      sessionStorage.setItem(`ll_draft_${friendId}`, draft);
+    }
+  } catch {}
+}
+
+function getStoredFriend(): FriendUser | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = sessionStorage.getItem('ll_active_friend');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function setStoredFriend(friend: FriendUser | null): void {
+  if (typeof window === 'undefined') return;
+  try {
+    if (!friend) {
+      sessionStorage.removeItem('ll_active_friend');
+    } else {
+      sessionStorage.setItem('ll_active_friend', JSON.stringify(friend));
+    }
+  } catch {}
+}
+
+function getStoredFriends(): FriendUser[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = sessionStorage.getItem('ll_friends_list');
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function setStoredFriends(friends: FriendUser[]): void {
+  if (typeof window === 'undefined') return;
+  try {
+    sessionStorage.setItem('ll_friends_list', JSON.stringify(friends));
+  } catch {}
+}
+
+function getStoredConversations(): ConversationItem[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = sessionStorage.getItem('ll_convs_list');
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function setStoredConversations(convs: ConversationItem[]): void {
+  if (typeof window === 'undefined') return;
+  try {
+    sessionStorage.setItem('ll_convs_list', JSON.stringify(convs));
+  } catch {}
+}
+
 function FriendsContent() {
   const searchParams = useSearchParams();
-  const directChatWith = searchParams.get('chatWith');
+  const directChatWith = searchParams.get('friend') || searchParams.get('chatWith');
   const directTab = searchParams.get('tab');
 
   const [user, setUser] = useState<{
@@ -93,14 +187,38 @@ function FriendsContent() {
     (directTab as 'chats' | 'friends' | 'requests' | 'search') || 'chats'
   );
 
-  // Friends & Chat State
-  const [friends, setFriends] = useState<FriendUser[]>([]);
-  const [conversations, setConversations] = useState<ConversationItem[]>([]);
+  // Friends & Chat State - initialized with cache for zero-latency re-opening
+  const [friends, setFriends] = useState<FriendUser[]>(() => getStoredFriends());
+  const [conversations, setConversations] = useState<ConversationItem[]>(() => getStoredConversations());
   const [incomingRequests, setIncomingRequests] = useState<IncomingRequest[]>([]);
   const [outgoingRequests, setOutgoingRequests] = useState<OutgoingRequest[]>([]);
-  const [selectedFriend, setSelectedFriend] = useState<FriendUser | null>(null);
-  const [messages, setMessages] = useState<ChatMessageItem[]>([]);
-  const [messageInput, setMessageInput] = useState('');
+
+  const [selectedFriend, setSelectedFriend] = useState<FriendUser | null>(() => {
+    const stored = getStoredFriend();
+    if (directChatWith) {
+      if (stored?.id === directChatWith) return stored;
+      const found = getStoredFriends().find((f) => f.id === directChatWith);
+      if (found) return found;
+    }
+    return stored;
+  });
+
+  const [messages, setMessages] = useState<ChatMessageItem[]>(() => {
+    const friendId = directChatWith || getStoredFriend()?.id;
+    if (friendId) {
+      return getCachedMessages(friendId);
+    }
+    return [];
+  });
+
+  const [messageInput, setMessageInput] = useState<string>(() => {
+    const friendId = directChatWith || getStoredFriend()?.id;
+    if (friendId) {
+      return getCachedDraft(friendId);
+    }
+    return '';
+  });
+
   const [isSending, setIsSending] = useState(false);
 
   // Search State
@@ -109,10 +227,16 @@ function FriendsContent() {
   const [isSearching, setIsSearching] = useState(false);
   const [addingUserId, setAddingUserId] = useState<string | null>(null);
   const [respondingRequestId, setRespondingRequestId] = useState<string | null>(null);
-  const [statusMessage, setStatusMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{
+    text: string;
+    type: 'success' | 'error';
+    friendToChat?: FriendUser;
+  } | null>(null);
 
-  // Loading & Polling States
-  const [isLoadingList, setIsLoadingList] = useState(true);
+  // Loading & Polling States - Stale-While-Revalidate
+  const [isLoadingList, setIsLoadingList] = useState<boolean>(() => {
+    return getStoredFriends().length === 0 && getStoredConversations().length === 0;
+  });
   const [isLoadingChat, setIsLoadingChat] = useState(false);
   const [, startTransition] = useTransition();
 
@@ -137,7 +261,9 @@ function FriendsContent() {
       const res = await fetch('/api/friends');
       if (res.ok) {
         const data = await res.json();
-        setFriends(data.friends || []);
+        const list = data.friends || [];
+        setFriends(list);
+        setStoredFriends(list);
       }
     } catch (err) {
       console.error('Fetch friends error:', err);
@@ -150,7 +276,9 @@ function FriendsContent() {
       const res = await fetch('/api/chat/conversations');
       if (res.ok) {
         const data = await res.json();
-        setConversations(data.conversations || []);
+        const list = data.conversations || [];
+        setConversations(list);
+        setStoredConversations(list);
       }
     } catch (err) {
       console.error('Fetch conversations error:', err);
@@ -171,7 +299,7 @@ function FriendsContent() {
     }
   }, []);
 
-  // Initial load
+  // Initial load with Stale-While-Revalidate
   useEffect(() => {
     let active = true;
     const timer = setTimeout(async () => {
@@ -187,17 +315,6 @@ function FriendsContent() {
     };
   }, [fetchFriends, fetchConversations, fetchRequests]);
 
-  // Handle direct navigation to friend chat via query param
-  useEffect(() => {
-    if (directChatWith && friends.length > 0) {
-      const found = friends.find((f) => f.id === directChatWith);
-      if (found) {
-        const timer = setTimeout(() => setSelectedFriend(found), 0);
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [directChatWith, friends]);
-
   // Selected friend ref and loading trackers to avoid re-render loops
   const selectedFriendRef = useRef<FriendUser | null>(null);
   const currentLoadedFriendIdRef = useRef<string | null>(null);
@@ -207,10 +324,11 @@ function FriendsContent() {
     selectedFriendRef.current = selectedFriend;
   }, [selectedFriend]);
 
-  // Fetch messages for a specific friend ID
+  // Fetch messages for a specific friend ID (zero-flicker if cached)
   const fetchMessages = useCallback(async (friendId: string, isBackground = false) => {
     if (!friendId) return;
-    if (!isBackground) setIsLoadingChat(true);
+    const hasCached = getCachedMessages(friendId).length > 0;
+    if (!isBackground && !hasCached) setIsLoadingChat(true);
 
     try {
       const res = await fetch(`/api/chat/messages?friendId=${encodeURIComponent(friendId)}`);
@@ -218,16 +336,32 @@ function FriendsContent() {
         const data = await res.json();
         // Only update state if the user is still viewing this friend
         if (selectedFriendRef.current?.id === friendId) {
-          setMessages(data.messages || []);
+          const list = data.messages || [];
+          setMessages(list);
+          setCachedMessages(friendId, list);
           currentLoadedFriendIdRef.current = friendId;
         }
       }
     } catch (err) {
       console.error('Fetch messages error:', err);
     } finally {
-      if (!isBackground) setIsLoadingChat(false);
+      if (!isBackground && !hasCached) setIsLoadingChat(false);
     }
   }, []);
+
+  // Handle direct navigation to friend chat via query param
+  useEffect(() => {
+    if (directChatWith) {
+      const found = friends.find((f) => f.id === directChatWith) || getStoredFriends().find((f) => f.id === directChatWith);
+      if (found && selectedFriendRef.current?.id !== found.id) {
+        const timer = setTimeout(() => {
+          setSelectedFriend(found);
+          setStoredFriend(found);
+        }, 0);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [directChatWith, friends]);
 
   // When selectedFriend changes, fetch messages once
   useEffect(() => {
@@ -237,8 +371,9 @@ function FriendsContent() {
     }
 
     const friendId = selectedFriend.id;
+    const isCached = getCachedMessages(friendId).length > 0;
     const timer = setTimeout(() => {
-      fetchMessages(friendId, false);
+      fetchMessages(friendId, isCached);
     }, 0);
 
     return () => clearTimeout(timer);
@@ -265,11 +400,12 @@ function FriendsContent() {
       if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
         return;
       }
+      fetchFriends();
       fetchConversations();
       fetchRequests();
     }, 6000);
     return () => clearInterval(interval);
-  }, [fetchConversations, fetchRequests]);
+  }, [fetchFriends, fetchConversations, fetchRequests]);
 
   // Scroll to bottom on new messages
   useEffect(() => {
@@ -384,13 +520,43 @@ function FriendsContent() {
         setIncomingRequests((prev) =>
           prev.filter((r) => r.id !== requestId && (!sender || r.sender.id !== sender.id))
         );
-        setStatusMessage({
-          text: data.message || (action === 'ACCEPT' ? 'Friend request accepted!' : 'Friend request declined.'),
-          type: 'success',
-        });
+
+        if (action === 'ACCEPT' && data.friend) {
+          const newFriend: FriendUser = data.friend;
+          const newConv: ConversationItem = data.conversation;
+
+          setFriends((prev) => {
+            const next = [newFriend, ...prev.filter((f) => f.id !== newFriend.id)];
+            setStoredFriends(next);
+            return next;
+          });
+
+          if (newConv) {
+            setConversations((prev) => {
+              const next = [newConv, ...prev.filter((c) => c.friendId !== newFriend.id)];
+              setStoredConversations(next);
+              return next;
+            });
+          }
+
+          setSearchResults((prev) =>
+            prev.map((u) => (u.id === newFriend.id ? { ...u, relationshipStatus: 'FRIENDS' as const } : u))
+          );
+
+          setStatusMessage({
+            text: data.message || `You are now friends with ${newFriend.name}!`,
+            type: 'success',
+            friendToChat: newFriend,
+          });
+        } else {
+          setStatusMessage({
+            text: data.message || (action === 'ACCEPT' ? 'Friend request accepted!' : 'Friend request declined.'),
+            type: 'success',
+          });
+        }
+
         if (action === 'ACCEPT') {
-          fetchFriends();
-          fetchConversations();
+          Promise.all([fetchFriends(), fetchConversations(), fetchRequests()]).catch(() => {});
         }
       } else {
         setStatusMessage({
@@ -418,10 +584,18 @@ function FriendsContent() {
     try {
       const res = await fetch(`/api/friends/${friendId}`, { method: 'DELETE' });
       if (res.ok) {
-        setFriends((prev) => prev.filter((f) => f.id !== friendId));
-        setConversations((prev) => prev.filter((c) => c.friendId !== friendId));
+        setFriends((prev) => {
+          const next = prev.filter((f) => f.id !== friendId);
+          setStoredFriends(next);
+          return next;
+        });
+        setConversations((prev) => {
+          const next = prev.filter((c) => c.friendId !== friendId);
+          setStoredConversations(next);
+          return next;
+        });
         if (selectedFriend?.id === friendId) {
-          setSelectedFriend(null);
+          handleCloseChat();
         }
       }
     } catch (err) {
@@ -451,13 +625,18 @@ function FriendsContent() {
       status: 'sending',
     };
 
-    setMessages((prev) => [...prev, optimisticMsg]);
+    setMessages((prev) => {
+      const updated = [...prev, optimisticMsg];
+      setCachedMessages(friendId, updated);
+      return updated;
+    });
     setMessageInput('');
+    setCachedDraft(friendId, '');
     setIsSending(true);
 
     // Update conversation item in sidebar optimistically
-    setConversations((prev) =>
-      prev.map((c) =>
+    setConversations((prev) => {
+      const updated = prev.map((c) =>
         c.friendId === friendId
           ? {
               ...c,
@@ -465,8 +644,10 @@ function FriendsContent() {
               lastMessageAt: new Date().toISOString(),
             }
           : c
-      )
-    );
+      );
+      setStoredConversations(updated);
+      return updated;
+    });
 
     try {
       const res = await fetch('/api/chat/messages', {
@@ -481,17 +662,21 @@ function FriendsContent() {
       const data = await res.json();
       if (res.ok && data.message) {
         // Replace optimistic msg with real message
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === tempId ? { ...data.message, isMine: true, status: 'sent' } : m
-          )
-        );
+        setMessages((prev) => {
+          const updated = prev.map((m) =>
+            m.id === tempId ? { ...data.message, isMine: true, status: 'sent' as const } : m
+          );
+          setCachedMessages(friendId, updated);
+          return updated;
+        });
         fetchConversations();
       } else {
         // Mark optimistic message as failed rather than deleting it
-        setMessages((prev) =>
-          prev.map((m) => (m.id === tempId ? { ...m, status: 'failed' } : m))
-        );
+        setMessages((prev) => {
+          const updated = prev.map((m) => (m.id === tempId ? { ...m, status: 'failed' as const } : m));
+          setCachedMessages(friendId, updated);
+          return updated;
+        });
         setStatusMessage({
           text: data.error || 'Failed to send message.',
           type: 'error',
@@ -499,9 +684,11 @@ function FriendsContent() {
       }
     } catch (err) {
       console.error('Send message error:', err);
-      setMessages((prev) =>
-        prev.map((m) => (m.id === tempId ? { ...m, status: 'failed' } : m))
-      );
+      setMessages((prev) => {
+        const updated = prev.map((m) => (m.id === tempId ? { ...m, status: 'failed' as const } : m));
+        setCachedMessages(friendId, updated);
+        return updated;
+      });
       setStatusMessage({
         text: 'Network error: could not deliver message. Tap Retry to resend.',
         type: 'error',
@@ -516,9 +703,11 @@ function FriendsContent() {
     if (!selectedFriend) return;
     const friendId = selectedFriend.id;
 
-    setMessages((prev) =>
-      prev.map((m) => (m.id === failedId ? { ...m, status: 'sending' } : m))
-    );
+    setMessages((prev) => {
+      const updated = prev.map((m) => (m.id === failedId ? { ...m, status: 'sending' as const } : m));
+      setCachedMessages(friendId, updated);
+      return updated;
+    });
 
     try {
       const res = await fetch('/api/chat/messages', {
@@ -532,34 +721,68 @@ function FriendsContent() {
 
       const data = await res.json();
       if (res.ok && data.message) {
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === failedId ? { ...data.message, isMine: true, status: 'sent' } : m
-          )
-        );
+        setMessages((prev) => {
+          const updated = prev.map((m) =>
+            m.id === failedId ? { ...data.message, isMine: true, status: 'sent' as const } : m
+          );
+          setCachedMessages(friendId, updated);
+          return updated;
+        });
         fetchConversations();
       } else {
-        setMessages((prev) =>
-          prev.map((m) => (m.id === failedId ? { ...m, status: 'failed' } : m))
-        );
+        setMessages((prev) => {
+          const updated = prev.map((m) => (m.id === failedId ? { ...m, status: 'failed' as const } : m));
+          setCachedMessages(friendId, updated);
+          return updated;
+        });
         setStatusMessage({
           text: data.error || 'Failed to retry message.',
           type: 'error',
         });
       }
     } catch {
-      setMessages((prev) =>
-        prev.map((m) => (m.id === failedId ? { ...m, status: 'failed' } : m))
-      );
+      setMessages((prev) => {
+        const updated = prev.map((m) => (m.id === failedId ? { ...m, status: 'failed' as const } : m));
+        setCachedMessages(friendId, updated);
+        return updated;
+      });
     }
   };
 
-  // Open Chat with a friend
+  // Open Chat with a friend (preserves draft of previous conversation)
   const openChatWithFriend = (friend: FriendUser) => {
-    setMessages([]);
+    if (selectedFriendRef.current) {
+      setCachedDraft(selectedFriendRef.current.id, messageInput);
+    }
+
+    const cachedMsgs = getCachedMessages(friend.id);
+    setMessages(cachedMsgs);
+    setMessageInput(getCachedDraft(friend.id));
+    setStoredFriend(friend);
+
+    if (typeof window !== 'undefined') {
+      try {
+        window.history.replaceState(null, '', `/friends?friend=${encodeURIComponent(friend.id)}`);
+      } catch {}
+    }
+
     startTransition(() => {
       setSelectedFriend(friend);
     });
+  };
+
+  // Close Chat (intentionally navigating back to conversations list)
+  const handleCloseChat = () => {
+    if (selectedFriendRef.current) {
+      setCachedDraft(selectedFriendRef.current.id, messageInput);
+    }
+    setSelectedFriend(null);
+    setStoredFriend(null);
+    if (typeof window !== 'undefined') {
+      try {
+        window.history.replaceState(null, '', '/friends');
+      } catch {}
+    }
   };
 
   const pendingRequestsCount = incomingRequests.length;
@@ -583,7 +806,7 @@ function FriendsContent() {
             {selectedFriend ? (
               <button
                 type="button"
-                onClick={() => setSelectedFriend(null)}
+                onClick={handleCloseChat}
                 className="md:hidden p-2 -ml-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
                 title="Back to conversation list"
               >
@@ -888,14 +1111,29 @@ function FriendsContent() {
                           }`}
                         >
                           <span className="flex-1 mr-2">{statusMessage.text}</span>
-                          <button
-                            type="button"
-                            onClick={() => setStatusMessage(null)}
-                            className="p-1 hover:opacity-75 text-xs cursor-pointer text-slate-500"
-                            title="Dismiss"
-                          >
-                            <X className="w-3.5 h-3.5" aria-hidden="true" />
-                          </button>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {statusMessage.friendToChat && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  openChatWithFriend(statusMessage.friendToChat!);
+                                  setStatusMessage(null);
+                                }}
+                                className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-xs shadow-xs cursor-pointer inline-flex items-center gap-1 transition-colors"
+                              >
+                                <MessageCircle className="w-3 h-3" aria-hidden="true" />
+                                <span>Chat</span>
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => setStatusMessage(null)}
+                              className="p-1 hover:opacity-75 text-xs cursor-pointer text-slate-500"
+                              title="Dismiss"
+                            >
+                              <X className="w-3.5 h-3.5" aria-hidden="true" />
+                            </button>
+                          </div>
                         </div>
                       )}
 
@@ -1027,14 +1265,29 @@ function FriendsContent() {
                           }`}
                         >
                           <span className="flex-1 mr-2">{statusMessage.text}</span>
-                          <button
-                            type="button"
-                            onClick={() => setStatusMessage(null)}
-                            className="p-1 hover:opacity-75 text-xs cursor-pointer text-slate-500"
-                            title="Dismiss"
-                          >
-                            <X className="w-3.5 h-3.5" aria-hidden="true" />
-                          </button>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {statusMessage.friendToChat && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  openChatWithFriend(statusMessage.friendToChat!);
+                                  setStatusMessage(null);
+                                }}
+                                className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-xs shadow-xs cursor-pointer inline-flex items-center gap-1 transition-colors"
+                              >
+                                <MessageCircle className="w-3 h-3" aria-hidden="true" />
+                                <span>Chat</span>
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => setStatusMessage(null)}
+                              className="p-1 hover:opacity-75 text-xs cursor-pointer text-slate-500"
+                              title="Dismiss"
+                            >
+                              <X className="w-3.5 h-3.5" aria-hidden="true" />
+                            </button>
+                          </div>
                         </div>
                       )}
 
@@ -1145,7 +1398,7 @@ function FriendsContent() {
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
-                      onClick={() => setSelectedFriend(null)}
+                      onClick={handleCloseChat}
                       className="md:hidden p-1.5 -ml-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
                       title="Back to conversations"
                     >
@@ -1286,7 +1539,13 @@ function FriendsContent() {
                     <input
                       type="text"
                       value={messageInput}
-                      onChange={(e) => setMessageInput(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setMessageInput(val);
+                        if (selectedFriend) {
+                          setCachedDraft(selectedFriend.id, val);
+                        }
+                      }}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' && !e.shiftKey) {
                           e.preventDefault();
