@@ -1,9 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 
-const SESSION_COOKIE_NAME = 'lingua_session_token';
+const SESSION_COOKIE_NAME = 'langua_session_token';
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET || 'lingualearn_super_secure_default_secret_key_32_bytes_long_!'
+  process.env.SESSION_SECRET || 'langualearn_super_secure_default_secret_key_32_bytes_long_!'
 );
 
 const PROTECTED_ROUTES = [

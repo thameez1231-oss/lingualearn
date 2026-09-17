@@ -15,10 +15,10 @@ const geistMono = Geist_Mono({
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
-  title: "LinguaLearn | Learn English. Speak with Confidence.",
+  title: "LanguaLearn | Learn English. Speak with Confidence.",
   description: "Learn English step by step with our AI-powered tutor, completely free. Speak in the language you know, learn the English you need.",
   openGraph: {
-    title: "LinguaLearn | Learn English. Speak with Confidence.",
+    title: "LanguaLearn | Learn English. Speak with Confidence.",
     description: "Learn English step by step with our AI-powered tutor, completely free.",
     type: "website",
   },

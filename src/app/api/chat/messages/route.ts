@@ -150,7 +150,7 @@ export async function POST(req: Request) {
       create: {
         id: user.id,
         name: user.name || 'Learner',
-        email: user.email || `user_${user.id}@lingualearn.app`,
+        email: user.email || `user_${user.id}@langualearn.app`,
         passwordHash: 'jwt_managed_user',
         onboardingCompleted: true,
       },
@@ -162,7 +162,7 @@ export async function POST(req: Request) {
       create: {
         id: receiverId,
         name: 'Friend',
-        email: `user_${receiverId}@lingualearn.app`,
+        email: `user_${receiverId}@langualearn.app`,
         passwordHash: 'jwt_managed_user',
         onboardingCompleted: true,
       },

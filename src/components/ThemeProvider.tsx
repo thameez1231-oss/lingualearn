@@ -18,7 +18,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-    const stored = localStorage.getItem("lingualearn-theme") as Theme | null;
+    const stored = localStorage.getItem("langualearn-theme") as Theme | null;
     if (stored === "dark" || stored === "light") {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setThemeState(stored);
@@ -39,7 +39,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
-    localStorage.setItem("lingualearn-theme", newTheme);
+    localStorage.setItem("langualearn-theme", newTheme);
     if (newTheme === "dark") {
       document.documentElement.classList.add("dark");
     } else {

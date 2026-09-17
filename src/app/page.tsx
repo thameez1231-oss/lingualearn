@@ -73,18 +73,18 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* How LinguaLearn Works Section */}
+      {/* How LanguaLearn Works Section */}
       <section id="how-it-works" className="py-20 bg-slate-50 dark:bg-slate-950/75 border-y border-slate-200 dark:border-slate-700/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-xs font-extrabold tracking-widest text-indigo-600 uppercase mb-3">
-              How LinguaLearn Works
+              How LanguaLearn Works
             </h2>
             <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
               Three Simple Steps to Fluency
             </h3>
             <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-slate-400">
-              You never have to guess. LinguaLearn connects English concepts directly to your native language.
+              You never have to guess. LanguaLearn connects English concepts directly to your native language.
             </p>
           </div>
 
@@ -163,7 +163,7 @@ export default async function LandingPage() {
                 English learning made easier.
               </h3>
               <p className="mt-4 text-base text-slate-600 dark:text-slate-400 leading-relaxed">
-                Most platforms throw complete beginners into English-only immersion, causing frustration and abandonment. LinguaLearn takes a fundamentally better approach:
+                Most platforms throw complete beginners into English-only immersion, causing frustration and abandonment. LanguaLearn takes a fundamentally better approach:
               </p>
 
               <div className="mt-8 space-y-4">
@@ -228,7 +228,7 @@ export default async function LandingPage() {
 
               <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-emerald-500/80 shadow-sm dark:shadow-none shadow-emerald-50">
                 <div className="flex items-center gap-2 text-emerald-600 text-xs font-bold uppercase mb-2">
-                  <span>✨ The LinguaLearn Advantage</span>
+                  <span>✨ The LanguaLearn Advantage</span>
                 </div>
                 <div className="space-y-3">
                   <div className="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl">
@@ -257,7 +257,7 @@ export default async function LandingPage() {
               <div className="w-8 h-8 rounded-xl bg-indigo-500 flex items-center justify-center font-extrabold text-sm">
                 L
               </div>
-              <span className="font-extrabold text-lg tracking-tight">LinguaLearn</span>
+              <span className="font-extrabold text-lg tracking-tight">LanguaLearn</span>
               <span className="text-xs text-slate-400">| Learn English. Speak with Confidence.</span>
             </div>
 
@@ -277,7 +277,7 @@ export default async function LandingPage() {
             </div>
           </div>
           <div className="mt-8 pt-6 border-t border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
-            © {new Date().getFullYear()} LinguaLearn Inc. All rights reserved. Commercial EdTech for English Beginners.
+            © {new Date().getFullYear()} LanguaLearn Inc. All rights reserved. Commercial EdTech for English Beginners.
           </div>
         </div>
       </footer>

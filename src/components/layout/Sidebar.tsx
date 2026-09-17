@@ -84,7 +84,7 @@ export function Sidebar({ user }: SidebarProps) {
           </div>
           <div>
             <span className="font-bold text-lg text-slate-900 dark:text-slate-50 tracking-tight block">
-              Lingua<span className="text-indigo-600">Learn</span>
+              Langua<span className="text-indigo-600">Learn</span>
             </span>
             <span className="text-[10px] text-slate-400 font-medium tracking-wider uppercase block -mt-1">
               {user?.preferredLanguage ? `${user.preferredLanguage} Bridge` : 'Beginner English'}

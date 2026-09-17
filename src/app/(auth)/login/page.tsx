@@ -56,7 +56,7 @@ export default function LoginPage() {
             L
           </div>
           <span className="font-extrabold text-2xl text-slate-900 dark:text-slate-50 tracking-tight">
-            Lingua<span className="text-indigo-600">Learn</span>
+            Langua<span className="text-indigo-600">Learn</span>
           </span>
         </Link>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
@@ -173,13 +173,13 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => {
-                  setEmail('demo@lingualearn.com');
+                  setEmail('demo@langualearn.com');
                   setPassword('Password123!');
                 }}
                 className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-semibold text-indigo-700 bg-indigo-50/70 hover:bg-indigo-100/80 border border-indigo-200/60 transition-all cursor-pointer"
                 title="Pre-fills demo account credentials"
               >
-                <span>⚡ Fill Demo Account (demo@lingualearn.com)</span>
+                <span>⚡ Fill Demo Account (demo@langualearn.com)</span>
               </button>
             </div>
           </form>

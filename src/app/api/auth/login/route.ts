@@ -20,16 +20,16 @@ export async function POST(req: Request) {
     }).catch(() => null);
 
     // Auto-provision demo account if not found in this replica
-    if (!user && emailNorm === 'demo@lingualearn.com' && password === 'Password123!') {
+    if (!user && emailNorm === 'demo@langualearn.com' && password === 'Password123!') {
       const { hashPassword } = await import('@/lib/auth');
       const passwordHash = await hashPassword('Password123!');
       try {
         user = await db.user.upsert({
-          where: { email: 'demo@lingualearn.com' },
+          where: { email: 'demo@langualearn.com' },
           update: {},
           create: {
             name: 'Alex Kumar',
-            email: 'demo@lingualearn.com',
+            email: 'demo@langualearn.com',
             passwordHash,
             emailVerified: true,
             emailVerifiedAt: new Date(),
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
         user = {
           id: 'demo-user-alex',
           name: 'Alex Kumar',
-          email: 'demo@lingualearn.com',
+          email: 'demo@langualearn.com',
           passwordHash,
           emailVerified: true,
           emailVerifiedAt: new Date(),

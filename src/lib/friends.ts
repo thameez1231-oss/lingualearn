@@ -69,7 +69,7 @@ export async function ensureBidirectionalFriendship(userAId: string, userBId: st
         create: {
           id: userAId,
           name: 'Learner',
-          email: `user_${userAId}@lingualearn.app`,
+          email: `user_${userAId}@langualearn.app`,
           passwordHash: 'jwt_managed_user',
           onboardingCompleted: true,
         },
@@ -80,7 +80,7 @@ export async function ensureBidirectionalFriendship(userAId: string, userBId: st
         create: {
           id: userBId,
           name: 'Learner',
-          email: `user_${userBId}@lingualearn.app`,
+          email: `user_${userBId}@langualearn.app`,
           passwordHash: 'jwt_managed_user',
           onboardingCompleted: true,
         },

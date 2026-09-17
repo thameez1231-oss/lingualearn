@@ -63,7 +63,7 @@ export default function OnboardingPage() {
           </h1>
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
             {step === 1
-              ? 'LinguaLearn will explain English words and phrases in this language.'
+              ? 'LanguaLearn will explain English words and phrases in this language.'
               : 'We will personalize your starting lessons and AI tutor to match your speed.'}
           </p>
         </div>

@@ -5,10 +5,10 @@ import { db } from './db';
 import crypto from 'crypto';
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET || 'lingualearn_super_secure_default_secret_key_32_bytes_long_!'
+  process.env.SESSION_SECRET || 'langualearn_super_secure_default_secret_key_32_bytes_long_!'
 );
 
-export const SESSION_COOKIE_NAME = 'lingua_session_token';
+export const SESSION_COOKIE_NAME = 'langua_session_token';
 const SESSION_DURATION_DAYS = 30;
 
 export async function hashPassword(password: string): Promise<string> {

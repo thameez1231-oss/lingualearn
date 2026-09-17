@@ -166,7 +166,7 @@ export function InteractiveHeroDemo() {
         <div className="bg-gradient-to-br from-indigo-50/70 to-violet-50/70 rounded-xl p-5 border border-indigo-100 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between text-xs font-bold text-indigo-700 mb-3">
-              <span>LINGUALEARN ENGLISH TUTOR</span>
+              <span>LANGUALEARN ENGLISH TUTOR</span>
               <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-md font-bold">
                 Natural English
               </span>

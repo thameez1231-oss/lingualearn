@@ -351,7 +351,7 @@ export default function SpeakPage() {
               Speak & Translate
             </h1>
             <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-              Speak in your language. LinguaLearn understands the complete meaning and converts it to natural English.
+              Speak in your language. LanguaLearn understands the complete meaning and converts it to natural English.
             </p>
           </div>
 

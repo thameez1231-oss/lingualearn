@@ -77,7 +77,7 @@ export default function DevMailboxPage() {
           </Link>
           <div className="flex items-center gap-2">
             <Mail className="w-5 h-5 text-indigo-400" />
-            <span className="font-extrabold text-base">LinguaLearn Developer Mailbox</span>
+            <span className="font-extrabold text-base">LanguaLearn Developer Mailbox</span>
             <span className="text-[11px] px-2 py-0.5 bg-indigo-900/60 text-indigo-300 border border-indigo-700 rounded font-semibold">
               Live Inspection
             </span>

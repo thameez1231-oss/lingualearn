@@ -106,7 +106,7 @@ export default function VerifyNoticePage() {
             L
           </div>
           <span className="font-extrabold text-2xl text-slate-900 dark:text-slate-50">
-            Lingua<span className="text-indigo-600">Learn</span>
+            Langua<span className="text-indigo-600">Learn</span>
           </span>
         </Link>
       </div>

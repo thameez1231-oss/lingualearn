@@ -719,7 +719,7 @@ export async function chatWithAITutor(
           .map((h) => `${h.role === 'user' ? 'Learner' : 'Coach Maya'}: ${h.text}`)
           .join('\n');
 
-        const prompt = `You are Coach Maya, an encouraging, remarkably smart, empathetic, and friendly English teacher for LinguaLearn.
+        const prompt = `You are Coach Maya, an encouraging, remarkably smart, empathetic, and friendly English teacher for LanguaLearn.
 Learner's Native Language: ${userLanguage}
 Learner's English Proficiency: ${englishLevel}
 
@@ -949,7 +949,7 @@ Return PURE JSON ONLY with this schema:
       replyNative = `സ്വാഗതം! നിങ്ങളുടെ ഇംഗ്ലീഷ് മെച്ചപ്പെടുന്നത് കാണുന്നതിൽ സന്തോഷമുണ്ട്.`;
       suggestions = ['Teach me five new everyday words.', 'Can we practice another conversation?', 'Thank you Maya!'];
     } else if (cleanLower.includes('who are you') || cleanLower.includes('what is your name')) {
-      replyEnglish = `I am Coach Maya, your friendly AI English tutor here at LinguaLearn! My goal is to help you speak fluent, confident English step by step. How are you today?`;
+      replyEnglish = `I am Coach Maya, your friendly AI English tutor here at LanguaLearn! My goal is to help you speak fluent, confident English step by step. How are you today?`;
       replyNative = `ഞാൻ ലിംഗ്വാലേണിലെ നിങ്ങളുടെ എഐ ഇംഗ്ലീഷ് അധ്യാപികയായ കോച്ച് മായയാണ്!`;
       suggestions = ['Nice to meet you, Maya!', 'Can you teach me English?', 'How do I start?'];
     }

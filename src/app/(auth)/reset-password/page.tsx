@@ -181,7 +181,7 @@ export default function ResetPasswordPage() {
             L
           </div>
           <span className="font-extrabold text-2xl text-slate-900 dark:text-slate-50 tracking-tight">
-            Lingua<span className="text-indigo-600">Learn</span>
+            Langua<span className="text-indigo-600">Learn</span>
           </span>
         </Link>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">

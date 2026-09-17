@@ -385,7 +385,7 @@ export default function ProfilePage() {
         <div className="bg-rose-50/50 rounded-xl p-6 sm:p-8 border border-rose-200 space-y-4">
           <h2 className="text-base font-bold text-rose-900">Danger Zone</h2>
           <p className="text-xs text-rose-700 leading-relaxed">
-            Permanently delete your LinguaLearn account, all speaking logs, and vocabulary progress. This action cannot be undone.
+            Permanently delete your LanguaLearn account, all speaking logs, and vocabulary progress. This action cannot be undone.
           </p>
 
           {!showDeleteConfirm ? (

@@ -24,7 +24,7 @@ export function Navbar({ user }: NavbarProps) {
           </div>
           <div className="flex flex-col">
             <span className="font-extrabold text-xl tracking-tight text-slate-900 dark:text-slate-50 group-hover:text-indigo-600 transition-colors">
-              Lingua<span className="text-indigo-600">Learn</span>
+              Langua<span className="text-indigo-600">Learn</span>
             </span>
             <span className="text-[10px] font-medium text-slate-400 -mt-1 tracking-wider uppercase">
               AI English Tutor

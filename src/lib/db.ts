@@ -17,7 +17,7 @@ function getDatabaseUrl(): string | undefined {
   // Vercel Serverless / Lambda environment: root filesystem is read-only.
   // We use writable /tmp and seed it with starter.db on first invocation.
   if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
-    const tmpDbPath = '/tmp/lingualearn.db';
+    const tmpDbPath = '/tmp/langualearn.db';
     const starterPath = path.join(process.cwd(), 'prisma', 'starter.db');
 
     if (fs.existsSync(starterPath)) {

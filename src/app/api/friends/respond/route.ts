@@ -57,7 +57,7 @@ export async function POST(req: Request) {
 
     const finalSenderId = request?.senderId || targetSenderId;
     const finalSenderName = request?.sender?.name || senderName || 'Learner';
-    const finalSenderEmail = request?.sender?.email || senderEmail || `user_${finalSenderId}@lingualearn.app`;
+    const finalSenderEmail = request?.sender?.email || senderEmail || `user_${finalSenderId}@langualearn.app`;
 
     if (!finalSenderId) {
       return NextResponse.json({ error: 'Friend request not found.' }, { status: 404 });
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
       create: {
         id: user.id,
         name: user.name || 'Learner',
-        email: user.email || `user_${user.id}@lingualearn.app`,
+        email: user.email || `user_${user.id}@langualearn.app`,
         passwordHash: 'jwt_managed_user',
         onboardingCompleted: true,
       },
