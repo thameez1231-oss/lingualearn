@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         englishLevel: user.englishLevel || 'BEGINNER',
         onboardingCompleted: true,
       },
-    }).catch(() => {});
+    });
 
     // Verify target user exists
     const targetUser = await db.user.findUnique({

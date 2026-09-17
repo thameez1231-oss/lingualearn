@@ -255,46 +255,75 @@ function FriendsContent() {
       .catch(() => {});
   }, []);
 
-  // Fetch friends list
+  const fetchFriendsController = useRef<AbortController | null>(null);
+
+  // Fetch all friends with stale-response protection
   const fetchFriends = useCallback(async () => {
+    if (fetchFriendsController.current) {
+      fetchFriendsController.current.abort();
+    }
+    const controller = new AbortController();
+    fetchFriendsController.current = controller;
+
     try {
-      const res = await fetch('/api/friends');
+      const res = await fetch('/api/friends', { signal: controller.signal });
       if (res.ok) {
         const data = await res.json();
-        const list = data.friends || [];
-        setFriends(list);
-        setStoredFriends(list);
+        // Only update if this is still the most recent request
+        if (controller.signal.aborted) return;
+        setFriends(data.friends || []);
+        setStoredFriends(data.friends || []);
       }
-    } catch (err) {
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') return;
       console.error('Fetch friends error:', err);
     }
   }, []);
 
-  // Fetch conversations list
+  const fetchConversationsController = useRef<AbortController | null>(null);
+
+  // Fetch all conversations with stale-response protection
   const fetchConversations = useCallback(async () => {
+    if (fetchConversationsController.current) {
+      fetchConversationsController.current.abort();
+    }
+    const controller = new AbortController();
+    fetchConversationsController.current = controller;
+
     try {
-      const res = await fetch('/api/chat/conversations');
+      const res = await fetch('/api/chat/conversations', { signal: controller.signal });
       if (res.ok) {
         const data = await res.json();
-        const list = data.conversations || [];
-        setConversations(list);
-        setStoredConversations(list);
+        if (controller.signal.aborted) return;
+        setConversations(data.conversations || []);
+        setStoredConversations(data.conversations || []);
       }
-    } catch (err) {
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') return;
       console.error('Fetch conversations error:', err);
     }
   }, []);
 
-  // Fetch friend requests
+  const fetchRequestsController = useRef<AbortController | null>(null);
+
+  // Fetch pending requests with stale-response protection
   const fetchRequests = useCallback(async () => {
+    if (fetchRequestsController.current) {
+      fetchRequestsController.current.abort();
+    }
+    const controller = new AbortController();
+    fetchRequestsController.current = controller;
+
     try {
-      const res = await fetch('/api/friends/requests');
+      const res = await fetch('/api/friends/requests', { signal: controller.signal });
       if (res.ok) {
         const data = await res.json();
+        if (controller.signal.aborted) return;
         setIncomingRequests(data.incoming || []);
         setOutgoingRequests(data.outgoing || []);
       }
-    } catch (err) {
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') return;
       console.error('Fetch requests error:', err);
     }
   }, []);
@@ -336,9 +365,15 @@ function FriendsContent() {
         const data = await res.json();
         // Only update state if the user is still viewing this friend
         if (selectedFriendRef.current?.id === friendId) {
-          const list = data.messages || [];
-          setMessages(list);
-          setCachedMessages(friendId, list);
+          const list: ChatMessageItem[] = data.messages || [];
+          setMessages((prev) => {
+            const pending = prev.filter((m) => m.status === 'sending' || m.status === 'failed');
+            const serverMsgIds = new Set(list.map((m) => m.id));
+            const mergedPending = pending.filter((m) => !serverMsgIds.has(m.id));
+            const finalList = [...list, ...mergedPending];
+            setCachedMessages(friendId, finalList);
+            return finalList;
+          });
           currentLoadedFriendIdRef.current = friendId;
         }
       }
@@ -599,7 +634,7 @@ function FriendsContent() {
 
           if (newConv) {
             setConversations((prev) => {
-              const next = [newConv, ...prev.filter((c) => c.friendId !== newFriend.id)];
+              const next = [newConv, ...prev.filter((c) => c.friendId !== newConv.friendId)];
               setStoredConversations(next);
               return next;
             });
@@ -620,9 +655,12 @@ function FriendsContent() {
             type: 'success',
           });
         }
+        
+        // Ensure subsequent background fetches are aborted to prevent stale overwrites
+        fetchFriends();
+        fetchConversations();
+        fetchRequests();
 
-        // Trust the optimistic update and avoid triggering a race condition
-        // Background polling will eventually synchronize any missing data quietly.
       } else {
         setStatusMessage({
           text: data.error || 'Failed to process request.',
@@ -662,6 +700,10 @@ function FriendsContent() {
         if (selectedFriend?.id === friendId) {
           handleCloseChat();
         }
+        
+        fetchFriends();
+        fetchConversations();
+        fetchRequests();
       }
     } catch (err) {
       console.error('Remove friend error:', err);
@@ -721,6 +763,7 @@ function FriendsContent() {
         body: JSON.stringify({
           receiverId: friendId,
           content,
+          clientMessageId: tempId, // Idempotency key
         }),
       });
 
@@ -734,7 +777,6 @@ function FriendsContent() {
           setCachedMessages(friendId, updated);
           return updated;
         });
-        fetchConversations();
       } else {
         // Mark optimistic message as failed rather than deleting it
         setMessages((prev) => {
@@ -781,6 +823,7 @@ function FriendsContent() {
         body: JSON.stringify({
           receiverId: friendId,
           content,
+          clientMessageId: failedId, // Keep same idempotency key
         }),
       });
 
@@ -793,7 +836,6 @@ function FriendsContent() {
           setCachedMessages(friendId, updated);
           return updated;
         });
-        fetchConversations();
       } else {
         setMessages((prev) => {
           const updated = prev.map((m) => (m.id === failedId ? { ...m, status: 'failed' as const } : m));

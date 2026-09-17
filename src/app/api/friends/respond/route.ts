@@ -64,30 +64,29 @@ export async function POST(req: Request) {
     }
 
     // Ensure both users exist in database before proceeding
-    await Promise.all([
-      db.user.upsert({
-        where: { id: user.id },
-        update: {},
-        create: {
-          id: user.id,
-          name: user.name || 'Learner',
-          email: user.email || `user_${user.id}@lingualearn.app`,
-          passwordHash: 'jwt_managed_user',
-          onboardingCompleted: true,
-        },
-      }).catch(() => {}),
-      db.user.upsert({
-        where: { id: finalSenderId },
-        update: {},
-        create: {
-          id: finalSenderId,
-          name: finalSenderName,
-          email: finalSenderEmail,
-          passwordHash: 'jwt_managed_user',
-          onboardingCompleted: true,
-        },
-      }).catch(() => {}),
-    ]);
+    await db.user.upsert({
+      where: { id: user.id },
+      update: {},
+      create: {
+        id: user.id,
+        name: user.name || 'Learner',
+        email: user.email || `user_${user.id}@lingualearn.app`,
+        passwordHash: 'jwt_managed_user',
+        onboardingCompleted: true,
+      },
+    });
+
+    await db.user.upsert({
+      where: { id: finalSenderId },
+      update: {},
+      create: {
+        id: finalSenderId,
+        name: finalSenderName,
+        email: finalSenderEmail,
+        passwordHash: 'jwt_managed_user',
+        onboardingCompleted: true,
+      },
+    });
 
     if (action === 'ACCEPT') {
       // 1. Update or create accepted friend request
@@ -95,7 +94,7 @@ export async function POST(req: Request) {
         await db.friendRequest.update({
           where: { id: request.id },
           data: { status: 'ACCEPTED' },
-        }).catch(() => {});
+        });
       } else {
         await db.friendRequest.upsert({
           where: {
@@ -111,38 +110,38 @@ export async function POST(req: Request) {
             receiverId: user.id,
             status: 'ACCEPTED',
           },
-        }).catch(() => {});
+        });
       }
 
       // 2. Upsert bidirectional friendship records
-      await Promise.all([
-        db.friendship.upsert({
-          where: {
-            userId_friendId: {
-              userId: user.id,
-              friendId: finalSenderId,
-            },
-          },
-          update: {},
-          create: {
+      // Executed sequentially to prevent Prisma P2002 concurrency issues on PostgreSQL
+      await db.friendship.upsert({
+        where: {
+          userId_friendId: {
             userId: user.id,
             friendId: finalSenderId,
           },
-        }),
-        db.friendship.upsert({
-          where: {
-            userId_friendId: {
-              userId: finalSenderId,
-              friendId: user.id,
-            },
-          },
-          update: {},
-          create: {
+        },
+        update: {},
+        create: {
+          userId: user.id,
+          friendId: finalSenderId,
+        },
+      });
+
+      await db.friendship.upsert({
+        where: {
+          userId_friendId: {
             userId: finalSenderId,
             friendId: user.id,
           },
-        }),
-      ]);
+        },
+        update: {},
+        create: {
+          userId: finalSenderId,
+          friendId: user.id,
+        },
+      });
 
       // 3. Fetch sender user profile details to return immediately
       const senderUser = await db.user.findUnique({
@@ -224,7 +223,7 @@ export async function POST(req: Request) {
         await db.friendRequest.update({
           where: { id: request.id },
           data: { status: 'DECLINED' },
-        }).catch(() => {});
+        });
       } else {
         await db.friendRequest.upsert({
           where: {
@@ -240,7 +239,7 @@ export async function POST(req: Request) {
             receiverId: user.id,
             status: 'DECLINED',
           },
-        }).catch(() => {});
+        });
       }
 
       return NextResponse.json({

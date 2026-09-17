@@ -133,7 +133,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { receiverId, content } = await req.json();
+    const { receiverId, content, clientMessageId } = await req.json();
 
     if (!receiverId || typeof receiverId !== 'string') {
       return NextResponse.json({ error: 'receiverId is required.' }, { status: 400 });
@@ -144,30 +144,29 @@ export async function POST(req: Request) {
     }
 
     // Ensure sender and receiver exist in DB to prevent foreign key errors
-    await Promise.all([
-      db.user.upsert({
-        where: { id: user.id },
-        update: {},
-        create: {
-          id: user.id,
-          name: user.name || 'Learner',
-          email: user.email || `user_${user.id}@lingualearn.app`,
-          passwordHash: 'jwt_managed_user',
-          onboardingCompleted: true,
-        },
-      }).catch(() => {}),
-      db.user.upsert({
-        where: { id: receiverId },
-        update: {},
-        create: {
-          id: receiverId,
-          name: 'Friend',
-          email: `user_${receiverId}@lingualearn.app`,
-          passwordHash: 'jwt_managed_user',
-          onboardingCompleted: true,
-        },
-      }).catch(() => {}),
-    ]);
+    await db.user.upsert({
+      where: { id: user.id },
+      update: {},
+      create: {
+        id: user.id,
+        name: user.name || 'Learner',
+        email: user.email || `user_${user.id}@lingualearn.app`,
+        passwordHash: 'jwt_managed_user',
+        onboardingCompleted: true,
+      },
+    });
+
+    await db.user.upsert({
+      where: { id: receiverId },
+      update: {},
+      create: {
+        id: receiverId,
+        name: 'Friend',
+        email: `user_${receiverId}@lingualearn.app`,
+        passwordHash: 'jwt_managed_user',
+        onboardingCompleted: true,
+      },
+    });
 
     const cleanContent = sanitizeMessage(content);
     if (!cleanContent) {
@@ -179,9 +178,11 @@ export async function POST(req: Request) {
     }
 
     // Security Check: Verify caller and receiver are accepted friends!
+    console.log(`[Message API] Checking friendship for ${user.id} and ${receiverId}`);
     const isFriend = await areUsersFriends(user.id, receiverId);
 
     if (!isFriend) {
+      console.log(`[Message API] Friendship authorization failed for ${user.id} and ${receiverId}`);
       return NextResponse.json(
         { error: 'You can only message accepted friends.' },
         { status: 403 }
@@ -210,16 +211,33 @@ export async function POST(req: Request) {
       },
     });
 
-    // Create message
-    const message = await db.message.create({
-      data: {
-        conversationId: conversation.id,
-        senderId: user.id,
-        receiverId,
-        content: cleanContent,
-        isRead: false,
-      },
-    });
+    // Create message idempotently if clientMessageId is provided
+    let message;
+    if (clientMessageId) {
+      // Upsert using the client ID to prevent duplicates on retry
+      message = await db.message.upsert({
+        where: { id: clientMessageId },
+        update: {}, // Do nothing if it already exists
+        create: {
+          id: clientMessageId,
+          conversationId: conversation.id,
+          senderId: user.id,
+          receiverId,
+          content: cleanContent,
+          isRead: false,
+        },
+      });
+    } else {
+      message = await db.message.create({
+        data: {
+          conversationId: conversation.id,
+          senderId: user.id,
+          receiverId,
+          content: cleanContent,
+          isRead: false,
+        },
+      });
+    }
 
     return NextResponse.json({
       success: true,
