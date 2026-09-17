@@ -127,19 +127,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Ensure sender exists in DB
-    await db.user.upsert({
-      where: { id: user.id },
-      update: {},
-      create: {
-        id: user.id,
-        name: user.name || 'Learner',
-        email: user.email || `user_${user.id}@lingualearn.app`,
-        passwordHash: 'jwt_managed_user',
-        onboardingCompleted: true,
-      },
-    }).catch(() => {});
-
     const { receiverId, content } = await req.json();
 
     if (!receiverId || typeof receiverId !== 'string') {
@@ -149,6 +136,32 @@ export async function POST(req: Request) {
     if (!content || typeof content !== 'string') {
       return NextResponse.json({ error: 'Message content is required.' }, { status: 400 });
     }
+
+    // Ensure sender and receiver exist in DB to prevent foreign key errors
+    await Promise.all([
+      db.user.upsert({
+        where: { id: user.id },
+        update: {},
+        create: {
+          id: user.id,
+          name: user.name || 'Learner',
+          email: user.email || `user_${user.id}@lingualearn.app`,
+          passwordHash: 'jwt_managed_user',
+          onboardingCompleted: true,
+        },
+      }).catch(() => {}),
+      db.user.upsert({
+        where: { id: receiverId },
+        update: {},
+        create: {
+          id: receiverId,
+          name: 'Friend',
+          email: `user_${receiverId}@lingualearn.app`,
+          passwordHash: 'jwt_managed_user',
+          onboardingCompleted: true,
+        },
+      }).catch(() => {}),
+    ]);
 
     const cleanContent = sanitizeMessage(content);
     if (!cleanContent) {

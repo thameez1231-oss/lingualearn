@@ -107,6 +107,7 @@ function FriendsContent() {
   const [searchResults, setSearchResults] = useState<FriendUser[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [addingUserId, setAddingUserId] = useState<string | null>(null);
+  const [respondingRequestId, setRespondingRequestId] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   // Loading & Polling States
@@ -328,26 +329,55 @@ function FriendsContent() {
   };
 
   // Respond to Friend Request (ACCEPT or DECLINE)
-  const handleRespondRequest = async (requestId: string, action: 'ACCEPT' | 'DECLINE') => {
+  const handleRespondRequest = async (
+    requestId: string,
+    action: 'ACCEPT' | 'DECLINE',
+    sender?: { id: string; name?: string; email?: string }
+  ) => {
+    if (respondingRequestId) return;
+    setRespondingRequestId(requestId);
+    setStatusMessage(null);
+
     try {
       const res = await fetch('/api/friends/respond', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ requestId, action }),
+        body: JSON.stringify({
+          requestId,
+          senderId: sender?.id,
+          senderName: sender?.name,
+          senderEmail: sender?.email,
+          action,
+        }),
       });
       const data = await res.json();
 
       if (res.ok) {
-        setIncomingRequests((prev) => prev.filter((r) => r.id !== requestId));
+        setIncomingRequests((prev) =>
+          prev.filter((r) => r.id !== requestId && (!sender || r.sender.id !== sender.id))
+        );
+        setStatusMessage({
+          text: data.message || (action === 'ACCEPT' ? 'Friend request accepted!' : 'Friend request declined.'),
+          type: 'success',
+        });
         if (action === 'ACCEPT') {
           fetchFriends();
           fetchConversations();
         }
       } else {
-        alert(data.error || 'Failed to process request.');
+        setStatusMessage({
+          text: data.error || 'Failed to process request.',
+          type: 'error',
+        });
       }
     } catch (err) {
       console.error('Respond request error:', err);
+      setStatusMessage({
+        text: 'Unable to process request. Please check your connection.',
+        type: 'error',
+      });
+    } finally {
+      setRespondingRequestId(null);
     }
   };
 
@@ -748,6 +778,27 @@ function FriendsContent() {
                   {/* TAB 3: FRIEND REQUESTS */}
                   {activeTab === 'requests' && (
                     <div className="p-3 space-y-5">
+                      {/* Status Feedback Banner */}
+                      {statusMessage && (
+                        <div
+                          className={`p-3 rounded-2xl text-xs font-semibold flex items-center justify-between transition-all ${
+                            statusMessage.type === 'success'
+                              ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-xs'
+                              : 'bg-rose-50 text-rose-800 border border-rose-200 shadow-xs'
+                          }`}
+                        >
+                          <span className="flex-1 mr-2">{statusMessage.text}</span>
+                          <button
+                            type="button"
+                            onClick={() => setStatusMessage(null)}
+                            className="p-1 hover:opacity-75 text-xs cursor-pointer text-slate-500"
+                            title="Dismiss"
+                          >
+                            <X className="w-3.5 h-3.5" aria-hidden="true" />
+                          </button>
+                        </div>
+                      )}
+
                       {/* Incoming Requests */}
                       <div>
                         <div className="flex items-center justify-between mb-2.5">
@@ -784,16 +835,22 @@ function FriendsContent() {
                                 <div className="flex items-center gap-2 pt-1">
                                   <button
                                     type="button"
-                                    onClick={() => handleRespondRequest(req.id, 'ACCEPT')}
-                                    className="flex-1 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-xs transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                                    disabled={respondingRequestId === req.id}
+                                    onClick={() => handleRespondRequest(req.id, 'ACCEPT', req.sender)}
+                                    className="flex-1 py-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-bold rounded-xl shadow-xs transition-colors flex items-center justify-center gap-1 cursor-pointer"
                                   >
-                                    <Check className="w-3.5 h-3.5" aria-hidden="true" />
-                                    <span>Accept</span>
+                                    {respondingRequestId === req.id ? (
+                                      <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden="true" />
+                                    ) : (
+                                      <Check className="w-3.5 h-3.5" aria-hidden="true" />
+                                    )}
+                                    <span>{respondingRequestId === req.id ? 'Accepting...' : 'Accept'}</span>
                                   </button>
                                   <button
                                     type="button"
-                                    onClick={() => handleRespondRequest(req.id, 'DECLINE')}
-                                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                                    disabled={respondingRequestId === req.id}
+                                    onClick={() => handleRespondRequest(req.id, 'DECLINE', req.sender)}
+                                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-600 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1 cursor-pointer"
                                   >
                                     <X className="w-3.5 h-3.5" aria-hidden="true" />
                                     <span>Decline</span>
@@ -921,14 +978,22 @@ function FriendsContent() {
                                 ) : userResult.relationshipStatus === 'PENDING_RECEIVED' ? (
                                   <button
                                     type="button"
+                                    disabled={respondingRequestId === (userResult.requestId || userResult.id)}
                                     onClick={() =>
-                                      userResult.requestId &&
-                                      handleRespondRequest(userResult.requestId, 'ACCEPT')
+                                      handleRespondRequest(
+                                        userResult.requestId || userResult.id,
+                                        'ACCEPT',
+                                        userResult
+                                      )
                                     }
-                                    className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] rounded-full shadow-xs cursor-pointer inline-flex items-center gap-1"
+                                    className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold text-[10px] rounded-full shadow-xs cursor-pointer inline-flex items-center gap-1"
                                   >
-                                    <Check className="w-3 h-3" aria-hidden="true" />
-                                    <span>Accept</span>
+                                    {respondingRequestId === (userResult.requestId || userResult.id) ? (
+                                      <Loader2 className="w-3 h-3 animate-spin" aria-hidden="true" />
+                                    ) : (
+                                      <Check className="w-3 h-3" aria-hidden="true" />
+                                    )}
+                                    <span>{respondingRequestId === (userResult.requestId || userResult.id) ? 'Accepting...' : 'Accept'}</span>
                                   </button>
                                 ) : (
                                   <button

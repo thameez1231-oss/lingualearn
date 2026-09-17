@@ -11,14 +11,26 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { requestId, action } = await req.json();
+    const body = await req.json();
+    const { requestId, senderId, senderName, senderEmail, action } = body;
 
-    if (!requestId || (action !== 'ACCEPT' && action !== 'DECLINE')) {
-      return NextResponse.json({ error: 'Valid requestId and action (ACCEPT or DECLINE) are required.' }, { status: 400 });
+    if ((!requestId && !senderId) || (action !== 'ACCEPT' && action !== 'DECLINE')) {
+      return NextResponse.json(
+        { error: 'Valid requestId or senderId, and action (ACCEPT or DECLINE) are required.' },
+        { status: 400 }
+      );
     }
 
-    const request = await db.friendRequest.findUnique({
-      where: { id: requestId },
+    // Try finding by primary key ID first, or fallback to senderId/receiverId
+    const targetSenderId = senderId || (requestId && requestId !== user.id ? requestId : undefined);
+
+    const request = await db.friendRequest.findFirst({
+      where: {
+        OR: [
+          ...(requestId ? [{ id: requestId }] : []),
+          ...(targetSenderId ? [{ senderId: targetSenderId, receiverId: user.id }] : []),
+        ],
+      },
       include: {
         sender: {
           select: { id: true, name: true, email: true },
@@ -26,75 +38,107 @@ export async function POST(req: Request) {
       },
     });
 
-    if (!request) {
+    // Security check: If request is found, ensure the current user is the designated recipient!
+    if (request && request.receiverId !== user.id) {
+      return NextResponse.json(
+        { error: 'You are not authorized to respond to this friend request.' },
+        { status: 403 }
+      );
+    }
+
+    // If request was already accepted, return idempotently
+    if (request && request.status === 'ACCEPTED') {
+      return NextResponse.json({
+        success: true,
+        action: 'ACCEPTED',
+        message: `You are already friends with ${request.sender?.name || 'this user'}!`,
+      });
+    }
+
+    const finalSenderId = request?.senderId || targetSenderId;
+    const finalSenderName = request?.sender?.name || senderName || 'Learner';
+    const finalSenderEmail = request?.sender?.email || senderEmail || `user_${finalSenderId}@lingualearn.app`;
+
+    if (!finalSenderId) {
       return NextResponse.json({ error: 'Friend request not found.' }, { status: 404 });
     }
 
-    // Security Check: Only the designated receiver can accept or decline!
-    if (request.receiverId !== user.id) {
-      return NextResponse.json({ error: 'You are not authorized to respond to this friend request.' }, { status: 403 });
-    }
-
-    if (request.status !== 'PENDING') {
-      return NextResponse.json({ error: `This request has already been ${request.status.toLowerCase()}.` }, { status: 400 });
-    }
+    // Ensure both users exist in database before proceeding
+    await Promise.all([
+      db.user.upsert({
+        where: { id: user.id },
+        update: {},
+        create: {
+          id: user.id,
+          name: user.name || 'Learner',
+          email: user.email || `user_${user.id}@lingualearn.app`,
+          passwordHash: 'jwt_managed_user',
+          onboardingCompleted: true,
+        },
+      }).catch(() => {}),
+      db.user.upsert({
+        where: { id: finalSenderId },
+        update: {},
+        create: {
+          id: finalSenderId,
+          name: finalSenderName,
+          email: finalSenderEmail,
+          passwordHash: 'jwt_managed_user',
+          onboardingCompleted: true,
+        },
+      }).catch(() => {}),
+    ]);
 
     if (action === 'ACCEPT') {
-      // Ensure both users exist in database before creating friendship
-      await Promise.all([
-        db.user.upsert({
-          where: { id: user.id },
-          update: {},
-          create: {
-            id: user.id,
-            name: user.name || 'Learner',
-            email: user.email || `user_${user.id}@lingualearn.app`,
-            passwordHash: 'jwt_managed_user',
-            onboardingCompleted: true,
-          },
-        }).catch(() => {}),
-        db.user.upsert({
-          where: { id: request.senderId },
-          update: {},
-          create: {
-            id: request.senderId,
-            name: request.sender?.name || 'Learner',
-            email: request.sender?.email || `user_${request.senderId}@lingualearn.app`,
-            passwordHash: 'jwt_managed_user',
-            onboardingCompleted: true,
-          },
-        }).catch(() => {}),
-      ]);
-
-      // In transaction: update request to ACCEPTED, create bidirectional friendship rows
-      await db.$transaction([
-        db.friendRequest.update({
-          where: { id: requestId },
+      // 1. Update or create accepted friend request
+      if (request) {
+        await db.friendRequest.update({
+          where: { id: request.id },
           data: { status: 'ACCEPTED' },
-        }),
+        }).catch(() => {});
+      } else {
+        await db.friendRequest.upsert({
+          where: {
+            senderId_receiverId: {
+              senderId: finalSenderId,
+              receiverId: user.id,
+            },
+          },
+          update: { status: 'ACCEPTED' },
+          create: {
+            id: requestId || undefined,
+            senderId: finalSenderId,
+            receiverId: user.id,
+            status: 'ACCEPTED',
+          },
+        }).catch(() => {});
+      }
+
+      // 2. Upsert bidirectional friendship records
+      await Promise.all([
         db.friendship.upsert({
           where: {
             userId_friendId: {
               userId: user.id,
-              friendId: request.senderId,
+              friendId: finalSenderId,
             },
           },
           update: {},
           create: {
             userId: user.id,
-            friendId: request.senderId,
+            friendId: finalSenderId,
           },
         }),
         db.friendship.upsert({
           where: {
             userId_friendId: {
-              userId: request.senderId,
+              userId: finalSenderId,
               friendId: user.id,
             },
           },
           update: {},
           create: {
-            userId: request.senderId,
+            userId: finalSenderId,
             friendId: user.id,
           },
         }),
@@ -103,14 +147,32 @@ export async function POST(req: Request) {
       return NextResponse.json({
         success: true,
         action: 'ACCEPTED',
-        message: `You are now friends with ${request.sender.name}!`,
+        message: `You are now friends with ${finalSenderName}!`,
       });
     } else {
-      // Decline request
-      await db.friendRequest.update({
-        where: { id: requestId },
-        data: { status: 'DECLINED' },
-      });
+      // DECLINE
+      if (request) {
+        await db.friendRequest.update({
+          where: { id: request.id },
+          data: { status: 'DECLINED' },
+        }).catch(() => {});
+      } else {
+        await db.friendRequest.upsert({
+          where: {
+            senderId_receiverId: {
+              senderId: finalSenderId,
+              receiverId: user.id,
+            },
+          },
+          update: { status: 'DECLINED' },
+          create: {
+            id: requestId || undefined,
+            senderId: finalSenderId,
+            receiverId: user.id,
+            status: 'DECLINED',
+          },
+        }).catch(() => {});
+      }
 
       return NextResponse.json({
         success: true,
