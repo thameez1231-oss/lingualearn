@@ -906,15 +906,15 @@ function FriendsContent() {
         }
       }
     >
-      <div className="max-w-6xl mx-auto h-[calc(100vh-130px)] min-h-[550px] flex flex-col bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden select-none">
+      <div className="max-w-6xl mx-auto h-[calc(100vh-130px)] min-h-[550px] flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm overflow-hidden select-none">
         {/* Top Header & Mobile Breadcrumb */}
-        <div className="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-white shrink-0">
+        <div className="px-5 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between bg-white dark:bg-slate-900 shrink-0">
           <div className="flex items-center gap-3">
             {selectedFriend ? (
               <button
                 type="button"
                 onClick={handleCloseChat}
-                className="md:hidden p-2 -ml-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+                className="md:hidden p-2 -ml-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded-xl transition-colors cursor-pointer"
                 title="Back to conversation list"
               >
                 <ArrowLeft className="w-5 h-5 select-none pointer-events-none" aria-hidden="true" />
@@ -922,14 +922,14 @@ function FriendsContent() {
             ) : null}
 
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-indigo-100">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-sm dark:shadow-none shadow-indigo-100">
                 <Users className="w-5 h-5 select-none pointer-events-none" aria-hidden="true" />
               </div>
               <div>
-                <h1 className="font-extrabold text-base sm:text-lg text-slate-900 leading-tight">
+                <h1 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-slate-50 leading-tight">
                   Friends & Classmates
                 </h1>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Connect with fellow learners and practice English together
                 </p>
               </div>
@@ -945,7 +945,7 @@ function FriendsContent() {
                 fetchRequests();
                 if (selectedFriend) fetchMessages(selectedFriend.id, false);
               }}
-              className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+              className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded-xl transition-colors cursor-pointer"
               title="Refresh"
             >
               <RefreshCw className="w-4 h-4 select-none pointer-events-none" aria-hidden="true" />
@@ -957,19 +957,19 @@ function FriendsContent() {
         <div className="flex-1 flex overflow-hidden">
           {/* Left Panel: Navigation Tabs & Lists */}
           <div
-            className={`w-full md:w-80 lg:w-96 border-r border-slate-200 flex flex-col bg-slate-50/50 shrink-0 ${
+            className={`w-full md:w-80 lg:w-96 border-r border-slate-200 dark:border-slate-700 flex flex-col bg-slate-50 dark:bg-slate-950/50 shrink-0 ${
               selectedFriend ? 'hidden md:flex' : 'flex'
             }`}
           >
             {/* Tabs Header */}
-            <div className="p-3 border-b border-slate-200 bg-white grid grid-cols-4 gap-1">
+            <div className="p-3 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 grid grid-cols-4 gap-1">
               <button
                 type="button"
                 onClick={() => setActiveTab('chats')}
                 className={`py-2 px-1 rounded-xl text-xs font-bold transition-all flex flex-col items-center gap-1 relative cursor-pointer ${
                   activeTab === 'chats'
                     ? 'bg-indigo-50 text-indigo-600 shadow-xs'
-                    : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-700'
                 }`}
               >
                 <MessageCircle className="w-4 h-4 select-none pointer-events-none" aria-hidden="true" />
@@ -987,7 +987,7 @@ function FriendsContent() {
                 className={`py-2 px-1 rounded-xl text-xs font-bold transition-all flex flex-col items-center gap-1 cursor-pointer ${
                   activeTab === 'friends'
                     ? 'bg-indigo-50 text-indigo-600 shadow-xs'
-                    : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-700'
                 }`}
               >
                 <UserCheck className="w-4 h-4 select-none pointer-events-none" aria-hidden="true" />
@@ -1000,7 +1000,7 @@ function FriendsContent() {
                 className={`py-2 px-1 rounded-xl text-xs font-bold transition-all flex flex-col items-center gap-1 relative cursor-pointer ${
                   activeTab === 'requests'
                     ? 'bg-indigo-50 text-indigo-600 shadow-xs'
-                    : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-700'
                 }`}
               >
                 <Clock className="w-4 h-4 select-none pointer-events-none" aria-hidden="true" />
@@ -1018,7 +1018,7 @@ function FriendsContent() {
                 className={`py-2 px-1 rounded-xl text-xs font-bold transition-all flex flex-col items-center gap-1 cursor-pointer ${
                   activeTab === 'search'
                     ? 'bg-indigo-50 text-indigo-600 shadow-xs'
-                    : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-700'
                 }`}
               >
                 <UserPlus className="w-4 h-4 select-none pointer-events-none" aria-hidden="true" />
@@ -1032,10 +1032,10 @@ function FriendsContent() {
                 <div className="p-4 space-y-4">
                   {[...Array(5)].map((_, i) => (
                     <div key={i} className="flex items-center gap-3 animate-pulse">
-                      <div className="w-11 h-11 rounded-2xl bg-slate-200 shrink-0" />
+                      <div className="w-11 h-11 rounded-xl bg-slate-200 dark:bg-slate-700 shrink-0" />
                       <div className="flex-1 space-y-2">
-                        <div className="h-4 bg-slate-200 rounded w-1/2" />
-                        <div className="h-3 bg-slate-100 rounded w-3/4" />
+                        <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/2" />
+                        <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded w-3/4" />
                       </div>
                     </div>
                   ))}
@@ -1044,14 +1044,14 @@ function FriendsContent() {
                 <>
                   {/* TAB 1: CHATS / RECENT CONVERSATIONS */}
                   {activeTab === 'chats' && (
-                    <div className="divide-y divide-slate-100">
+                    <div className="divide-y divide-slate-100 dark:divide-slate-800">
                       {conversations.length === 0 ? (
                         <div className="p-8 text-center text-slate-400 space-y-3">
-                          <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-500 mx-auto flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-500 mx-auto flex items-center justify-center">
                             <MessageCircle className="w-6 h-6 select-none pointer-events-none" aria-hidden="true" />
                           </div>
                           <div>
-                            <p className="font-bold text-sm text-slate-700">No conversations yet</p>
+                            <p className="font-bold text-sm text-slate-700 dark:text-slate-300">No conversations yet</p>
                             <p className="text-xs text-slate-400 mt-1">
                               Connect with friends and start chatting to practice speaking English!
                             </p>
@@ -1086,7 +1086,7 @@ function FriendsContent() {
                               className={`w-full p-3.5 text-left flex items-start gap-3 transition-all duration-200 cursor-pointer select-none group ${
                                 isSelected
                                   ? 'bg-indigo-50/80 border-l-4 border-indigo-600'
-                                  : 'hover:bg-slate-50 border-l-4 border-transparent'
+                                  : 'hover:bg-slate-50 dark:hover:bg-slate-800 border-l-4 border-transparent'
                               }`}
                             >
                               {/* Avatar */}
@@ -1102,7 +1102,7 @@ function FriendsContent() {
                               {/* Details */}
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between gap-1">
-                                  <span className="font-bold text-sm text-slate-900 truncate">
+                                  <span className="font-bold text-sm text-slate-900 dark:text-slate-50 truncate">
                                     {conv.friendName}
                                   </span>
                                   <span className="text-[10px] text-slate-400 shrink-0">
@@ -1114,7 +1114,7 @@ function FriendsContent() {
                                       : ''}
                                   </span>
                                 </div>
-                                <p className="text-xs text-slate-500 truncate mt-0.5 font-medium">
+                                <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5 font-medium">
                                   {conv.lastMessageText}
                                 </p>
                               </div>
@@ -1134,14 +1134,14 @@ function FriendsContent() {
 
                   {/* TAB 2: MY FRIENDS */}
                   {activeTab === 'friends' && (
-                    <div className="divide-y divide-slate-100">
+                    <div className="divide-y divide-slate-100 dark:divide-slate-800">
                       {friends.length === 0 ? (
                         <div className="p-8 text-center text-slate-400 space-y-3">
-                          <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-500 mx-auto flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-500 mx-auto flex items-center justify-center">
                             <Users className="w-6 h-6 select-none pointer-events-none" aria-hidden="true" />
                           </div>
                           <div>
-                            <p className="font-bold text-sm text-slate-700">No friends added yet</p>
+                            <p className="font-bold text-sm text-slate-700 dark:text-slate-300">No friends added yet</p>
                             <p className="text-xs text-slate-400 mt-1">
                               Search for your classmates and send them a friend request!
                             </p>
@@ -1163,7 +1163,7 @@ function FriendsContent() {
                           >
                             <div className="flex items-center gap-3 min-w-0">
                               <div className="relative shrink-0">
-                                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-violet-500 to-indigo-500 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-500 text-white flex items-center justify-center font-bold text-sm shadow-sm">
                                   {friend.name.charAt(0).toUpperCase()}
                                 </div>
                                 {friend.isOnline && (
@@ -1172,7 +1172,7 @@ function FriendsContent() {
                               </div>
                               <div className="min-w-0">
                                 <div className="flex items-center gap-1.5">
-                                  <span className="font-bold text-sm text-slate-900 truncate">
+                                  <span className="font-bold text-sm text-slate-900 dark:text-slate-50 truncate">
                                     {friend.name}
                                   </span>
                                   {friend.streak ? (
@@ -1218,7 +1218,7 @@ function FriendsContent() {
                       {/* Status Feedback Banner */}
                       {statusMessage && (
                         <div
-                          className={`p-3 rounded-2xl text-xs font-semibold flex items-center justify-between transition-all ${
+                          className={`p-3 rounded-xl text-xs font-semibold flex items-center justify-between transition-all ${
                             statusMessage.type === 'success'
                               ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-xs'
                               : 'bg-rose-50 text-rose-800 border border-rose-200 shadow-xs'
@@ -1242,7 +1242,7 @@ function FriendsContent() {
                             <button
                               type="button"
                               onClick={() => setStatusMessage(null)}
-                              className="p-1 hover:opacity-75 text-xs cursor-pointer text-slate-500"
+                              className="p-1 hover:opacity-75 text-xs cursor-pointer text-slate-500 dark:text-slate-400"
                               title="Dismiss"
                             >
                               <X className="w-3.5 h-3.5" aria-hidden="true" />
@@ -1260,7 +1260,7 @@ function FriendsContent() {
                         </div>
 
                         {incomingRequests.length === 0 ? (
-                          <div className="p-5 text-center bg-white border border-slate-200 rounded-2xl text-xs text-slate-400">
+                          <div className="p-5 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-400">
                             You don&apos;t have any pending friend requests.
                           </div>
                         ) : (
@@ -1268,14 +1268,14 @@ function FriendsContent() {
                             {incomingRequests.map((req) => (
                               <div
                                 key={req.id}
-                                className="p-3 bg-white border border-slate-200 rounded-2xl shadow-xs space-y-2.5 select-none"
+                                className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xs space-y-2.5 select-none"
                               >
                                 <div className="flex items-center gap-3">
                                   <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 text-white flex items-center justify-center font-bold text-sm shrink-0">
                                     {req.sender.name.charAt(0).toUpperCase()}
                                   </div>
                                   <div className="min-w-0 flex-1">
-                                    <span className="font-bold text-sm text-slate-900 block truncate">
+                                    <span className="font-bold text-sm text-slate-900 dark:text-slate-50 block truncate">
                                       {req.sender.name}
                                     </span>
                                     <span className="text-[11px] text-slate-400 block truncate">
@@ -1302,7 +1302,7 @@ function FriendsContent() {
                                     type="button"
                                     disabled={respondingRequestId === req.id}
                                     onClick={() => handleRespondRequest(req.id, 'DECLINE', req.sender)}
-                                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-600 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                                    className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 disabled:opacity-50 text-slate-600 dark:text-slate-400 text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1 cursor-pointer"
                                   >
                                     <X className="w-3.5 h-3.5" aria-hidden="true" />
                                     <span>Decline</span>
@@ -1324,13 +1324,13 @@ function FriendsContent() {
                             {outgoingRequests.map((req) => (
                               <div
                                 key={req.id}
-                                className="p-3 bg-white border border-slate-200 rounded-2xl flex items-center justify-between gap-3 text-xs select-none"
+                                className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-between gap-3 text-xs select-none"
                               >
                                 <div className="flex items-center gap-2.5 min-w-0">
-                                  <div className="w-8 h-8 rounded-lg bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs shrink-0">
+                                  <div className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 flex items-center justify-center font-bold text-xs shrink-0">
                                     {req.receiver.name.charAt(0).toUpperCase()}
                                   </div>
-                                  <span className="font-semibold text-slate-800 truncate">
+                                  <span className="font-semibold text-slate-800 dark:text-slate-200 truncate">
                                     {req.receiver.name}
                                   </span>
                                 </div>
@@ -1362,7 +1362,7 @@ function FriendsContent() {
                             }
                           }}
                           placeholder="Search learners by name or email..."
-                          className="w-full pl-9 pr-8 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-800"
+                          className="w-full pl-9 pr-8 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-800 dark:text-slate-200"
                         />
                         {searchQuery && (
                           <button
@@ -1382,7 +1382,7 @@ function FriendsContent() {
                       {/* Status Feedback Banner */}
                       {statusMessage && (
                         <div
-                          className={`p-3 rounded-2xl text-xs font-semibold flex items-center justify-between transition-all ${
+                          className={`p-3 rounded-xl text-xs font-semibold flex items-center justify-between transition-all ${
                             statusMessage.type === 'success'
                               ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-xs'
                               : 'bg-rose-50 text-rose-800 border border-rose-200 shadow-xs'
@@ -1406,7 +1406,7 @@ function FriendsContent() {
                             <button
                               type="button"
                               onClick={() => setStatusMessage(null)}
-                              className="p-1 hover:opacity-75 text-xs cursor-pointer text-slate-500"
+                              className="p-1 hover:opacity-75 text-xs cursor-pointer text-slate-500 dark:text-slate-400"
                               title="Dismiss"
                             >
                               <X className="w-3.5 h-3.5" aria-hidden="true" />
@@ -1419,15 +1419,15 @@ function FriendsContent() {
                       {isSearching ? (
                         <div className="space-y-2">
                           {[...Array(3)].map((_, i) => (
-                            <div key={i} className="p-3 bg-white border border-slate-200 rounded-2xl flex items-center justify-between gap-3 animate-pulse">
+                            <div key={i} className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-between gap-3 animate-pulse">
                               <div className="flex items-center gap-2.5">
-                                <div className="w-9 h-9 rounded-xl bg-slate-200 shrink-0" />
+                                <div className="w-9 h-9 rounded-xl bg-slate-200 dark:bg-slate-700 shrink-0" />
                                 <div className="space-y-1.5">
-                                  <div className="w-24 h-3 bg-slate-200 rounded" />
-                                  <div className="w-32 h-2 bg-slate-100 rounded" />
+                                  <div className="w-24 h-3 bg-slate-200 dark:bg-slate-700 rounded" />
+                                  <div className="w-32 h-2 bg-slate-100 dark:bg-slate-800 rounded" />
                                 </div>
                               </div>
-                              <div className="w-16 h-7 bg-slate-200 rounded-xl" />
+                              <div className="w-16 h-7 bg-slate-200 dark:bg-slate-700 rounded-xl" />
                             </div>
                           ))}
                         </div>
@@ -1436,14 +1436,14 @@ function FriendsContent() {
                           {searchResults.map((userResult) => (
                             <div
                               key={userResult.id}
-                              className="p-3 bg-white border border-slate-200 rounded-2xl flex items-center justify-between gap-3 shadow-xs select-none"
+                              className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-between gap-3 shadow-xs select-none"
                             >
                               <div className="flex items-center gap-2.5 min-w-0">
                                 <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 text-white flex items-center justify-center font-bold text-sm shrink-0">
                                   {userResult.name.charAt(0).toUpperCase()}
                                 </div>
                                 <div className="min-w-0">
-                                  <span className="font-bold text-xs text-slate-900 block truncate">
+                                  <span className="font-bold text-xs text-slate-900 dark:text-slate-50 block truncate">
                                     {userResult.name}
                                   </span>
                                   <span className="text-[10px] text-slate-400 block truncate">
@@ -1508,7 +1508,7 @@ function FriendsContent() {
                       ) : (
                         <div className="p-6 text-center text-slate-400 text-xs space-y-1">
                           <Sparkles className="w-5 h-5 text-indigo-400 mx-auto mb-2" aria-hidden="true" />
-                          <p className="font-semibold text-slate-600">Search for Classmates</p>
+                          <p className="font-semibold text-slate-600 dark:text-slate-400">Search for Classmates</p>
                           <p className="text-[11px]">Type a name or email to connect with other English learners.</p>
                         </div>
                       )}
@@ -1521,25 +1521,25 @@ function FriendsContent() {
 
           {/* Right Panel: 1-to-1 Private Chat Window */}
           <div
-            className={`flex-1 flex flex-col bg-white overflow-hidden ${
+            className={`flex-1 flex flex-col bg-white dark:bg-slate-900 overflow-hidden ${
               selectedFriend ? 'flex' : 'hidden md:flex'
             }`}
           >
             {selectedFriend ? (
               <div className="flex-1 flex flex-col h-full overflow-hidden">
                 {/* Chat Top Header */}
-                <div className="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-white shrink-0">
+                <div className="px-5 py-3.5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between bg-white dark:bg-slate-900 shrink-0">
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
                       onClick={handleCloseChat}
-                      className="md:hidden p-1.5 -ml-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+                      className="md:hidden p-1.5 -ml-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded-xl transition-colors cursor-pointer"
                       title="Back to conversations"
                     >
                       <ArrowLeft className="w-5 h-5" aria-hidden="true" />
                     </button>
                     <div className="relative">
-                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
                         {selectedFriend.name.charAt(0).toUpperCase()}
                       </div>
                       {selectedFriend.isOnline && (
@@ -1548,7 +1548,7 @@ function FriendsContent() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h2 className="font-extrabold text-sm text-slate-900">
+                        <h2 className="font-extrabold text-sm text-slate-900 dark:text-slate-50">
                           {selectedFriend.name}
                         </h2>
                         {selectedFriend.isOnline ? (
@@ -1586,22 +1586,22 @@ function FriendsContent() {
                 {/* Message Stream */}
                 <div
                   ref={chatContainerRef}
-                  className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3 bg-slate-50/60"
+                  className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3 bg-slate-50 dark:bg-slate-950/60"
                 >
                   {isLoadingChat ? (
                     <div className="h-full flex flex-col justify-end p-4 space-y-4">
                       {[...Array(4)].map((_, i) => (
                         <div key={i} className={`flex flex-col ${i % 2 === 0 ? 'items-start' : 'items-end'}`}>
-                          <div className={`w-48 h-10 rounded-2xl animate-pulse ${i % 2 === 0 ? 'bg-slate-200 rounded-tl-none' : 'bg-indigo-100 rounded-tr-none'}`} />
+                          <div className={`w-48 h-10 rounded-xl animate-pulse ${i % 2 === 0 ? 'bg-slate-200 dark:bg-slate-700 rounded-tl-none' : 'bg-indigo-100 rounded-tr-none'}`} />
                         </div>
                       ))}
                     </div>
                   ) : messages.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center text-center p-8 text-slate-400 space-y-2">
-                      <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
                         <MessageCircle className="w-6 h-6 select-none pointer-events-none" aria-hidden="true" />
                       </div>
-                      <p className="font-bold text-sm text-slate-700">
+                      <p className="font-bold text-sm text-slate-700 dark:text-slate-300">
                         Start chatting with {selectedFriend.name}!
                       </p>
                       <p className="text-xs text-slate-400 max-w-xs">
@@ -1625,14 +1625,14 @@ function FriendsContent() {
                           className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}
                         >
                           <div
-                            className={`max-w-[85%] sm:max-w-[70%] rounded-2xl px-4 py-2.5 text-sm shadow-xs break-words whitespace-pre-wrap select-text ${
+                            className={`max-w-[85%] sm:max-w-[70%] rounded-xl px-4 py-2.5 text-sm shadow-xs break-words whitespace-pre-wrap select-text ${
                               isMine
                                 ? isFailed
                                   ? 'bg-rose-600 text-white rounded-tr-none'
                                   : isSendingStatus
                                   ? 'bg-indigo-500 text-white/90 rounded-tr-none'
                                   : 'bg-indigo-600 text-white rounded-tr-none'
-                                : 'bg-white border border-slate-200 text-slate-900 rounded-tl-none'
+                                : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-50 rounded-tl-none'
                             }`}
                           >
                             {msg.content}
@@ -1668,10 +1668,10 @@ function FriendsContent() {
                 </div>
 
                 {/* Message Input Box */}
-                <div className="p-3 sm:p-4 bg-white border-t border-slate-200 shrink-0">
+                <div className="p-3 sm:p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 shrink-0">
                   <form
                     onSubmit={handleSendMessage}
-                    className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-2xl p-1.5 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:bg-white transition-all"
+                    className="flex items-center gap-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-1.5 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:bg-white transition-all"
                   >
                     <input
                       type="text"
@@ -1690,7 +1690,7 @@ function FriendsContent() {
                         }
                       }}
                       placeholder={`Message ${selectedFriend.name}...`}
-                      className="flex-1 px-3 py-2 text-sm bg-transparent focus:outline-none text-slate-900 placeholder:text-slate-400 font-medium"
+                      className="flex-1 px-3 py-2 text-sm bg-transparent focus:outline-none text-slate-900 dark:text-slate-50 placeholder:text-slate-400 font-medium"
                     />
 
                     <button
@@ -1707,14 +1707,14 @@ function FriendsContent() {
             ) : (
               /* No Friend Selected: Welcoming Empty State */
               <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-400 space-y-4">
-                <div className="w-16 h-16 rounded-3xl bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-inner">
+                <div className="w-16 h-16 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-inner">
                   <Users className="w-8 h-8 select-none pointer-events-none" aria-hidden="true" />
                 </div>
                 <div className="max-w-sm space-y-1">
-                  <h3 className="font-extrabold text-base text-slate-800">
+                  <h3 className="font-extrabold text-base text-slate-800 dark:text-slate-200">
                     Private 1-to-1 English Practice
                   </h3>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
                     Select a friend from your list or find new classmates to practice daily conversation!
                   </p>
                 </div>

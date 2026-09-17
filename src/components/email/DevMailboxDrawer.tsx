@@ -73,7 +73,7 @@ export function DevMailboxDrawer() {
             setIsOpen(true);
             fetchEmails();
           }}
-          className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-900 text-white rounded-full shadow-xl border border-slate-700 hover:bg-slate-800 transition-all active:scale-95 text-xs font-semibold"
+          className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-900 text-white rounded-full shadow-lg dark:shadow-none border border-slate-700 hover:bg-slate-800 transition-all active:scale-95 text-xs font-semibold"
           title="Open Dev Mailbox to view verification and password reset emails"
         >
           <Mail className="w-4 h-4 text-indigo-400" />
@@ -88,7 +88,7 @@ export function DevMailboxDrawer() {
 
       {/* Expanded Modal / Drawer */}
       {isOpen && (
-        <div className="w-80 sm:w-96 max-h-[520px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col text-slate-800 animate-in fade-in slide-in-from-bottom-5 duration-200">
+        <div className="w-80 sm:w-96 max-h-[520px] bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col text-slate-800 dark:text-slate-200 animate-in fade-in slide-in-from-bottom-5 duration-200">
           {/* Header */}
           <div className="p-3.5 bg-slate-900 text-white flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -116,7 +116,7 @@ export function DevMailboxDrawer() {
           </div>
 
           {/* Email List */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-2.5 divide-y divide-slate-100">
+          <div className="flex-1 overflow-y-auto p-3 space-y-2.5 divide-y divide-slate-100 dark:divide-slate-800">
             {emails.length === 0 ? (
               <div className="text-center py-8 text-slate-400 text-xs">
                 <p>No emails sent yet.</p>
@@ -132,15 +132,15 @@ export function DevMailboxDrawer() {
 
                 return (
                   <div key={email.id} className="pt-2.5 first:pt-0">
-                    <div className="flex items-center justify-between text-[11px] text-slate-500 mb-1">
-                      <span className="font-semibold text-slate-800 truncate max-w-[190px]">
+                    <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 mb-1">
+                      <span className="font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[190px]">
                         {email.to}
                       </span>
                       <span>
                         {new Date(email.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
-                    <div className="font-medium text-xs text-slate-900 mb-1.5 flex items-center gap-1.5">
+                    <div className="font-medium text-xs text-slate-900 dark:text-slate-50 mb-1.5 flex items-center gap-1.5">
                       <span
                         className={`w-2 h-2 rounded-full ${
                           email.type === 'VERIFICATION' ? 'bg-emerald-500' : 'bg-amber-500'
@@ -167,9 +167,9 @@ export function DevMailboxDrawer() {
                           href={email.previewUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-lg transition-colors"
                         >
-                          <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+                          <ExternalLink className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                           <span>Ethereal Mail</span>
                         </a>
                       )}
@@ -180,7 +180,7 @@ export function DevMailboxDrawer() {
             )}
           </div>
 
-          <div className="p-2.5 bg-slate-50 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
+          <div className="p-2.5 bg-slate-50 dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between">
             <span>Real SMTP can be configured in .env</span>
             <a
               href="/dev/mailbox"

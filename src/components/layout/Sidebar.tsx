@@ -5,16 +5,17 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Home,
-  BookOpen,
-  Mic,
   MessageSquare,
+  Mic,
+  BookOpen,
+  Users,
+  Award,
+  LogOut,
   BookMarked,
   User,
-  LogOut,
   Flame,
-  Award,
-  Users,
 } from 'lucide-react';
+import { ThemeToggle } from '../ui/ThemeToggle';
 
 interface SidebarProps {
   user?: {
@@ -74,15 +75,15 @@ export function Sidebar({ user }: SidebarProps) {
   ];
 
   return (
-    <aside className="hidden md:flex flex-col w-64 bg-white border-r border-slate-200 h-screen sticky top-0 px-4 py-6 justify-between select-none">
+    <aside className="hidden md:flex flex-col w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700 h-screen sticky top-0 px-4 py-6 justify-between select-none">
       {/* Brand Header */}
       <div>
         <Link href="/dashboard" className="flex items-center gap-3 px-2 mb-8 group">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-100 group-hover:scale-105 transition-transform">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 flex items-center justify-center text-white shadow-sm dark:shadow-none shadow-indigo-100 group-hover:scale-105 transition-transform">
             <span className="font-extrabold text-xl">L</span>
           </div>
           <div>
-            <span className="font-bold text-lg text-slate-900 tracking-tight block">
+            <span className="font-bold text-lg text-slate-900 dark:text-slate-50 tracking-tight block">
               Lingua<span className="text-indigo-600">Learn</span>
             </span>
             <span className="text-[10px] text-slate-400 font-medium tracking-wider uppercase block -mt-1">
@@ -93,7 +94,7 @@ export function Sidebar({ user }: SidebarProps) {
 
         {/* Quick Stats Pill */}
         {user && (
-          <div className="mb-6 p-3 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 rounded-2xl flex items-center justify-between">
+          <div className="mb-6 p-3 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 rounded-xl flex items-center justify-between">
             <div className="flex items-center gap-1.5 text-amber-800 font-bold text-xs">
               <Flame className="w-4 h-4 text-orange-500 fill-orange-500 animate-pulse" />
               <span>{user.streak || 1} Day Streak</span>
@@ -120,7 +121,7 @@ export function Sidebar({ user }: SidebarProps) {
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-150 ${
                   isActive
                     ? 'bg-indigo-50 text-indigo-600 font-bold shadow-xs'
-                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900'
                 }`}
               >
                 <Icon
@@ -145,20 +146,26 @@ export function Sidebar({ user }: SidebarProps) {
       </div>
 
       {/* User Footer & Logout */}
-      <div className="pt-4 border-t border-slate-100">
+      <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
         {user && (
-          <div className="flex items-center justify-between px-2 py-2 mb-2 rounded-xl bg-slate-50">
-            <div className="truncate mr-2">
-              <p className="text-xs font-bold text-slate-800 truncate">{user.name}</p>
-              <p className="text-[11px] text-slate-400 truncate">{user.email}</p>
+          <div className="flex flex-col gap-2 px-2 py-2 mb-2 rounded-xl bg-slate-50 dark:bg-slate-950">
+            <div className="flex items-center justify-between">
+              <div className="truncate mr-2">
+                <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{user.name}</p>
+                <p className="text-[11px] text-slate-400 truncate">{user.email}</p>
+              </div>
+              <div className="w-2 h-2 rounded-full bg-emerald-500" title="Online" />
             </div>
-            <div className="w-2 h-2 rounded-full bg-emerald-500" title="Online" />
+            <div className="flex items-center justify-between pt-1 mt-1 border-t border-slate-200 dark:border-slate-800">
+               <span className="text-[10px] font-semibold text-slate-400">Appearance</span>
+               <ThemeToggle />
+            </div>
           </div>
         )}
 
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
+          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
         >
           <LogOut className="w-4 h-4" />
           <span>Log Out</span>

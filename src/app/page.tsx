@@ -16,7 +16,7 @@ export default async function LandingPage() {
   const user = await getCurrentUser();
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
+    <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 selection:bg-indigo-100 selection:text-indigo-900">
       {/* Navigation */}
       <Navbar user={user ? { name: user.name, email: user.email } : null} />
 
@@ -33,7 +33,7 @@ export default async function LandingPage() {
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight max-w-4xl mx-auto leading-[1.12]">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight max-w-4xl mx-auto leading-[1.12]">
             Learn English.{' '}
             <span className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-600 bg-clip-text text-transparent">
               Speak with Confidence.
@@ -41,7 +41,7 @@ export default async function LandingPage() {
           </h1>
 
           {/* Subtitles */}
-          <p className="mt-6 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
+          <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed font-normal">
             Understand English, practice speaking, and learn step by step — in a language you already understand.
           </p>
 
@@ -53,7 +53,7 @@ export default async function LandingPage() {
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href={user ? '/dashboard' : '/signup'}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 text-base font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-95 rounded-2xl shadow-lg shadow-indigo-200 transition-all"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 text-base font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-95 rounded-xl shadow-sm dark:shadow-none shadow-indigo-200 transition-all"
             >
               <span>Start Learning</span>
               <ArrowRight className="w-5 h-5" />
@@ -61,7 +61,7 @@ export default async function LandingPage() {
 
             <Link
               href="/speak"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 text-base font-bold text-slate-800 bg-white hover:bg-slate-50 active:scale-95 rounded-2xl border-2 border-slate-200 transition-all shadow-xs"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 text-base font-bold text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-95 rounded-xl border-2 border-slate-200 dark:border-slate-700 transition-all shadow-xs"
             >
               <Mic className="w-5 h-5 text-emerald-600" />
               <span>Practice Speaking</span>
@@ -74,16 +74,16 @@ export default async function LandingPage() {
       </section>
 
       {/* How LinguaLearn Works Section */}
-      <section id="how-it-works" className="py-20 bg-slate-50/75 border-y border-slate-200/80">
+      <section id="how-it-works" className="py-20 bg-slate-50 dark:bg-slate-950/75 border-y border-slate-200 dark:border-slate-700/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-xs font-extrabold tracking-widest text-indigo-600 uppercase mb-3">
               How LinguaLearn Works
             </h2>
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
               Three Simple Steps to Fluency
             </h3>
-            <p className="mt-3 text-base sm:text-lg text-slate-600">
+            <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-slate-400">
               You never have to guess. LinguaLearn connects English concepts directly to your native language.
             </p>
           </div>
@@ -91,58 +91,58 @@ export default async function LandingPage() {
           {/* Three Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* 1. Speak */}
-            <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+            <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all group">
+              <div className="w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
                 <Mic className="w-7 h-7" />
               </div>
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
                   Feature 1
                 </span>
-                <h4 className="text-2xl font-bold text-slate-900">🎤 Speak</h4>
+                <h4 className="text-2xl font-bold text-slate-900 dark:text-slate-50">🎤 Speak</h4>
               </div>
-              <p className="text-slate-600 text-sm leading-relaxed mt-3">
+              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mt-3">
                 Speak in your own language and instantly learn how to say it in natural English. Practice your pronunciation with real-time feedback.
               </p>
-              <div className="mt-6 pt-6 border-t border-slate-100 flex items-center text-xs font-bold text-emerald-600">
+              <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center text-xs font-bold text-emerald-600">
                 <span>Instant Speech-to-Speech Translation →</span>
               </div>
             </div>
 
             {/* 2. Learn */}
-            <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-              <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-200 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+            <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all group">
+              <div className="w-14 h-14 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-200 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
                 <BookOpen className="w-7 h-7" />
               </div>
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
                   Feature 2
                 </span>
-                <h4 className="text-2xl font-bold text-slate-900">📚 Learn</h4>
+                <h4 className="text-2xl font-bold text-slate-900 dark:text-slate-50">📚 Learn</h4>
               </div>
-              <p className="text-slate-600 text-sm leading-relaxed mt-3">
+              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mt-3">
                 Learn vocabulary, grammar, sentences, and everyday English step by step with rich visual flashcards, matching games, and quizzes.
               </p>
-              <div className="mt-6 pt-6 border-t border-slate-100 flex items-center text-xs font-bold text-indigo-600">
+              <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center text-xs font-bold text-indigo-600">
                 <span>Visual 5-Module Curriculum →</span>
               </div>
             </div>
 
             {/* 3. Practice */}
-            <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-              <div className="w-14 h-14 rounded-2xl bg-violet-50 text-violet-600 border border-violet-200 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+            <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all group">
+              <div className="w-14 h-14 rounded-xl bg-violet-50 text-violet-600 border border-violet-200 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
                 <Sparkles className="w-7 h-7" />
               </div>
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xs font-bold uppercase tracking-wider text-violet-600 bg-violet-50 px-2 py-0.5 rounded">
                   Feature 3
                 </span>
-                <h4 className="text-2xl font-bold text-slate-900">💬 Practice</h4>
+                <h4 className="text-2xl font-bold text-slate-900 dark:text-slate-50">💬 Practice</h4>
               </div>
-              <p className="text-slate-600 text-sm leading-relaxed mt-3">
+              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mt-3">
                 Practice conversations with your friendly AI English tutor. Receive gentle corrections when you make mistakes without feeling judged.
               </p>
-              <div className="mt-6 pt-6 border-t border-slate-100 flex items-center text-xs font-bold text-violet-600">
+              <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center text-xs font-bold text-violet-600">
                 <span>Adaptive Level-1 Tutor Partner →</span>
               </div>
             </div>
@@ -151,7 +151,7 @@ export default async function LandingPage() {
       </section>
 
       {/* English Learning Made Easier Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -159,10 +159,10 @@ export default async function LandingPage() {
                 <ShieldCheck className="w-4 h-4" />
                 <span>Designed For Beginners</span>
               </div>
-              <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
                 English learning made easier.
               </h3>
-              <p className="mt-4 text-base text-slate-600 leading-relaxed">
+              <p className="mt-4 text-base text-slate-600 dark:text-slate-400 leading-relaxed">
                 Most platforms throw complete beginners into English-only immersion, causing frustration and abandonment. LinguaLearn takes a fundamentally better approach:
               </p>
 
@@ -172,8 +172,8 @@ export default async function LandingPage() {
                     ✓
                   </div>
                   <div>
-                    <h5 className="font-bold text-slate-900 text-sm">Clear Explanations in Your Native Tongue</h5>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <h5 className="font-bold text-slate-900 dark:text-slate-50 text-sm">Clear Explanations in Your Native Tongue</h5>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                       Grammar rules, sentence structures, and meanings are explained in Malayalam, Hindi, Tamil, Spanish, and 10+ other languages.
                     </p>
                   </div>
@@ -184,8 +184,8 @@ export default async function LandingPage() {
                     ✓
                   </div>
                   <div>
-                    <h5 className="font-bold text-slate-900 text-sm">Gentle AI Mistake Explanations</h5>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <h5 className="font-bold text-slate-900 dark:text-slate-50 text-sm">Gentle AI Mistake Explanations</h5>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                       When you say &quot;I am go to school&quot;, we don&apos;t just say &quot;Wrong&quot;. We show you: &quot;I am going to school&quot; and explain why simply.
                     </p>
                   </div>
@@ -196,8 +196,8 @@ export default async function LandingPage() {
                     ✓
                   </div>
                   <div>
-                    <h5 className="font-bold text-slate-900 text-sm">Audio at Normal and Slow Speeds</h5>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <h5 className="font-bold text-slate-900 dark:text-slate-50 text-sm">Audio at Normal and Slow Speeds</h5>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                       Hear native English accents clearly with 1-click audio playback and phonetic pronunciations on every word.
                     </p>
                   </div>
@@ -207,7 +207,7 @@ export default async function LandingPage() {
               <div className="mt-10">
                 <Link
                   href="/signup"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-100 transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm dark:shadow-none shadow-indigo-100 transition-all"
                 >
                   <span>Create Your Free Account</span>
                   <ArrowRight className="w-4 h-4" />
@@ -216,24 +216,24 @@ export default async function LandingPage() {
             </div>
 
             {/* Graphic Comparison */}
-            <div className="bg-slate-50 border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6">
-              <div className="bg-white p-5 rounded-2xl border border-rose-100 shadow-xs">
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-6 sm:p-8 space-y-6">
+              <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-rose-100 shadow-xs">
                 <div className="flex items-center gap-2 text-rose-600 text-xs font-bold uppercase mb-2">
                   <span>❌ Traditional English Apps</span>
                 </div>
-                <p className="text-xs text-slate-600">
+                <p className="text-xs text-slate-600 dark:text-slate-400">
                   Complicated grammar rules explained entirely in advanced English. Users feel lost and give up in days.
                 </p>
               </div>
 
-              <div className="bg-white p-6 rounded-2xl border-2 border-emerald-500/80 shadow-md shadow-emerald-50">
+              <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-emerald-500/80 shadow-sm dark:shadow-none shadow-emerald-50">
                 <div className="flex items-center gap-2 text-emerald-600 text-xs font-bold uppercase mb-2">
                   <span>✨ The LinguaLearn Advantage</span>
                 </div>
                 <div className="space-y-3">
-                  <div className="p-3 bg-slate-50 rounded-xl">
+                  <div className="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl">
                     <p className="text-xs font-bold text-slate-400">YOU MAKE A MISTAKE:</p>
-                    <p className="text-sm font-semibold text-slate-700 mt-0.5">&ldquo;I am go to school.&rdquo;</p>
+                    <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mt-0.5">&ldquo;I am go to school.&rdquo;</p>
                   </div>
                   <div className="p-3 bg-emerald-50/80 border border-emerald-200 rounded-xl">
                     <p className="text-xs font-bold text-emerald-800">BETTER ENGLISH:</p>
@@ -276,7 +276,7 @@ export default async function LandingPage() {
               </Link>
             </div>
           </div>
-          <div className="mt-8 pt-6 border-t border-slate-800 text-center text-xs text-slate-500">
+          <div className="mt-8 pt-6 border-t border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
             © {new Date().getFullYear()} LinguaLearn Inc. All rights reserved. Commercial EdTech for English Beginners.
           </div>
         </div>

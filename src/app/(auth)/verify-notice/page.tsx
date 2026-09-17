@@ -35,18 +35,18 @@ function VerifyNoticeContent() {
   };
 
   return (
-    <div className="bg-white py-10 px-6 sm:px-10 shadow-xl shadow-slate-200/50 rounded-3xl border border-slate-200/80 text-center">
-      <div className="w-18 h-18 mx-auto rounded-3xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-3xl mb-6 shadow-xs">
+    <div className="bg-white dark:bg-slate-900 py-10 px-6 sm:px-10 shadow-lg dark:shadow-none shadow-slate-200/50 rounded-xl border border-slate-200 dark:border-slate-700/80 text-center">
+      <div className="w-18 h-18 mx-auto rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-3xl mb-6 shadow-xs">
         📧
       </div>
 
-      <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+      <h2 className="text-2xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
         Check your email
       </h2>
 
-      <p className="mt-3 text-sm text-slate-600 leading-relaxed max-w-sm mx-auto">
+      <p className="mt-3 text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-sm mx-auto">
         We&apos;ve sent a verification link to{' '}
-        <strong className="text-slate-900 font-semibold">{emailParam}</strong>.
+        <strong className="text-slate-900 dark:text-slate-50 font-semibold">{emailParam}</strong>.
         Please verify your email before continuing.
       </p>
 
@@ -62,7 +62,7 @@ function VerifyNoticeContent() {
         <button
           onClick={handleResend}
           disabled={resending}
-          className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-98 transition-all shadow-md shadow-indigo-100 disabled:opacity-60"
+          className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-98 transition-all shadow-sm dark:shadow-none shadow-indigo-100 disabled:opacity-60"
         >
           <RefreshCw className={`w-4 h-4 ${resending ? 'animate-spin' : ''}`} />
           <span>{resending ? 'Sending...' : 'Resend verification email'}</span>
@@ -70,7 +70,7 @@ function VerifyNoticeContent() {
 
         <Link
           href="/signup"
-          className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors border border-slate-200"
+          className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border border-slate-200 dark:border-slate-700"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Change email address</span>
@@ -78,11 +78,11 @@ function VerifyNoticeContent() {
       </div>
 
       {/* Dev Convenience Helper */}
-      <div className="mt-8 pt-6 border-t border-slate-100 bg-slate-50/70 -mx-6 -mb-10 sm:-mx-10 p-5 rounded-b-3xl">
-        <p className="text-xs font-bold text-slate-700 mb-1">
+      <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/70 -mx-6 -mb-10 sm:-mx-10 p-5 rounded-b-3xl">
+        <p className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
           Testing in Development?
         </p>
-        <p className="text-[11px] text-slate-500 mb-3">
+        <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
           Verification emails are recorded live in the Dev Mailbox. Click below to view and complete verification with one click!
         </p>
         <Link
@@ -99,13 +99,13 @@ function VerifyNoticeContent() {
 
 export default function VerifyNoticePage() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-6">
         <Link href="/" className="inline-flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-black text-lg">
+          <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-lg">
             L
           </div>
-          <span className="font-extrabold text-2xl text-slate-900">
+          <span className="font-extrabold text-2xl text-slate-900 dark:text-slate-50">
             Lingua<span className="text-indigo-600">Learn</span>
           </span>
         </Link>

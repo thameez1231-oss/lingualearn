@@ -347,16 +347,16 @@ export default function SpeakPage() {
               <Sparkles className="w-3.5 h-3.5" />
               <span>Sentence-Level Meaning Engine</span>
             </div>
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-3xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
               Speak & Translate
             </h1>
-            <p className="text-sm text-slate-600 mt-1">
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
               Speak in your language. LinguaLearn understands the complete meaning and converts it to natural English.
             </p>
           </div>
 
           {/* "What language are you speaking?" Selector */}
-          <div className="bg-white p-3 rounded-2xl border border-slate-200/80 shadow-xs">
+          <div className="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700/80 shadow-xs">
             <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-1">
               What language are you speaking?
             </label>
@@ -370,7 +370,7 @@ export default function SpeakPage() {
                   setTextInput('');
                   setErrorMessage('');
                 }}
-                className="text-xs font-bold text-slate-900 bg-transparent focus:outline-none cursor-pointer pr-2"
+                className="text-xs font-bold text-slate-900 dark:text-slate-50 bg-transparent focus:outline-none cursor-pointer pr-2"
               >
                 {SUPPORTED_LANGUAGES.map((lang) => (
                   <option key={lang.id} value={lang.id}>
@@ -384,7 +384,7 @@ export default function SpeakPage() {
 
         {/* Pipeline State Banner (Section 22) */}
         {pipelineStage !== 'idle' && pipelineStage !== 'ready' && (
-          <div className="p-3.5 bg-indigo-50 border border-indigo-200 rounded-2xl flex items-center justify-center gap-3 animate-in fade-in duration-200">
+          <div className="p-3.5 bg-indigo-50 border border-indigo-200 rounded-xl flex items-center justify-center gap-3 animate-in fade-in duration-200">
             {pipelineStage === 'listening' && (
               <>
                 <div className="w-3 h-3 rounded-full bg-rose-500 animate-ping" />
@@ -414,7 +414,7 @@ export default function SpeakPage() {
 
         {/* Error / Silence Notification (Section 21) */}
         {errorMessage && (
-          <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl flex items-center justify-between text-xs text-rose-800 font-medium">
+          <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl flex items-center justify-between text-xs text-rose-800 font-medium">
             <div className="flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
               <span>{errorMessage}</span>
@@ -429,7 +429,7 @@ export default function SpeakPage() {
         )}
 
         {/* Primary Speaking Card */}
-        <div className="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-xl shadow-slate-200/40 text-center relative overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700/80 shadow-lg dark:shadow-none shadow-slate-200/40 text-center relative overflow-hidden">
           <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-6">
             Press the button and speak in {currentLangInfo.name}
           </p>
@@ -442,7 +442,7 @@ export default function SpeakPage() {
             <button
               type="button"
               onClick={pipelineStage === 'listening' ? stopNativeSpeech : startNativeSpeech}
-              className={`w-28 h-28 rounded-full flex flex-col items-center justify-center transition-all duration-200 shadow-xl active:scale-95 ${
+              className={`w-28 h-28 rounded-full flex flex-col items-center justify-center transition-all duration-200 shadow-lg dark:shadow-none active:scale-95 ${
                 pipelineStage === 'listening'
                   ? 'bg-rose-500 text-white shadow-rose-200 ring-8 ring-rose-100 scale-105 animate-pulse'
                   : 'bg-gradient-to-tr from-emerald-500 to-teal-600 text-white shadow-emerald-200 hover:scale-105'
@@ -465,7 +465,7 @@ export default function SpeakPage() {
 
           {/* Live Interim Speech Preview */}
           {interimText && (
-            <div className="p-3 bg-slate-50 border border-dashed border-slate-300 rounded-xl mb-4 max-w-md mx-auto text-xs text-slate-600 italic">
+            <div className="p-3 bg-slate-50 dark:bg-slate-950 border border-dashed border-slate-300 dark:border-slate-600 rounded-xl mb-4 max-w-md mx-auto text-xs text-slate-600 dark:text-slate-400 italic">
               Hearing: &ldquo;{interimText}&rdquo;
             </div>
           )}
@@ -480,7 +480,7 @@ export default function SpeakPage() {
                   setTextInput(currentLangInfo.samplePhrase);
                   handleTranslate(currentLangInfo.samplePhrase);
                 }}
-                className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors"
+                className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-slate-200 transition-colors"
               >
                 &ldquo;{currentLangInfo.samplePhrase}&rdquo;
               </button>
@@ -493,7 +493,7 @@ export default function SpeakPage() {
                       setTextInput(phrase);
                       handleTranslate(phrase);
                     }}
-                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800"
+                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-slate-200"
                   >
                     &ldquo;ഞാൻ നാളെ സ്കൂളിൽ പോകും&rdquo;
                   </button>
@@ -504,7 +504,7 @@ export default function SpeakPage() {
                       setTextInput(phrase);
                       handleTranslate(phrase);
                     }}
-                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800"
+                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-slate-200"
                   >
                     &ldquo;എനിക്ക് ഒരു ചായ വേണം&rdquo;
                   </button>
@@ -519,7 +519,7 @@ export default function SpeakPage() {
                       setTextInput(phrase);
                       handleTranslate(phrase);
                     }}
-                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800"
+                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-slate-200"
                   >
                     &ldquo;मुझे पानी चाहिए&rdquo;
                   </button>
@@ -529,7 +529,7 @@ export default function SpeakPage() {
           </div>
 
           {/* Text Input Option (Section 15) */}
-          <div className="mt-6 pt-6 border-t border-slate-100 max-w-md mx-auto">
+          <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 max-w-md mx-auto">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -542,7 +542,7 @@ export default function SpeakPage() {
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
                 placeholder={`Type in ${currentLangInfo.name} or English...`}
-                className="flex-1 px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-800"
+                className="flex-1 px-4 py-2.5 text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-800 dark:text-slate-200"
               />
               <button
                 type="submit"
@@ -557,11 +557,11 @@ export default function SpeakPage() {
 
         {/* TRANSLATION RESULT UI (Section 8, 16, 17) */}
         {translation && (
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border-2 border-indigo-100 shadow-xl shadow-indigo-50 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="bg-white dark:bg-slate-900 rounded-xl p-6 sm:p-8 border-2 border-indigo-100 shadow-lg dark:shadow-none shadow-indigo-50 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
             {/* Step A: "You Said" with ✏️ Edit (Section 8) */}
-            <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200/80">
+            <div className="p-5 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-700/80">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                   <span>🗣️ You said ({translation.detectedLanguage})</span>
                 </span>
 
@@ -590,7 +590,7 @@ export default function SpeakPage() {
               </div>
 
               {!isEditingTranscript ? (
-                <p className="text-2xl font-bold text-slate-900 leading-snug">
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-50 leading-snug">
                   {translation.nativeText}
                 </p>
               ) : (
@@ -599,7 +599,7 @@ export default function SpeakPage() {
                     type="text"
                     value={editedTranscript}
                     onChange={(e) => setEditedTranscript(e.target.value)}
-                    className="w-full px-3 py-2 text-base font-bold bg-white border border-indigo-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 text-base font-bold bg-white dark:bg-slate-900 border border-indigo-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   <div className="flex justify-end gap-2">
                     <button
@@ -616,7 +616,7 @@ export default function SpeakPage() {
 
             {/* Uncertainty Warning / Did You Mean (Section 9) */}
             {translation.confidence < 0.7 && translation.didYouMean && translation.didYouMean.length > 0 && (
-              <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-xs space-y-2">
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs space-y-2">
                 <div className="flex items-center gap-1.5 font-bold text-amber-900">
                   <HelpCircle className="w-4 h-4 text-amber-600 shrink-0" />
                   <span>We aren&apos;t completely sure what you said.</span>
@@ -628,7 +628,7 @@ export default function SpeakPage() {
                       key={idx}
                       type="button"
                       onClick={() => handleTranslate(alt)}
-                      className="px-3 py-1 bg-white border border-amber-300 rounded-lg text-xs font-bold text-amber-900 hover:bg-amber-100 transition-colors"
+                      className="px-3 py-1 bg-white dark:bg-slate-900 border border-amber-300 rounded-lg text-xs font-bold text-amber-900 hover:bg-amber-100 transition-colors"
                     >
                       &ldquo;{alt}&rdquo;
                     </button>
@@ -638,7 +638,7 @@ export default function SpeakPage() {
             )}
 
             {/* Step B: "English" with Audio & Phonetics (Section 16) */}
-            <div className="p-6 bg-gradient-to-br from-indigo-50/90 to-violet-50/90 rounded-2xl border border-indigo-200/80">
+            <div className="p-6 bg-gradient-to-br from-indigo-50/90 to-violet-50/90 rounded-xl border border-indigo-200/80">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-extrabold uppercase tracking-wider text-indigo-700 flex items-center gap-1.5">
                   <span>🇬🇧 Natural English</span>
@@ -654,9 +654,9 @@ export default function SpeakPage() {
               </p>
 
               {translation.phoneticGuide && (
-                <div className="mt-3 pt-3 border-t border-indigo-100 flex items-center gap-2 text-xs font-semibold text-slate-500">
+                <div className="mt-3 pt-3 border-t border-indigo-100 flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
                   <span>Phonetic:</span>
-                  <span className="text-slate-800 font-bold bg-white/70 px-2 py-0.5 rounded-md border border-indigo-100">
+                  <span className="text-slate-800 dark:text-slate-200 font-bold bg-white dark:bg-slate-900/70 px-2 py-0.5 rounded-md border border-indigo-100">
                     {translation.phoneticGuide}
                   </span>
                 </div>
@@ -664,18 +664,18 @@ export default function SpeakPage() {
             </div>
 
             {/* Step C: Pronunciation Practice ("Try saying it") */}
-            <div className="p-6 bg-amber-50/60 border border-amber-200/80 rounded-2xl">
+            <div className="p-6 bg-amber-50/60 border border-amber-200/80 rounded-xl">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <span className="text-xs font-extrabold uppercase tracking-wider text-amber-900 block mb-1">
                     🎤 Practice saying it
                   </span>
-                  <p className="text-base font-bold text-slate-800">
+                  <p className="text-base font-bold text-slate-800 dark:text-slate-200">
                     Say aloud: &ldquo;{translation.englishText}&rdquo;
                   </p>
                   {englishAttempt && (
-                    <p className="text-xs text-slate-600 mt-1">
-                      We heard: <strong className="text-slate-900">{englishAttempt}</strong>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                      We heard: <strong className="text-slate-900 dark:text-slate-50">{englishAttempt}</strong>
                     </p>
                   )}
                 </div>
@@ -684,7 +684,7 @@ export default function SpeakPage() {
                   type="button"
                   onClick={startEnglishPronunciationCheck}
                   disabled={isListeningEnglishTry}
-                  className={`inline-flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs shadow-md transition-all active:scale-95 ${
+                  className={`inline-flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs shadow-sm dark:shadow-none transition-all active:scale-95 ${
                     isListeningEnglishTry
                       ? 'bg-rose-500 text-white animate-pulse'
                       : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-200'
@@ -702,7 +702,7 @@ export default function SpeakPage() {
                     <span className="text-xl">
                       {pronunciationScore >= 80 ? '⭐' : '💪'}
                     </span>
-                    <span className="text-xs font-bold text-slate-800">
+                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
                       {pronunciationFeedback}
                     </span>
                   </div>
@@ -714,8 +714,8 @@ export default function SpeakPage() {
             </div>
 
             {/* Step D: "Learn this sentence" Mode (Section 16 & 17) */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100">
-              <div className="text-xs text-slate-500">
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="text-xs text-slate-500 dark:text-slate-400">
                 Turn this translation into long-term learning by saving it to your vocabulary list.
               </div>
 

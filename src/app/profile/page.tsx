@@ -162,21 +162,21 @@ export default function ProfilePage() {
     >
       <div className="max-w-3xl mx-auto space-y-8">
         {/* Header Summary Card */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6">
+        <div className="bg-white dark:bg-slate-900 rounded-xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700/80 shadow-sm flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6">
           <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
-            <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-black text-3xl shadow-lg shadow-indigo-100">
+            <div className="w-20 h-20 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-black text-3xl shadow-sm dark:shadow-none shadow-indigo-100">
               {name ? name.charAt(0).toUpperCase() : 'U'}
             </div>
             <div>
               <div className="flex items-center justify-center sm:justify-start gap-2">
-                <h1 className="text-2xl font-black text-slate-900">{name || 'User'}</h1>
+                <h1 className="text-2xl font-black text-slate-900 dark:text-slate-50">{name || 'User'}</h1>
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   <span>Verified</span>
                 </span>
               </div>
-              <p className="text-xs text-slate-500 mt-1">{user?.email}</p>
-              <div className="flex items-center justify-center sm:justify-start gap-3 mt-3 text-xs font-semibold text-slate-600">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{user?.email}</p>
+              <div className="flex items-center justify-center sm:justify-start gap-3 mt-3 text-xs font-semibold text-slate-600 dark:text-slate-400">
                 <span>🌐 {preferredLanguage}</span>
                 <span>•</span>
                 <span>🎓 {englishLevel.replace('_', ' ')}</span>
@@ -187,7 +187,7 @@ export default function ProfilePage() {
           <button
             type="button"
             onClick={handleLogout}
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-700 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 rounded-xl transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 dark:border-slate-700 rounded-xl transition-colors"
           >
             <LogOut className="w-4 h-4" />
             <span>Log Out</span>
@@ -196,29 +196,29 @@ export default function ProfilePage() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-2xl border border-slate-200/80 text-center">
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700/80 text-center">
             <Flame className="w-5 h-5 text-orange-500 mx-auto mb-1" />
-            <span className="text-xl font-black text-slate-900 block">{user?.streak || 1}</span>
+            <span className="text-xl font-black text-slate-900 dark:text-slate-50 block">{user?.streak || 1}</span>
             <span className="text-[10px] font-bold uppercase text-slate-400">Day Streak</span>
           </div>
 
-          <div className="bg-white p-4 rounded-2xl border border-slate-200/80 text-center">
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700/80 text-center">
             <Award className="w-5 h-5 text-indigo-600 mx-auto mb-1" />
-            <span className="text-xl font-black text-slate-900 block">{user?.xp || 0}</span>
+            <span className="text-xl font-black text-slate-900 dark:text-slate-50 block">{user?.xp || 0}</span>
             <span className="text-[10px] font-bold uppercase text-slate-400">Total XP</span>
           </div>
 
-          <div className="bg-white p-4 rounded-2xl border border-slate-200/80 text-center">
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700/80 text-center">
             <BookOpen className="w-5 h-5 text-emerald-600 mx-auto mb-1" />
-            <span className="text-xl font-black text-slate-900 block">
+            <span className="text-xl font-black text-slate-900 dark:text-slate-50 block">
               {user?.stats?.completedLessonsCount || 0}
             </span>
             <span className="text-[10px] font-bold uppercase text-slate-400">Lessons Finished</span>
           </div>
 
-          <div className="bg-white p-4 rounded-2xl border border-slate-200/80 text-center">
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700/80 text-center">
             <BookMarked className="w-5 h-5 text-violet-600 mx-auto mb-1" />
-            <span className="text-xl font-black text-slate-900 block">
+            <span className="text-xl font-black text-slate-900 dark:text-slate-50 block">
               {user?.stats?.learnedWordsCount || 0}
             </span>
             <span className="text-[10px] font-bold uppercase text-slate-400">Words Learned</span>
@@ -226,8 +226,8 @@ export default function ProfilePage() {
         </div>
 
         {/* Edit Profile Form */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
-          <h2 className="text-lg font-bold text-slate-900">Personal & Learning Settings</h2>
+        <div className="bg-white dark:bg-slate-900 rounded-xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700/80 shadow-sm space-y-6">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">Personal & Learning Settings</h2>
 
           {profileMsg && (
             <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-semibold flex items-center gap-2">
@@ -238,26 +238,26 @@ export default function ProfilePage() {
 
           <form onSubmit={handleUpdateProfile} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Full Name
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900"
+                className="w-full px-4 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900 dark:text-slate-50"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                   Preferred Language (Support Language)
                 </label>
                 <select
                   value={preferredLanguage}
                   onChange={(e) => setPreferredLanguage(e.target.value)}
-                  className="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900 cursor-pointer"
+                  className="w-full px-4 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900 dark:text-slate-50 cursor-pointer"
                 >
                   {SUPPORTED_LANGUAGES.map((lang) => (
                     <option key={lang.id} value={lang.id}>
@@ -268,13 +268,13 @@ export default function ProfilePage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                   English Learning Level
                 </label>
                 <select
                   value={englishLevel}
                   onChange={(e) => setEnglishLevel(e.target.value)}
-                  className="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900 cursor-pointer"
+                  className="w-full px-4 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900 dark:text-slate-50 cursor-pointer"
                 >
                   {ENGLISH_LEVELS.map((level) => (
                     <option key={level.id} value={level.id}>
@@ -303,10 +303,10 @@ export default function ProfilePage() {
         </div>
 
         {/* Change Password Form */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
+        <div className="bg-white dark:bg-slate-900 rounded-xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700/80 shadow-sm space-y-6">
           <div className="flex items-center gap-2">
             <KeyRound className="w-5 h-5 text-indigo-600" />
-            <h2 className="text-lg font-bold text-slate-900">Change Password</h2>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-50">Change Password</h2>
           </div>
 
           {passwordMsg && (
@@ -325,7 +325,7 @@ export default function ProfilePage() {
 
           <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Current Password
               </label>
               <input
@@ -333,12 +333,12 @@ export default function ProfilePage() {
                 required
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900"
+                className="w-full px-4 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900 dark:text-slate-50"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 New Password
               </label>
               <input
@@ -347,12 +347,12 @@ export default function ProfilePage() {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="At least 6 characters"
-                className="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900"
+                className="w-full px-4 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900 dark:text-slate-50"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Confirm New Password
               </label>
               <input
@@ -360,7 +360,7 @@ export default function ProfilePage() {
                 required
                 value={confirmNewPassword}
                 onChange={(e) => setConfirmNewPassword(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900"
+                className="w-full px-4 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900 dark:text-slate-50"
               />
             </div>
 
@@ -382,7 +382,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Danger Zone: Account Deletion */}
-        <div className="bg-rose-50/50 rounded-3xl p-6 sm:p-8 border border-rose-200 space-y-4">
+        <div className="bg-rose-50/50 rounded-xl p-6 sm:p-8 border border-rose-200 space-y-4">
           <h2 className="text-base font-bold text-rose-900">Danger Zone</h2>
           <p className="text-xs text-rose-700 leading-relaxed">
             Permanently delete your LinguaLearn account, all speaking logs, and vocabulary progress. This action cannot be undone.
@@ -398,7 +398,7 @@ export default function ProfilePage() {
               <span>Delete My Account</span>
             </button>
           ) : (
-            <div className="p-4 bg-white rounded-2xl border border-rose-300 space-y-3 max-w-md">
+            <div className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-rose-300 space-y-3 max-w-md">
               <p className="text-xs font-bold text-rose-900">
                 Are you sure you want to permanently delete your account?
               </p>
@@ -414,7 +414,7 @@ export default function ProfilePage() {
                 <button
                   type="button"
                   onClick={() => setShowDeleteConfirm(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all"
+                  className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-all"
                 >
                   Cancel
                 </button>

@@ -60,12 +60,12 @@ function VerifyEmailContent() {
   }, [token, statusParam]);
 
   return (
-    <div className="bg-white py-10 px-6 sm:px-10 shadow-xl shadow-slate-200/50 rounded-3xl border border-slate-200/80 text-center">
+    <div className="bg-white dark:bg-slate-900 py-10 px-6 sm:px-10 shadow-lg dark:shadow-none shadow-slate-200/50 rounded-xl border border-slate-200 dark:border-slate-700/80 text-center">
       {loading && (
         <div className="py-12 space-y-4">
           <Loader2 className="w-10 h-10 animate-spin text-indigo-600 mx-auto" />
-          <h2 className="text-xl font-bold text-slate-800">Verifying your email...</h2>
-          <p className="text-xs text-slate-500">Please wait a moment while we activate your account.</p>
+          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200">Verifying your email...</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Please wait a moment while we activate your account.</p>
         </div>
       )}
 
@@ -74,8 +74,8 @@ function VerifyEmailContent() {
           <div className="w-16 h-16 rounded-full bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center mx-auto">
             <AlertCircle className="w-8 h-8" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900">Verification Link Invalid</h2>
-          <p className="text-sm text-slate-600 max-w-xs mx-auto">{error}</p>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50">Verification Link Invalid</h2>
+          <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xs mx-auto">{error}</p>
           <div className="pt-4 space-y-2">
             <Link
               href="/login"
@@ -89,22 +89,22 @@ function VerifyEmailContent() {
 
       {!loading && verified && (
         <div className="py-4 space-y-6">
-          <div className="w-20 h-20 rounded-3xl bg-emerald-50 border-2 border-emerald-200 text-emerald-600 flex items-center justify-center mx-auto text-3xl shadow-md shadow-emerald-50">
+          <div className="w-20 h-20 rounded-xl bg-emerald-50 border-2 border-emerald-200 text-emerald-600 flex items-center justify-center mx-auto text-3xl shadow-sm dark:shadow-none shadow-emerald-50">
             🎉
           </div>
 
           <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
               Email verified successfully! 🎉
             </h2>
-            <p className="mt-2 text-sm text-slate-600 max-w-sm mx-auto">
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
               Your account is now fully verified. Let&apos;s personalize your English learning experience.
             </p>
           </div>
 
-          <div className="p-4 bg-indigo-50/70 border border-indigo-100 rounded-2xl text-left flex items-start gap-3">
+          <div className="p-4 bg-indigo-50/70 border border-indigo-100 rounded-xl text-left flex items-start gap-3">
             <Sparkles className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
-            <div className="text-xs text-slate-600">
+            <div className="text-xs text-slate-600 dark:text-slate-400">
               <span className="font-bold text-indigo-900 block mb-0.5">Next step: Quick Onboarding</span>
               Choose your native language (Malayalam, Hindi, etc.) and your starting English level.
             </div>
@@ -113,7 +113,7 @@ function VerifyEmailContent() {
           <div className="pt-2">
             <Link
               href="/onboarding"
-              className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl text-base font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-98 transition-all shadow-lg shadow-indigo-100"
+              className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl text-base font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-98 transition-all shadow-sm dark:shadow-none shadow-indigo-100"
             >
               <span>Continue to Onboarding</span>
               <ArrowRight className="w-5 h-5" />
@@ -127,13 +127,13 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-6">
         <Link href="/" className="inline-flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-black text-lg">
+          <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-lg">
             L
           </div>
-          <span className="font-extrabold text-2xl text-slate-900">
+          <span className="font-extrabold text-2xl text-slate-900 dark:text-slate-50">
             Lingua<span className="text-indigo-600">Learn</span>
           </span>
         </Link>

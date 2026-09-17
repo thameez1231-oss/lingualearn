@@ -65,7 +65,7 @@ export default function DevMailboxPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col">
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-800 flex flex-col">
       {/* Top Banner */}
       <header className="bg-slate-900 text-white px-6 py-4 flex items-center justify-between border-b border-slate-800">
         <div className="flex items-center gap-3">
@@ -96,7 +96,7 @@ export default function DevMailboxPage() {
       {/* Main Mailbox Content */}
       <div className="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Email List Sidebar */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-4 overflow-hidden flex flex-col">
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm p-4 overflow-hidden flex flex-col">
           <h2 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 px-2 mb-3">
             Outbox Messages ({emails.length})
           </h2>
@@ -113,14 +113,14 @@ export default function DevMailboxPage() {
                   <button
                     key={email.id}
                     onClick={() => setSelectedEmail(email)}
-                    className={`w-full text-left p-3.5 rounded-2xl border transition-all ${
+                    className={`w-full text-left p-3.5 rounded-xl border transition-all ${
                       isSelected
                         ? 'border-indigo-600 bg-indigo-50/70 shadow-xs'
-                        : 'border-slate-100 hover:bg-slate-50'
+                        : 'border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
                     }`}
                   >
-                    <div className="flex items-center justify-between text-[11px] text-slate-500 mb-1">
-                      <span className="font-bold text-slate-800 truncate">{email.to}</span>
+                    <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 mb-1">
+                      <span className="font-bold text-slate-800 dark:text-slate-200 truncate">{email.to}</span>
                       <span>
                         {new Date(email.createdAt).toLocaleTimeString([], {
                           hour: '2-digit',
@@ -128,7 +128,7 @@ export default function DevMailboxPage() {
                         })}
                       </span>
                     </div>
-                    <div className="text-xs font-semibold text-slate-900 truncate">
+                    <div className="text-xs font-semibold text-slate-900 dark:text-slate-50 truncate">
                       {email.subject}
                     </div>
                   </button>
@@ -139,18 +139,18 @@ export default function DevMailboxPage() {
         </div>
 
         {/* Email Preview Area */}
-        <div className="md:col-span-2 bg-white rounded-3xl border border-slate-200 shadow-sm p-6 flex flex-col">
+        <div className="md:col-span-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm p-6 flex flex-col">
           {selectedEmail ? (
             <div className="space-y-6 flex-1 flex flex-col">
               {/* Email Meta */}
-              <div className="border-b border-slate-100 pb-4">
+              <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h1 className="text-xl font-bold text-slate-900">
+                    <h1 className="text-xl font-bold text-slate-900 dark:text-slate-50">
                       {selectedEmail.subject}
                     </h1>
-                    <p className="text-xs text-slate-500 mt-1">
-                      To: <strong className="text-slate-800">{selectedEmail.to}</strong> •{' '}
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                      To: <strong className="text-slate-800 dark:text-slate-200">{selectedEmail.to}</strong> •{' '}
                       {new Date(selectedEmail.createdAt).toLocaleString()}
                     </p>
                   </div>
@@ -175,7 +175,7 @@ export default function DevMailboxPage() {
                   );
                   if (match) {
                     return (
-                      <div className="mt-4 p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between">
+                      <div className="mt-4 p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                           <span className="text-xs font-bold text-emerald-950">
@@ -196,9 +196,9 @@ export default function DevMailboxPage() {
               </div>
 
               {/* Rendered HTML Sandbox */}
-              <div className="flex-1 bg-slate-50 rounded-2xl p-4 border border-slate-200 overflow-auto">
+              <div className="flex-1 bg-slate-50 dark:bg-slate-950 rounded-xl p-4 border border-slate-200 dark:border-slate-700 overflow-auto">
                 <div
-                  className="bg-white rounded-xl shadow-xs overflow-hidden"
+                  className="bg-white dark:bg-slate-900 rounded-xl shadow-xs overflow-hidden"
                   dangerouslySetInnerHTML={{ __html: selectedEmail.html }}
                 />
               </div>

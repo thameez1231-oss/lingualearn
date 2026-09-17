@@ -106,16 +106,16 @@ export default async function DashboardPage() {
         {/* Top Greeting */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
               {greetingTime}, {user.name}! 👋
             </h1>
-            <p className="text-slate-600 text-sm mt-1">
+            <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
               Ready to improve your English through <strong className="text-indigo-600 font-semibold">{user.preferredLanguage}</strong>?
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3.5 py-2 bg-amber-50 border border-amber-200/80 rounded-2xl">
+            <div className="flex items-center gap-2 px-3.5 py-2 bg-amber-50 border border-amber-200/80 rounded-xl">
               <Flame className="w-5 h-5 text-orange-500 fill-orange-500 animate-pulse" />
               <div>
                 <span className="text-xs font-bold text-amber-900 block leading-none">
@@ -125,7 +125,7 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 px-3.5 py-2 bg-indigo-50 border border-indigo-200/80 rounded-2xl">
+            <div className="flex items-center gap-2 px-3.5 py-2 bg-indigo-50 border border-indigo-200/80 rounded-xl">
               <Award className="w-5 h-5 text-indigo-600" />
               <div>
                 <span className="text-xs font-bold text-indigo-900 block leading-none">
@@ -138,13 +138,13 @@ export default async function DashboardPage() {
         </div>
 
         {/* 1. Primary Hero Progress & Continue Card */}
-        <div className="bg-gradient-to-br from-indigo-900 via-indigo-800 to-violet-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-indigo-950/10 relative overflow-hidden">
+        <div className="bg-gradient-to-br from-indigo-900 via-indigo-800 to-violet-900 text-white rounded-xl p-6 sm:p-8 shadow-lg dark:shadow-none shadow-indigo-950/10 relative overflow-hidden">
           {/* Subtle decoration */}
-          <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-white/5 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-white dark:bg-slate-900/5 rounded-full blur-2xl pointer-events-none" />
 
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-3 max-w-lg">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 text-indigo-200 text-xs font-semibold backdrop-blur-sm">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-slate-900/15 text-indigo-200 text-xs font-semibold backdrop-blur-sm">
                 <span>{levelTitle}</span>
               </div>
 
@@ -176,7 +176,7 @@ export default async function DashboardPage() {
             <div className="shrink-0">
               <Link
                 href={`/learn/${currentLesson.id}`}
-                className="inline-flex items-center justify-center gap-3 px-7 py-4 text-base font-extrabold text-indigo-900 bg-white hover:bg-indigo-50 active:scale-95 rounded-2xl shadow-lg transition-all"
+                className="inline-flex items-center justify-center gap-3 px-7 py-4 text-base font-extrabold text-indigo-900 bg-white dark:bg-slate-900 hover:bg-indigo-50 active:scale-95 rounded-xl shadow-sm dark:shadow-none transition-all"
               >
                 <span>Continue Learning</span>
                 <ArrowRight className="w-5 h-5 text-indigo-600" />
@@ -188,10 +188,10 @@ export default async function DashboardPage() {
         {/* 2. Two Clear Split Action Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Quick Practice: Speak & Translate */}
-          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+          <div className="bg-white dark:bg-slate-900 rounded-xl p-6 sm:p-7 border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center group-hover:scale-105 transition-transform">
                   <Mic className="w-6 h-6" />
                 </div>
                 <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-1 rounded-full uppercase tracking-wider">
@@ -199,19 +199,19 @@ export default async function DashboardPage() {
                 </span>
               </div>
 
-              <h3 className="text-xl font-bold text-slate-900">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50">
                 Speak & Translate
               </h3>
-              <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
                 Say something in {user.preferredLanguage}. Instantly hear and see how to speak it in natural English.
               </p>
 
-              <div className="mt-4 p-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-xs text-slate-700 italic">
+              <div className="mt-4 p-3.5 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-xl text-xs text-slate-700 dark:text-slate-300 italic">
                 &ldquo;Say: എനിക്ക് വിശക്കുന്നു or your own words...&rdquo;
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-slate-100">
+            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
               <Link
                 href="/speak"
                 className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 active:scale-98 transition-all"
@@ -223,10 +223,10 @@ export default async function DashboardPage() {
           </div>
 
           {/* Current Recommended Lesson Card */}
-          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+          <div className="bg-white dark:bg-slate-900 rounded-xl p-6 sm:p-7 border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-200 flex items-center justify-center group-hover:scale-105 transition-transform text-2xl">
+                <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-200 flex items-center justify-center group-hover:scale-105 transition-transform text-2xl">
                   {currentLesson.icon}
                 </div>
                 <span className="text-[11px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200/80 px-2.5 py-1 rounded-full uppercase tracking-wider">
@@ -234,21 +234,21 @@ export default async function DashboardPage() {
                 </span>
               </div>
 
-              <h3 className="text-xl font-bold text-slate-900">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-slate-50">
                 {currentLesson.title}
               </h3>
-              <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
                 {currentLesson.subtitle}
               </p>
 
-              <div className="mt-4 flex items-center gap-4 text-xs font-semibold text-slate-600">
+              <div className="mt-4 flex items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-400">
                 <span>⏱️ {currentLesson.estimatedMinutes} mins</span>
                 <span>⭐ +{currentLesson.xpReward} XP</span>
                 <span>📖 {currentLesson.vocabulary.length} words</span>
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-slate-100">
+            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
               <Link
                 href={`/learn/${currentLesson.id}`}
                 className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 active:scale-98 transition-all"
@@ -260,13 +260,13 @@ export default async function DashboardPage() {
         </div>
 
         {/* Practice with Friends Banner */}
-        <div className="bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 rounded-3xl p-6 sm:p-7 text-white shadow-lg relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-5">
+        <div className="bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 rounded-xl p-6 sm:p-7 text-white shadow-sm dark:shadow-none relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-5">
           <div className="flex items-center gap-4 relative z-10">
-            <div className="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/20 shrink-0">
+            <div className="w-14 h-14 rounded-xl bg-white dark:bg-slate-900/15 backdrop-blur-md flex items-center justify-center border border-white/20 shrink-0">
               <Users className="w-7 h-7 text-white" />
             </div>
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[11px] font-bold uppercase tracking-wider mb-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white dark:bg-slate-900/20 text-white text-[11px] font-bold uppercase tracking-wider mb-1">
                 <Sparkles className="w-3 h-3" />
                 <span>New Feature</span>
               </div>
@@ -280,7 +280,7 @@ export default async function DashboardPage() {
           </div>
           <Link
             href="/friends"
-            className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white text-indigo-900 font-bold text-sm shadow-md hover:bg-indigo-50 active:scale-95 transition-all relative z-10"
+            className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white dark:bg-slate-900 text-indigo-900 font-bold text-sm shadow-sm dark:shadow-none hover:bg-indigo-50 active:scale-95 transition-all relative z-10"
           >
             <Users className="w-4 h-4 text-indigo-600" />
             <span>Open Friends & Chat →</span>
@@ -288,11 +288,11 @@ export default async function DashboardPage() {
         </div>
 
         {/* 3. Daily Goals & Quick Stats Bar */}
-        <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-xl p-6 sm:p-7 border border-slate-200 dark:border-slate-700/80 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <Target className="w-5 h-5 text-indigo-600" />
-              <h3 className="font-bold text-base text-slate-900">Today&apos;s Learning Goal</h3>
+              <h3 className="font-bold text-base text-slate-900 dark:text-slate-50">Today&apos;s Learning Goal</h3>
             </div>
             {dailyGoal.isCompleted ? (
               <span className="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full">
@@ -304,12 +304,12 @@ export default async function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-              <div className="flex items-center justify-between text-xs font-semibold text-slate-600 mb-2">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">
                 <span>🎯 Learn 5 Words</span>
-                <span className="font-bold text-slate-900">{dailyGoal.wordsLearned}/5</span>
+                <span className="font-bold text-slate-900 dark:text-slate-50">{dailyGoal.wordsLearned}/5</span>
               </div>
-              <div className="w-full bg-slate-200 rounded-full h-2">
+              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
                 <div
                   className="bg-indigo-600 h-2 rounded-full transition-all"
                   style={{ width: `${Math.min(100, (dailyGoal.wordsLearned / 5) * 100)}%` }}
@@ -317,12 +317,12 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-              <div className="flex items-center justify-between text-xs font-semibold text-slate-600 mb-2">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">
                 <span>🎯 Complete 1 Lesson</span>
-                <span className="font-bold text-slate-900">{dailyGoal.lessonsCompleted}/1</span>
+                <span className="font-bold text-slate-900 dark:text-slate-50">{dailyGoal.lessonsCompleted}/1</span>
               </div>
-              <div className="w-full bg-slate-200 rounded-full h-2">
+              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
                 <div
                   className="bg-emerald-600 h-2 rounded-full transition-all"
                   style={{ width: `${Math.min(100, (dailyGoal.lessonsCompleted / 1) * 100)}%` }}
@@ -330,12 +330,12 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-              <div className="flex items-center justify-between text-xs font-semibold text-slate-600 mb-2">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">
                 <span>🎯 Speak for 5 Minutes</span>
-                <span className="font-bold text-slate-900">{dailyGoal.speakingMinutes}/5 min</span>
+                <span className="font-bold text-slate-900 dark:text-slate-50">{dailyGoal.speakingMinutes}/5 min</span>
               </div>
-              <div className="w-full bg-slate-200 rounded-full h-2">
+              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
                 <div
                   className="bg-amber-500 h-2 rounded-full transition-all"
                   style={{ width: `${Math.min(100, (dailyGoal.speakingMinutes / 5) * 100)}%` }}
