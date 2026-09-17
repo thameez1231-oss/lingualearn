@@ -27,7 +27,7 @@ export interface ExerciseItem {
 
 export interface Lesson {
   id: string;
-  moduleId: 'basics' | 'everyday' | 'speaking' | 'grammar' | 'vocabulary';
+  moduleId: string;
   moduleTitle: string;
   moduleBadge: string;
   title: string;

@@ -8,7 +8,7 @@ export interface DictionaryEntry {
   exampleSentence: string;
   exampleTranslation: string;
   translations: Record<string, string>;
-  category: 'everyday' | 'food' | 'family' | 'places' | 'action' | 'emotions';
+  category: string;
 }
 
 export const DICTIONARY_DATA: DictionaryEntry[] = [
