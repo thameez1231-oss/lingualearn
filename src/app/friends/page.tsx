@@ -379,32 +379,48 @@ function FriendsContent() {
     return () => clearTimeout(timer);
   }, [selectedFriend, fetchMessages]);
 
-  // Active chat polling (every 3s) only when page is visible
+  // Active chat polling with safe timeout loop
   useEffect(() => {
     if (!selectedFriend) return;
     const friendId = selectedFriend.id;
+    let timerId: NodeJS.Timeout;
+    let isActive = true;
 
-    const interval = setInterval(() => {
-      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
-        return;
+    const poll = async () => {
+      if (!isActive) return;
+      if (typeof document !== 'undefined' && document.visibilityState !== 'hidden') {
+        await fetchMessages(friendId, true);
       }
-      fetchMessages(friendId, true);
-    }, 3000);
+      if (isActive) timerId = setTimeout(poll, 3000);
+    };
 
-    return () => clearInterval(interval);
+    timerId = setTimeout(poll, 3000);
+
+    return () => {
+      isActive = false;
+      clearTimeout(timerId);
+    };
   }, [selectedFriend, fetchMessages]);
 
-  // Background overview polling (every 6s)
+  // Background overview polling with safe timeout loop
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
-        return;
+    let timerId: NodeJS.Timeout;
+    let isActive = true;
+
+    const poll = async () => {
+      if (!isActive) return;
+      if (typeof document !== 'undefined' && document.visibilityState !== 'hidden') {
+        await Promise.all([fetchFriends(), fetchConversations(), fetchRequests()]).catch(() => {});
       }
-      fetchFriends();
-      fetchConversations();
-      fetchRequests();
-    }, 6000);
-    return () => clearInterval(interval);
+      if (isActive) timerId = setTimeout(poll, 6000);
+    };
+
+    timerId = setTimeout(poll, 6000);
+
+    return () => {
+      isActive = false;
+      clearTimeout(timerId);
+    };
   }, [fetchFriends, fetchConversations, fetchRequests]);
 
   // Scroll to bottom on new messages
@@ -419,37 +435,55 @@ function FriendsContent() {
     }
   }, [messages.length]);
 
-  // Handle Search
+  // Handle Search with AbortController to prevent race conditions
   useEffect(() => {
-    const timer = setTimeout(async () => {
-      const trimmed = searchQuery.trim();
-      if (!trimmed) {
-        setSearchResults([]);
-        setIsSearching(false);
-        return;
-      }
+    const trimmed = searchQuery.trim();
+    if (!trimmed) return;
 
+    const controller = new AbortController();
+
+    const timer = setTimeout(async () => {
       setIsSearching(true);
       try {
-        const res = await fetch(`/api/friends/search?q=${encodeURIComponent(trimmed)}`);
+        const res = await fetch(`/api/friends/search?q=${encodeURIComponent(trimmed)}`, {
+          signal: controller.signal,
+        });
         if (res.ok) {
           const data = await res.json();
           setSearchResults(data.users || []);
         }
-      } catch (err) {
-        console.error('Search error:', err);
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name !== 'AbortError') {
+          console.error('Search error:', err);
+        }
       } finally {
         setIsSearching(false);
       }
-    }, 300);
+    }, 250);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [searchQuery]);
+
 
   // Send Friend Request
   const handleSendRequest = async (targetUserId: string) => {
-    setAddingUserId(targetUserId);
+    // 1. Optimistically update UI instantly
+    setSearchResults((prev) =>
+      prev.map((u) =>
+        u.id === targetUserId
+          ? {
+              ...u,
+              relationshipStatus: 'PENDING_SENT',
+            }
+          : u
+      )
+    );
     setStatusMessage(null);
+    setAddingUserId(targetUserId);
+
     try {
       const res = await fetch('/api/friends/request', {
         method: 'POST',
@@ -459,33 +493,65 @@ function FriendsContent() {
       const data = await res.json();
 
       if (res.ok) {
-        // Update local search results state immediately
+        if (data.relationshipStatus === 'FRIENDS') {
+          fetchFriends();
+          fetchConversations();
+          setStatusMessage({ text: data.message || 'You are now friends!', type: 'success' });
+          // If immediately became friends, update the search results UI again
+          setSearchResults((prev) =>
+            prev.map((u) =>
+              u.id === targetUserId
+                ? {
+                    ...u,
+                    relationshipStatus: 'FRIENDS',
+                    requestId: data.requestId,
+                  }
+                : u
+            )
+          );
+        } else {
+          setStatusMessage({ text: data.message || 'Friend request sent successfully!', type: 'success' });
+          // Update request id in case we want to cancel later
+          setSearchResults((prev) =>
+            prev.map((u) =>
+              u.id === targetUserId
+                ? {
+                    ...u,
+                    requestId: data.requestId,
+                  }
+                : u
+            )
+          );
+        }
+        fetchRequests();
+      } else {
+        // Revert optimistic UI on failure
         setSearchResults((prev) =>
           prev.map((u) =>
             u.id === targetUserId
               ? {
                   ...u,
-                  relationshipStatus: data.relationshipStatus || 'PENDING_SENT',
-                  requestId: data.requestId,
+                  relationshipStatus: 'NONE',
                 }
               : u
           )
         );
-
-        if (data.relationshipStatus === 'FRIENDS') {
-          fetchFriends();
-          fetchConversations();
-          setStatusMessage({ text: data.message || 'You are now friends!', type: 'success' });
-        } else {
-          setStatusMessage({ text: data.message || 'Friend request sent successfully!', type: 'success' });
-        }
-        fetchRequests();
-      } else {
         const errorMsg = data.error || data.details || 'Unable to send friend request. Please try again.';
         setStatusMessage({ text: errorMsg, type: 'error' });
       }
     } catch (err: unknown) {
       console.error('Send request error:', err);
+      // Revert optimistic UI on network failure
+      setSearchResults((prev) =>
+        prev.map((u) =>
+          u.id === targetUserId
+            ? {
+                ...u,
+                relationshipStatus: 'NONE',
+              }
+            : u
+        )
+      );
       setStatusMessage({ text: 'Unable to send friend request. Please check your connection and try again.', type: 'error' });
     } finally {
       setAddingUserId(null);
@@ -555,9 +621,8 @@ function FriendsContent() {
           });
         }
 
-        if (action === 'ACCEPT') {
-          Promise.all([fetchFriends(), fetchConversations(), fetchRequests()]).catch(() => {});
-        }
+        // Trust the optimistic update and avoid triggering a race condition
+        // Background polling will eventually synchronize any missing data quietly.
       } else {
         setStatusMessage({
           text: data.error || 'Failed to process request.',
@@ -922,9 +987,16 @@ function FriendsContent() {
             {/* List Body based on activeTab */}
             <div className="flex-1 overflow-y-auto">
               {isLoadingList ? (
-                <div className="p-8 flex flex-col items-center justify-center text-slate-400 gap-2">
-                  <Loader2 className="w-6 h-6 animate-spin text-indigo-600" aria-hidden="true" />
-                  <span className="text-xs">Loading...</span>
+                <div className="p-4 space-y-4">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="flex items-center gap-3 animate-pulse">
+                      <div className="w-11 h-11 rounded-2xl bg-slate-200 shrink-0" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-slate-200 rounded w-1/2" />
+                        <div className="h-3 bg-slate-100 rounded w-3/4" />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <>
@@ -969,15 +1041,15 @@ function FriendsContent() {
                                   isOnline: conv.isOnline,
                                 });
                               }}
-                              className={`w-full p-3.5 text-left flex items-start gap-3 transition-colors cursor-pointer select-none ${
+                              className={`w-full p-3.5 text-left flex items-start gap-3 transition-all duration-200 cursor-pointer select-none group ${
                                 isSelected
                                   ? 'bg-indigo-50/80 border-l-4 border-indigo-600'
-                                  : 'hover:bg-white'
+                                  : 'hover:bg-slate-50 border-l-4 border-transparent'
                               }`}
                             >
                               {/* Avatar */}
-                              <div className="relative shrink-0">
-                                <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-500 to-violet-500 text-white flex items-center justify-center font-bold text-base shadow-sm">
+                              <div className="relative shrink-0 transition-transform duration-200 group-hover:scale-105">
+                                <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-indigo-500 to-violet-500 text-white flex items-center justify-center font-bold text-base shadow-sm ring-2 ring-white">
                                   {conv.friendName.charAt(0).toUpperCase()}
                                 </div>
                                 {conv.isOnline && (
@@ -1240,14 +1312,24 @@ function FriendsContent() {
                         <input
                           type="text"
                           value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
+                          onChange={(e) => {
+                            setSearchQuery(e.target.value);
+                            if (!e.target.value.trim()) {
+                              setSearchResults([]);
+                              setIsSearching(false);
+                            }
+                          }}
                           placeholder="Search learners by name or email..."
                           className="w-full pl-9 pr-8 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-800"
                         />
                         {searchQuery && (
                           <button
                             type="button"
-                            onClick={() => setSearchQuery('')}
+                            onClick={() => {
+                              setSearchQuery('');
+                              setSearchResults([]);
+                              setIsSearching(false);
+                            }}
                             className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 cursor-pointer"
                           >
                             <X className="w-3.5 h-3.5" aria-hidden="true" />
@@ -1293,9 +1375,19 @@ function FriendsContent() {
 
                       {/* Results List */}
                       {isSearching ? (
-                        <div className="p-6 text-center text-slate-400 flex items-center justify-center gap-2">
-                          <Loader2 className="w-4 h-4 animate-spin text-indigo-600" aria-hidden="true" />
-                          <span className="text-xs">Searching learners...</span>
+                        <div className="space-y-2">
+                          {[...Array(3)].map((_, i) => (
+                            <div key={i} className="p-3 bg-white border border-slate-200 rounded-2xl flex items-center justify-between gap-3 animate-pulse">
+                              <div className="flex items-center gap-2.5">
+                                <div className="w-9 h-9 rounded-xl bg-slate-200 shrink-0" />
+                                <div className="space-y-1.5">
+                                  <div className="w-24 h-3 bg-slate-200 rounded" />
+                                  <div className="w-32 h-2 bg-slate-100 rounded" />
+                                </div>
+                              </div>
+                              <div className="w-16 h-7 bg-slate-200 rounded-xl" />
+                            </div>
+                          ))}
                         </div>
                       ) : searchResults.length > 0 ? (
                         <div className="space-y-2">
@@ -1455,9 +1547,12 @@ function FriendsContent() {
                   className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3 bg-slate-50/60"
                 >
                   {isLoadingChat ? (
-                    <div className="h-full flex items-center justify-center text-slate-400 text-xs gap-2">
-                      <Loader2 className="w-5 h-5 animate-spin text-indigo-600" aria-hidden="true" />
-                      <span>Loading messages...</span>
+                    <div className="h-full flex flex-col justify-end p-4 space-y-4">
+                      {[...Array(4)].map((_, i) => (
+                        <div key={i} className={`flex flex-col ${i % 2 === 0 ? 'items-start' : 'items-end'}`}>
+                          <div className={`w-48 h-10 rounded-2xl animate-pulse ${i % 2 === 0 ? 'bg-slate-200 rounded-tl-none' : 'bg-indigo-100 rounded-tr-none'}`} />
+                        </div>
+                      ))}
                     </div>
                   ) : messages.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center text-center p-8 text-slate-400 space-y-2">

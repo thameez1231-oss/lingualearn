@@ -160,12 +160,15 @@ export async function GET() {
             lastSeenAt: true,
           },
         },
-        messages: {
-          where: {
-            receiverId: user.id,
-            isRead: false,
+        _count: {
+          select: {
+            messages: {
+              where: {
+                receiverId: user.id,
+                isRead: false,
+              },
+            },
           },
-          select: { id: true },
         },
       },
       orderBy: { lastMessageAt: 'desc' },
@@ -180,7 +183,7 @@ export async function GET() {
       const otherUser = c.user1Id === user.id ? c.user2 : c.user1;
       conversationMap.set(otherUser.id, c);
 
-      const unreadCount = c.messages.length;
+      const unreadCount = c._count.messages;
       totalUnread += unreadCount;
 
       const isOnline = otherUser.lastSeenAt

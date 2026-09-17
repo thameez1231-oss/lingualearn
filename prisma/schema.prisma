@@ -43,6 +43,9 @@ model User {
   conversations2       Conversation[]  @relation("ConversationUser2")
   sentMessages         Message[]       @relation("SentMessages")
   receivedMessages     Message[]       @relation("ReceivedMessages")
+
+  @@index([name])
+  @@index([username])
 }
 
 model Session {
