@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Sparkles, MessageSquare, BookOpen, Mic } from 'lucide-react';
+import { Sparkles, BookOpen, Mic } from 'lucide-react';
 
 interface NavbarProps {
   user?: {

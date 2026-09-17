@@ -6,7 +6,7 @@ import {
   SUPPORTED_LANGUAGES,
   ENGLISH_LEVELS,
 } from '@/lib/languages';
-import { ArrowRight, Check, Sparkles, Loader2, Globe, GraduationCap } from 'lucide-react';
+import { ArrowRight, Check, Sparkles, Loader2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function OnboardingPage() {

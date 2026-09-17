@@ -1,8 +1,8 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Mail, RefreshCw, ExternalLink, ArrowLeft, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { notFound } from 'next/navigation';
+import { Mail, RefreshCw, ExternalLink, ArrowLeft, CheckCircle2 } from 'lucide-react';
 
 interface OutboxEmail {
   id: string;
@@ -16,6 +16,10 @@ interface OutboxEmail {
 }
 
 export default function DevMailboxPage() {
+  if (process.env.NODE_ENV === 'production') {
+    notFound();
+  }
+
   const [emails, setEmails] = useState<OutboxEmail[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedEmail, setSelectedEmail] = useState<OutboxEmail | null>(null);

@@ -2,18 +2,13 @@
 
 import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { getLessonById, Lesson } from '@/data/lessons';
+import { getLessonById } from '@/data/lessons';
 import { AudioButton } from '@/components/ui/AudioButton';
 import {
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
   XCircle,
-  Sparkles,
-  Volume2,
-  Award,
-  RefreshCw,
   Home,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -24,7 +19,6 @@ interface PageProps {
 
 export default function LessonRunnerPage({ params }: PageProps) {
   const resolvedParams = use(params);
-  const router = useRouter();
   const lesson = getLessonById(resolvedParams.lessonId);
 
   const [userLanguage, setUserLanguage] = useState('Malayalam');

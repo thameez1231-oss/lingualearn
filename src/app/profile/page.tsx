@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation';
 import { AppShell } from '@/components/layout/AppShell';
 import { SUPPORTED_LANGUAGES, ENGLISH_LEVELS } from '@/lib/languages';
 import {
-  User,
-  Mail,
   ShieldCheck,
   Flame,
   Award,

@@ -8,15 +8,14 @@ import { LESSONS_DATA, getLessonById } from '@/data/lessons';
 import {
   ArrowRight,
   Mic,
-  BookOpen,
   Flame,
-  Award,
-  Sparkles,
-  CheckCircle2,
-  ChevronRight,
-  TrendingUp,
+  Star,
   Target,
+  Trophy,
+  Zap,
   Users,
+  Sparkles,
+  Award,
 } from 'lucide-react';
 
 export default async function DashboardPage() {
@@ -84,7 +83,6 @@ export default async function DashboardPage() {
   const currentLesson = getLessonById(user.currentLessonId || 'basics-1') || LESSONS_DATA[0];
 
   // Calculate overall progress percentage
-  const totalLessons = LESSONS_DATA.length;
   const completedCount = completedLessons.length;
   const progressPercent = Math.min(
     100,

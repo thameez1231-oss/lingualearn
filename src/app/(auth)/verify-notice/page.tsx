@@ -3,7 +3,7 @@
 import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Mail, RefreshCw, ArrowLeft, CheckCircle2, ExternalLink } from 'lucide-react';
+import { RefreshCw, ArrowLeft, CheckCircle2, ExternalLink } from 'lucide-react';
 import { DevMailboxDrawer } from '@/components/email/DevMailboxDrawer';
 
 function VerifyNoticeContent() {

@@ -8,8 +8,6 @@ import {
   BookMarked,
   Bookmark,
   Sparkles,
-  Volume2,
-  Check,
 } from 'lucide-react';
 import { DictionaryEntry } from '@/data/dictionary';
 

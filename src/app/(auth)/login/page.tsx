@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, ArrowRight, Loader2, AlertCircle, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { DevMailboxDrawer } from '@/components/email/DevMailboxDrawer';
 
 export default function LoginPage() {
@@ -12,15 +12,11 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [requiresVerification, setRequiresVerification] = useState(false);
-  const [unverifiedEmail, setUnverifiedEmail] = useState('');
   const [resendStatus, setResendStatus] = useState('');
-  const [resending, setResending] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setRequiresVerification(false);
     setResendStatus('');
     setLoading(true);
 
@@ -49,28 +45,6 @@ export default function LoginPage() {
     } catch {
       setError('Network error. Please try again.');
       setLoading(false);
-    }
-  };
-
-  const handleResend = async () => {
-    setResending(true);
-    setResendStatus('');
-    try {
-      const res = await fetch('/api/auth/resend-verification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: unverifiedEmail || email }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setResendStatus('Verification link resent! Check your inbox or Dev Mailbox.');
-      } else {
-        setResendStatus(data.error || 'Failed to resend.');
-      }
-    } catch {
-      setResendStatus('Failed to resend email.');
-    } finally {
-      setResending(false);
     }
   };
 

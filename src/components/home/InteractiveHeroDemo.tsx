@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { SUPPORTED_LANGUAGES } from '@/lib/languages';
 import { AudioButton } from '@/components/ui/AudioButton';
-import { CheckCircle2, Globe, Loader2, Sparkles, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Globe, Loader2 } from 'lucide-react';
 
 export function InteractiveHeroDemo() {
   const [selectedLang, setSelectedLang] = useState('Malayalam');

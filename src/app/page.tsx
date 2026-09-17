@@ -8,15 +8,8 @@ import {
   BookOpen,
   Sparkles,
   ArrowRight,
-  CheckCircle2,
-  Globe2,
-  Volume2,
   ShieldCheck,
-  Zap,
-  GraduationCap,
-  MessageCircle,
 } from 'lucide-react';
-import { AudioButton } from '@/components/ui/AudioButton';
 import { InteractiveHeroDemo } from '@/components/home/InteractiveHeroDemo';
 
 export default async function LandingPage() {

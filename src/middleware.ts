@@ -9,6 +9,11 @@ const JWT_SECRET = new TextEncoder().encode(
 const PROTECTED_ROUTES = [
   '/dashboard',
   '/profile',
+  '/friends',
+  '/learn',
+  '/speak',
+  '/words',
+  '/tutor',
 ];
 
 export async function middleware(req: NextRequest) {
@@ -56,6 +61,11 @@ export const config = {
   matcher: [
     '/dashboard/:path*',
     '/profile/:path*',
+    '/friends/:path*',
+    '/learn/:path*',
+    '/speak/:path*',
+    '/words/:path*',
+    '/tutor/:path*',
     '/login',
     '/signup',
   ],

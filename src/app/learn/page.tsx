@@ -7,10 +7,8 @@ import { LESSONS_DATA } from '@/data/lessons';
 import {
   BookOpen,
   CheckCircle2,
-  Lock,
   ArrowRight,
   Sparkles,
-  Award,
   Clock,
 } from 'lucide-react';
 

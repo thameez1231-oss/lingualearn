@@ -19,6 +19,31 @@ export function DevMailboxDrawer() {
   const [emails, setEmails] = useState<OutboxEmail[]>([]);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    let ignore = false;
+    const loadData = () => {
+      fetch('/api/dev/emails')
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (!ignore && data?.emails) {
+            setEmails(data.emails);
+          }
+        })
+        .catch(console.error);
+    };
+
+    if (isOpen) {
+      loadData();
+    }
+    return () => {
+      ignore = true;
+    };
+  }, [isOpen]);
+
+  if (process.env.NODE_ENV === 'production') {
+    return null;
+  }
+
   const fetchEmails = async () => {
     try {
       setLoading(true);

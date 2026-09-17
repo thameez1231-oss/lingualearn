@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Loader2, AlertCircle, CheckCircle2, ShieldCheck, Mail, Lock, User } from 'lucide-react';
+import { ArrowRight, Loader2, AlertCircle, Mail, Lock, User } from 'lucide-react';
 import { DevMailboxDrawer } from '@/components/email/DevMailboxDrawer';
 
 export default function SignupPage() {

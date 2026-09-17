@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { searchDictionary, DICTIONARY_DATA } from '@/data/dictionary';
+import { searchDictionary } from '@/data/dictionary';
 import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 
