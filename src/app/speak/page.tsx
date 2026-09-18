@@ -78,7 +78,7 @@ export default function SpeakPage() {
     englishLevel?: string;
   } | null>(null);
 
-  const [selectedLanguage, setSelectedLanguage] = useState('Malayalam');
+  const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [pipelineStage, setPipelineStage] = useState<PipelineStage>('idle');
   const [textInput, setTextInput] = useState('');
   const [isEditingTranscript, setIsEditingTranscript] = useState(false);

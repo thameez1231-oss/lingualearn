@@ -902,7 +902,7 @@ function FriendsContent() {
           id: 'guest',
           name: 'Learner',
           email: '',
-          preferredLanguage: 'Malayalam',
+          preferredLanguage: 'English',
         }
       }
     >

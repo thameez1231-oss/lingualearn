@@ -91,7 +91,7 @@ export default async function LearnOverviewPage() {
           id: 'guest',
           name: 'Learner',
           email: '',
-          preferredLanguage: 'Malayalam',
+          preferredLanguage: 'English',
         }
       }
     >

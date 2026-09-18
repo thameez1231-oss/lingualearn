@@ -249,7 +249,7 @@ export default function TutorPage() {
           id: 'guest',
           name: 'Learner',
           email: '',
-          preferredLanguage: 'Malayalam',
+          preferredLanguage: 'English',
         }
       }
     >

@@ -30,7 +30,7 @@ export async function POST(req: Request) {
         name: user.name || 'Learner',
         email: user.email || `user_${user.id}@langualearn.app`,
         passwordHash: 'jwt_managed_user',
-        preferredLanguage: user.preferredLanguage || 'Malayalam',
+        preferredLanguage: user.preferredLanguage || 'English',
         englishLevel: user.englishLevel || 'BEGINNER',
         onboardingCompleted: true,
       },

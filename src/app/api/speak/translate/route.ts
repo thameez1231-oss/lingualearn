@@ -12,7 +12,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Text is required.' }, { status: 400 });
     }
 
-    const preferredLanguage = language || user?.preferredLanguage || 'Malayalam';
+    const preferredLanguage = language || user?.preferredLanguage || 'English';
     const translation = await translateNativeToEnglish(text, preferredLanguage, context);
 
     // If user is authenticated, log speaking practice and update XP & DailyGoal

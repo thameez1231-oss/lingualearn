@@ -62,7 +62,7 @@ export default function ProfilePage() {
         if (data?.user) {
           setUser(data.user);
           setName(data.user.name);
-          setPreferredLanguage(data.user.preferredLanguage || 'Malayalam');
+          setPreferredLanguage(data.user.preferredLanguage || 'English');
           setEnglishLevel(data.user.englishLevel || 'COMPLETE_BEGINNER');
         }
       })
@@ -156,7 +156,7 @@ export default function ProfilePage() {
           id: 'guest',
           name: 'Learner',
           email: '',
-          preferredLanguage: 'Malayalam',
+          preferredLanguage: 'English',
         }
       }
     >
