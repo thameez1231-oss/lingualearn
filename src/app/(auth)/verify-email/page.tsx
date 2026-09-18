@@ -28,6 +28,44 @@ function VerifyEmailContent() {
   const [verified, setVerified] = useState(statusParam === 'success');
   const [error, setError] = useState('');
 
+  const [resendEmail, setResendEmail] = useState('');
+  const [resending, setResending] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
+  const [resendError, setResendError] = useState('');
+
+  useEffect(() => {
+    if (!token && !verified) {
+      fetch('/api/auth/me').then(res => res.json()).then(data => {
+        if (data?.user?.email) setResendEmail(data.user.email);
+      }).catch(() => {});
+    }
+  }, [token, verified]);
+
+  const handleResend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resendEmail) return;
+    setResending(true);
+    setResendError('');
+    setResendSuccess(false);
+    try {
+      const res = await fetch('/api/auth/resend-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: resendEmail })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setResendSuccess(true);
+      } else {
+        setResendError(data.error || 'Failed to resend email.');
+      }
+    } catch (err) {
+      setResendError('Network error connecting to the server.');
+    } finally {
+      setResending(false);
+    }
+  };
+
   useEffect(() => {
     if (statusParam === 'success') {
       triggerConfetti();
@@ -72,16 +110,31 @@ function VerifyEmailContent() {
       {!loading && !token && !verified && (
         <div className="py-12 space-y-4">
           <div className="w-20 h-20 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center mx-auto mb-6">
-            <span className="text-3xl">✉️</span>
+            <span className="text-3xl">??</span>
           </div>
           <h2 className="text-2xl font-extrabold text-slate-900 dark:text-slate-50">Check your email</h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed">
             We've sent a verification link to your inbox. Please click the link to verify your account and continue.
           </p>
+
+          <form onSubmit={handleResend} className="mt-8 max-w-sm mx-auto space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">Didn't receive the email?</p>
+            <div className="flex flex-col space-y-2">
+              <input type="email" value={resendEmail} onChange={e => setResendEmail(e.target.value)} placeholder="Enter your email" className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" required />
+              <button type="submit" disabled={resending} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-bold disabled:opacity-50">
+                {resending ? 'Sending...' : 'Resend Verification Email'}   
+              </button>
+            </div>
+            {resendSuccess && <p className="text-xs text-emerald-600 font-bold p-2 bg-emerald-50 rounded-md">Verification link sent! Check your inbox (and spam folder).</p>}
+            {resendError && <p className="text-xs text-rose-600 font-bold p-2 bg-rose-50 rounded-md">{resendError}</p>}
+          </form>
+
           <div className="pt-6">
-            <Link href="/dev/mailbox" target="_blank" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 underline">
-              Open Development Mailbox (for testing)
-            </Link>
+            {process.env.NODE_ENV !== 'production' && (
+              <Link href="/dev/mailbox" target="_blank" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 underline">
+                Open Development Mailbox (for testing)
+              </Link>
+            )}
           </div>
         </div>
       )}
@@ -107,15 +160,15 @@ function VerifyEmailContent() {
       {!loading && verified && (
         <div className="py-4 space-y-6">
           <div className="w-20 h-20 rounded-xl bg-emerald-50 border-2 border-emerald-200 text-emerald-600 flex items-center justify-center mx-auto text-3xl shadow-sm dark:shadow-none shadow-emerald-50">
-            🎉
+            ?
           </div>
 
           <div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
-              Email verified successfully! 🎉
+              Email verified successfully! ?
             </h2>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
-              Your account is now fully verified. Let&apos;s personalize your English learning experience.
+              Your account is now fully verified. Let's personalize your English learning experience.
             </p>
           </div>
 
