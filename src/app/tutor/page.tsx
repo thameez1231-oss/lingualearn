@@ -88,7 +88,7 @@ const DEFAULT_WELCOME_MSG: ChatMessage = {
   id: 'msg-welcome',
   sender: 'tutor',
   text: 'Hello! I am Coach Maya, your personal AI English tutor. We can practice speaking, chatting, or checking grammar. You can type in English or your native language! What would you like to talk about today?',
-  nativeTranslation: 'ഹലോ! ഞാൻ കോച്ച് മായയാണ്, നിങ്ങളുടെ ഇംഗ്ലീഷ് അധ്യാപിക. എന്ത് സംസാരിക്കാനാണ് നിങ്ങൾക്ക് താല്പര്യം?',
+  nativeTranslation: '',
   audioText: 'Hello! I am Coach Maya, your personal AI English tutor. What would you like to talk about today?',
   timestamp: 'Just now',
 };
@@ -283,7 +283,7 @@ export default function TutorPage() {
                   id: 'msg-restart',
                   sender: 'tutor',
                   text: `Fresh conversation started! What would you like to practice now, ${welcomeName}?`,
-                  nativeTranslation: 'പുതിയ സംഭാഷണം ആരംഭിച്ചു! നമുക്ക് എന്ത് സംസാരിക്കണം?',
+                  nativeTranslation: '',
                   audioText: 'Fresh conversation started! What would you like to practice now?',
                   timestamp: 'Just now',
                 },

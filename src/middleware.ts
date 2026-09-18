@@ -21,11 +21,15 @@ export async function middleware(req: NextRequest) {
   const sessionCookie = req.cookies.get(SESSION_COOKIE_NAME);
 
   let isAuthenticated = false;
+  let isEmailVerified = false;
   if (sessionCookie?.value) {
     try {
       const { payload } = await jwtVerify(sessionCookie.value, JWT_SECRET);
       if (payload?.userId) {
         isAuthenticated = true;
+        const userPayload = (payload.user as any) || {};
+        isEmailVerified = userPayload.emailVerified !== false;
+
       }
     } catch {
       isAuthenticated = false;
@@ -41,6 +45,10 @@ export async function middleware(req: NextRequest) {
 
   // If accessing protected routes while unauthenticated, redirect to login
   const isProtected = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
+  if (isProtected && isAuthenticated && !isEmailVerified) {
+    return NextResponse.redirect(new URL('/verify-email', req.url));
+  }
+
   if (isProtected && !isAuthenticated) {
     const loginUrl = new URL('/login', req.url);
     loginUrl.searchParams.set('redirect', pathname);
