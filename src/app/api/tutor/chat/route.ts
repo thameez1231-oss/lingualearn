@@ -12,7 +12,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Message is required.' }, { status: 400 });
     }
 
-    const preferredLanguage = user?.preferredLanguage || userLanguage || 'Malayalam';
+    const preferredLanguage = user?.preferredLanguage || userLanguage || 'English';
     const englishLevel = user?.englishLevel || proficiencyLevel || 'COMPLETE_BEGINNER';
 
     const tutorResponse = await chatWithAITutor(message, preferredLanguage, englishLevel, history || []);

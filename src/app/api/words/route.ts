@@ -8,9 +8,9 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const query = searchParams.get('q') || '';
     const user = await getCurrentUser();
-    const lang = user?.preferredLanguage || 'Malayalam';
+    const lang = user?.preferredLanguage || 'English';
 
-    const words = searchDictionary(query, lang);
+    const words = searchDictionary(query);
 
     // Fetch user saved words if logged in
     let savedWordList: string[] = [];

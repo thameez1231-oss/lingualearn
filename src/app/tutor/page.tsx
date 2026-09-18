@@ -87,7 +87,7 @@ interface BrowserSpeechRecognition {
 const DEFAULT_WELCOME_MSG: ChatMessage = {
   id: 'msg-welcome',
   sender: 'tutor',
-  text: 'Hello! I am Coach Maya, your personal AI English tutor. We can practice speaking, chatting, or checking grammar. You can type in English, Malayalam, or Manglish! What would you like to talk about today?',
+  text: 'Hello! I am Coach Maya, your personal AI English tutor. We can practice speaking, chatting, or checking grammar. You can type in English or your native language! What would you like to talk about today?',
   nativeTranslation: 'ഹലോ! ഞാൻ കോച്ച് മായയാണ്, നിങ്ങളുടെ ഇംഗ്ലീഷ് അധ്യാപിക. എന്ത് സംസാരിക്കാനാണ് നിങ്ങൾക്ക് താല്പര്യം?',
   audioText: 'Hello! I am Coach Maya, your personal AI English tutor. What would you like to talk about today?',
   timestamp: 'Just now',
@@ -128,7 +128,7 @@ export default function TutorPage() {
               m.id === 'msg-welcome'
                 ? {
                     ...m,
-                    text: `Hello ${welcomeName}! I am Coach Maya, your personal AI English tutor. We can practice speaking, chatting, or checking grammar. You can type in English, Malayalam, or Manglish! What would you like to talk about today?`,
+                    text: `Hello ${welcomeName}! I am Coach Maya, your personal AI English tutor. We can practice speaking, chatting, or checking grammar. You can type in English or your native language! What would you like to talk about today?`,
                     audioText: `Hello ${welcomeName}! I am Coach Maya, your personal AI English tutor. What would you like to talk about today?`,
                   }
                 : m
@@ -162,7 +162,7 @@ export default function TutorPage() {
 
     try {
       const recognition = new SpeechRecognitionClass();
-      recognition.lang = getSpeechCodeForLanguage(user?.preferredLanguage || 'Malayalam');
+      recognition.lang = getSpeechCodeForLanguage(user?.preferredLanguage || 'en-US');
       recognition.continuous = false;
       recognition.interimResults = false;
 
@@ -205,7 +205,7 @@ export default function TutorPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: textToSend,
-          userLanguage: user?.preferredLanguage || 'Malayalam',
+          userLanguage: user?.preferredLanguage || 'English',
           proficiencyLevel: user?.englishLevel || 'BEGINNER',
           history: messages.slice(-8).map((m) => ({
             role: m.sender === 'user' ? 'user' : 'assistant',
@@ -364,7 +364,7 @@ export default function TutorPage() {
                   cleanDisplay(msg.nativeTranslation).toLowerCase().trim() !== cleanDisplay(msg.text).toLowerCase().trim() && (
                     <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 font-medium select-text">
                       <span className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5 select-none">
-                        In {user?.preferredLanguage || 'Malayalam'}:
+                        In {user?.preferredLanguage || 'your language'}:
                       </span>
                       {cleanDisplay(msg.nativeTranslation)}
                     </div>

@@ -57,12 +57,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "heh-LOH",
         "emoji": "👋",
         "translations": {
-          "Malayalam": "ഹലോ"
+          "Malayalam": "ഹലോ",
+          "Chinese": "你好",
+          "Mandarin": "你好",
+          "Hindi": "नमस्ते"
         },
         "exampleSentence": "Hello, how are you?",
         "examplePhonetic": "heh-LOH, how are yoo?",
         "exampleTranslations": {
-          "Malayalam": "ഹലോ, നിങ്ങൾക്ക് സുഖമാണോ?"
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -71,12 +77,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "PLEEZ",
         "emoji": "🙏",
         "translations": {
-          "Malayalam": "ദയവായി"
+          "Malayalam": "ദയവായി",
+          "Chinese": "请",
+          "Mandarin": "请",
+          "Hindi": "कृपया"
         },
         "exampleSentence": "Water, please.",
         "examplePhonetic": "WAH-ter, PLEEZ.",
         "exampleTranslations": {
-          "Malayalam": "ദയവായി വെള്ളം തരൂ."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -85,12 +97,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "THANGK yoo",
         "emoji": "😊",
         "translations": {
-          "Malayalam": "നന്ദി"
+          "Malayalam": "നന്ദി",
+          "Chinese": "谢谢",
+          "Mandarin": "谢谢",
+          "Hindi": "धन्यवाद"
         },
         "exampleSentence": "Thank you very much.",
         "examplePhonetic": "THANGK yoo ver-ee much.",
         "exampleTranslations": {
-          "Malayalam": "വളരെ നന്ദി."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -150,12 +168,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "wun",
         "emoji": "1️⃣",
         "translations": {
-          "Malayalam": "ഒന്ന്"
+          "Malayalam": "ഒന്ന്",
+          "Chinese": "一",
+          "Mandarin": "一",
+          "Hindi": "एक"
         },
         "exampleSentence": "I have one apple.",
         "examplePhonetic": "I hav wun AP-pul.",
         "exampleTranslations": {
-          "Malayalam": "എന്റെ കയ്യിൽ ഒരു ആപ്പിൾ ഉണ്ട്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -164,12 +188,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "too",
         "emoji": "2️⃣",
         "translations": {
-          "Malayalam": "രണ്ട്"
+          "Malayalam": "രണ്ട്",
+          "Chinese": "二",
+          "Mandarin": "二",
+          "Hindi": "दो"
         },
         "exampleSentence": "There are two cars.",
         "examplePhonetic": "Thair ar too karz.",
         "exampleTranslations": {
-          "Malayalam": "അവിടെ രണ്ട് കാറുകൾ ഉണ്ട്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -178,12 +208,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "three",
         "emoji": "3️⃣",
         "translations": {
-          "Malayalam": "മൂന്ന്"
+          "Malayalam": "മൂന്ന്",
+          "Chinese": "三",
+          "Mandarin": "三",
+          "Hindi": "तीन"
         },
         "exampleSentence": "I see three birds.",
         "examplePhonetic": "I see three berdz.",
         "exampleTranslations": {
-          "Malayalam": "ഞാൻ മൂന്ന് പക്ഷികളെ കാണുന്നു."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -228,12 +264,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "red",
         "emoji": "🔴",
         "translations": {
-          "Malayalam": "ചുവപ്പ്"
+          "Malayalam": "ചുവപ്പ്",
+          "Chinese": "红色",
+          "Mandarin": "红色",
+          "Hindi": "लाल"
         },
         "exampleSentence": "The apple is red.",
         "examplePhonetic": "The AP-pul iz red.",
         "exampleTranslations": {
-          "Malayalam": "ആപ്പിൾ ചുവപ്പാണ്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -242,12 +284,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "bloo",
         "emoji": "🔵",
         "translations": {
-          "Malayalam": "നീല"
+          "Malayalam": "നീല",
+          "Chinese": "蓝色",
+          "Mandarin": "蓝色",
+          "Hindi": "नीला"
         },
         "exampleSentence": "The sky is blue.",
         "examplePhonetic": "The sky iz bloo.",
         "exampleTranslations": {
-          "Malayalam": "ആകാശം നീലയാണ്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -256,12 +304,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "green",
         "emoji": "🟢",
         "translations": {
-          "Malayalam": "പച്ച"
+          "Malayalam": "പച്ച",
+          "Chinese": "绿色",
+          "Mandarin": "绿色",
+          "Hindi": "हरा"
         },
         "exampleSentence": "The grass is green.",
         "examplePhonetic": "The gras iz green.",
         "exampleTranslations": {
-          "Malayalam": "പുല്ല് പച്ചയാണ്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -306,12 +360,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "KOF-ee",
         "emoji": "☕",
         "translations": {
-          "Malayalam": "കോഫി"
+          "Malayalam": "കോഫി",
+          "Chinese": "咖啡",
+          "Mandarin": "咖啡",
+          "Hindi": "कॉफी"
         },
         "exampleSentence": "I want a coffee.",
         "examplePhonetic": "I wont a KOF-ee.",
         "exampleTranslations": {
-          "Malayalam": "എനിക്കൊരു കോഫി വേണം."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -320,12 +380,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "MEN-yoo",
         "emoji": "📖",
         "translations": {
-          "Malayalam": "മെനു"
+          "Malayalam": "മെനു",
+          "Chinese": "菜单",
+          "Mandarin": "菜单",
+          "Hindi": "मेन्यू"
         },
         "exampleSentence": "Bring the menu.",
         "examplePhonetic": "Bring the MEN-yoo.",
         "exampleTranslations": {
-          "Malayalam": "മെനു കൊണ്ടുവരൂ."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -334,12 +400,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "WAH-ter",
         "emoji": "💧",
         "translations": {
-          "Malayalam": "വെള്ളം"
+          "Malayalam": "വെള്ളം",
+          "Chinese": "水",
+          "Mandarin": "水",
+          "Hindi": "पानी"
         },
         "exampleSentence": "A glass of water.",
         "examplePhonetic": "A glas ov WAH-ter.",
         "exampleTranslations": {
-          "Malayalam": "ഒരു ഗ്ലാസ് വെള്ളം."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -384,12 +456,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "wayk up",
         "emoji": "🌅",
         "translations": {
-          "Malayalam": "ഉണരുക"
+          "Malayalam": "ഉണരുക",
+          "Chinese": "醒来",
+          "Mandarin": "醒来",
+          "Hindi": "जागना"
         },
         "exampleSentence": "I wake up early.",
         "examplePhonetic": "I wayk up ER-lee.",
         "exampleTranslations": {
-          "Malayalam": "ഞാൻ നേരത്തെ ഉണരും."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -398,12 +476,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "BREK-fust",
         "emoji": "🍳",
         "translations": {
-          "Malayalam": "പ്രഭാതഭക്ഷണം"
+          "Malayalam": "പ്രഭാതഭക്ഷണം",
+          "Chinese": "早餐",
+          "Mandarin": "早餐",
+          "Hindi": "नाश्ता"
         },
         "exampleSentence": "I eat breakfast.",
         "examplePhonetic": "I eet BREK-fust.",
         "exampleTranslations": {
-          "Malayalam": "ഞാൻ പ്രഭാതഭക്ഷണം കഴിക്കുന്നു."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -412,12 +496,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "sleep",
         "emoji": "😴",
         "translations": {
-          "Malayalam": "ഉറങ്ങുക"
+          "Malayalam": "ഉറങ്ങുക",
+          "Chinese": "睡觉",
+          "Mandarin": "睡觉",
+          "Hindi": "सोना"
         },
         "exampleSentence": "I sleep at night.",
         "examplePhonetic": "I sleep at nyt.",
         "exampleTranslations": {
-          "Malayalam": "ഞാൻ രാത്രിയിൽ ഉറങ്ങുന്നു."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -456,12 +546,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "frend",
         "emoji": "🤝",
         "translations": {
-          "Malayalam": "സുഹൃത്ത്"
+          "Malayalam": "സുഹൃത്ത്",
+          "Chinese": "朋友",
+          "Mandarin": "朋友",
+          "Hindi": "दोस्त"
         },
         "exampleSentence": "He is my friend.",
         "examplePhonetic": "He iz my frend.",
         "exampleTranslations": {
-          "Malayalam": "അവൻ എന്റെ സുഹൃത്താണ്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -470,12 +566,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "MUTH-er",
         "emoji": "👩",
         "translations": {
-          "Malayalam": "അമ്മ"
+          "Malayalam": "അമ്മ",
+          "Chinese": "母亲",
+          "Mandarin": "母亲",
+          "Hindi": "माँ"
         },
         "exampleSentence": "My mother is kind.",
         "examplePhonetic": "My MUTH-er iz kynd.",
         "exampleTranslations": {
-          "Malayalam": "എന്റെ അമ്മ ദയവുള്ളവളാണ്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -484,12 +586,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "FAH-ther",
         "emoji": "👨",
         "translations": {
-          "Malayalam": "അച്ഛൻ"
+          "Malayalam": "അച്ഛൻ",
+          "Chinese": "父亲",
+          "Mandarin": "父亲",
+          "Hindi": "पिता"
         },
         "exampleSentence": "My father works hard.",
         "examplePhonetic": "My FAH-ther werks hard.",
         "exampleTranslations": {
-          "Malayalam": "എന്റെ അച്ഛൻ കഠിനാധ്വാനം ചെയ്യുന്നു."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -534,12 +642,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "EE-ting",
         "emoji": "🍽️",
         "translations": {
-          "Malayalam": "കഴിക്കുന്നു"
+          "Malayalam": "കഴിക്കുന്നു",
+          "Chinese": "吃",
+          "Mandarin": "吃",
+          "Hindi": "खा रहा हूँ"
         },
         "exampleSentence": "She is eating.",
         "examplePhonetic": "She iz EE-ting.",
         "exampleTranslations": {
-          "Malayalam": "അവൾ കഴിക്കുകയാണ്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -548,12 +662,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "RUN-ing",
         "emoji": "🏃",
         "translations": {
-          "Malayalam": "ഓടുന്നു"
+          "Malayalam": "ഓടുന്നു",
+          "Chinese": "跑",
+          "Mandarin": "跑",
+          "Hindi": "दौड़ रहा हूँ"
         },
         "exampleSentence": "He is running.",
         "examplePhonetic": "He iz RUN-ing.",
         "exampleTranslations": {
-          "Malayalam": "അവൻ ഓടുകയാണ്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -562,12 +682,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "REE-ding",
         "emoji": "📚",
         "translations": {
-          "Malayalam": "വായിക്കുന്നു"
+          "Malayalam": "വായിക്കുന്നു",
+          "Chinese": "阅读",
+          "Mandarin": "阅读",
+          "Hindi": "पढ़ रहा हूँ"
         },
         "exampleSentence": "I am reading a book.",
         "examplePhonetic": "I am REE-ding a book.",
         "exampleTranslations": {
-          "Malayalam": "ഞാൻ ഒരു പുസ്തകം വായിക്കുകയാണ്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -612,12 +738,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "went",
         "emoji": "🚶",
         "translations": {
-          "Malayalam": "പോയി"
+          "Malayalam": "പോയി",
+          "Chinese": "去了",
+          "Mandarin": "去了",
+          "Hindi": "गया"
         },
         "exampleSentence": "I went home.",
         "examplePhonetic": "I went hohm.",
         "exampleTranslations": {
-          "Malayalam": "ഞാൻ വീട്ടിൽ പോയി."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -626,12 +758,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "ayt",
         "emoji": "🍎",
         "translations": {
-          "Malayalam": "കഴിച്ചു"
+          "Malayalam": "കഴിച്ചു",
+          "Chinese": "吃了",
+          "Mandarin": "吃了",
+          "Hindi": "खाया"
         },
         "exampleSentence": "He ate lunch.",
         "examplePhonetic": "He ayt lunch.",
         "exampleTranslations": {
-          "Malayalam": "അവൻ ഉച്ചഭക്ഷണം കഴിച്ചു."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -640,12 +778,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "saw",
         "emoji": "👁️",
         "translations": {
-          "Malayalam": "കണ്ടു"
+          "Malayalam": "കണ്ടു",
+          "Chinese": "看见",
+          "Mandarin": "看见",
+          "Hindi": "देखा"
         },
         "exampleSentence": "We saw a movie.",
         "examplePhonetic": "We saw a MOO-vee.",
         "exampleTranslations": {
-          "Malayalam": "ഞങ്ങൾ ഒരു സിനിമ കണ്ടു."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -684,12 +828,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "wil",
         "emoji": "🔮",
         "translations": {
-          "Malayalam": "ചെയ്യും"
+          "Malayalam": "ചെയ്യും",
+          "Chinese": "将",
+          "Mandarin": "将",
+          "Hindi": "करूँगा"
         },
         "exampleSentence": "I will go.",
         "examplePhonetic": "I wil go.",
         "exampleTranslations": {
-          "Malayalam": "ഞാൻ പോകും."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -698,12 +848,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "tuh-MOR-oh",
         "emoji": "📅",
         "translations": {
-          "Malayalam": "നാളെ"
+          "Malayalam": "നാളെ",
+          "Chinese": "明天",
+          "Mandarin": "明天",
+          "Hindi": "कल"
         },
         "exampleSentence": "See you tomorrow.",
         "examplePhonetic": "See yoo tuh-MOR-oh.",
         "exampleTranslations": {
-          "Malayalam": "നാളെ കാണാം."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -712,12 +868,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "soon",
         "emoji": "⏳",
         "translations": {
-          "Malayalam": "ഉടൻ"
+          "Malayalam": "ഉടൻ",
+          "Chinese": "很快",
+          "Mandarin": "很快",
+          "Hindi": "जल्द ही"
         },
         "exampleSentence": "It will happen soon.",
         "examplePhonetic": "It wil HAP-un soon.",
         "exampleTranslations": {
-          "Malayalam": "അത് ഉടൻ സംഭവിക്കും."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -762,12 +924,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "LUG-ij",
         "emoji": "🧳",
         "translations": {
-          "Malayalam": "ലഗേജ്"
+          "Malayalam": "ലഗേജ്",
+          "Chinese": "行李",
+          "Mandarin": "行李",
+          "Hindi": "सामान"
         },
         "exampleSentence": "Where is my luggage?",
         "examplePhonetic": "Wair iz my LUG-ij?",
         "exampleTranslations": {
-          "Malayalam": "എന്റെ ലഗേജ് എവിടെയാണ്?"
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -776,12 +944,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "BOR-ding pas",
         "emoji": "🎫",
         "translations": {
-          "Malayalam": "ബോർഡിംഗ് പാസ്"
+          "Malayalam": "ബോർഡിംഗ് പാസ്",
+          "Chinese": "登机牌",
+          "Mandarin": "登机牌",
+          "Hindi": "बोर्डिंग पास"
         },
         "exampleSentence": "Show your boarding pass.",
         "examplePhonetic": "Shoh yor BOR-ding pas.",
         "exampleTranslations": {
-          "Malayalam": "നിങ്ങളുടെ ബോർഡിംഗ് പാസ് കാണിക്കുക."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -790,12 +964,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "flyt",
         "emoji": "✈️",
         "translations": {
-          "Malayalam": "ഫ്ലൈറ്റ്"
+          "Malayalam": "ഫ്ലൈറ്റ്",
+          "Chinese": "航班",
+          "Mandarin": "航班",
+          "Hindi": "उड़ान"
         },
         "exampleSentence": "My flight is delayed.",
         "examplePhonetic": "My flyt iz dih-LAYD.",
         "exampleTranslations": {
-          "Malayalam": "എന്റെ ഫ്ലൈറ്റ് വൈകി."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -840,12 +1020,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "rez-er-VAY-shun",
         "emoji": "🛎️",
         "translations": {
-          "Malayalam": "റിസർവേഷൻ"
+          "Malayalam": "റിസർവേഷൻ",
+          "Chinese": "预订",
+          "Mandarin": "预订",
+          "Hindi": "आरक्षण"
         },
         "exampleSentence": "I have a reservation.",
         "examplePhonetic": "I hav a rez-er-VAY-shun.",
         "exampleTranslations": {
-          "Malayalam": "എനിക്ക് ഒരു റിസർവേഷൻ ഉണ്ട്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -854,12 +1040,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "kee",
         "emoji": "🔑",
         "translations": {
-          "Malayalam": "താക്കോൽ"
+          "Malayalam": "താക്കോൽ",
+          "Chinese": "钥匙",
+          "Mandarin": "钥匙",
+          "Hindi": "चाबी"
         },
         "exampleSentence": "Here is your room key.",
         "examplePhonetic": "Heer iz yor room kee.",
         "exampleTranslations": {
-          "Malayalam": "ഇതാ നിങ്ങളുടെ മുറിയുടെ താക്കോൽ."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -868,12 +1060,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "CHEK-owt",
         "emoji": "🚪",
         "translations": {
-          "Malayalam": "ചെക്കൗട്ട്"
+          "Malayalam": "ചെക്കൗട്ട്",
+          "Chinese": "退房",
+          "Mandarin": "退房",
+          "Hindi": "चेकआउट"
         },
         "exampleSentence": "Checkout is at noon.",
         "examplePhonetic": "CHEK-owt iz at noon.",
         "exampleTranslations": {
-          "Malayalam": "ചെക്കൗട്ട് ഉച്ചയ്ക്കാണ്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -912,12 +1110,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "strayt",
         "emoji": "⬆️",
         "translations": {
-          "Malayalam": "നേരെ"
+          "Malayalam": "നേരെ",
+          "Chinese": "直走",
+          "Mandarin": "直走",
+          "Hindi": "सीधे"
         },
         "exampleSentence": "Go straight ahead.",
         "examplePhonetic": "Go strayt uh-HED.",
         "exampleTranslations": {
-          "Malayalam": "നേരെ മുന്നോട്ട് പോകുക."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -926,12 +1130,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "left",
         "emoji": "⬅️",
         "translations": {
-          "Malayalam": "ഇടത്തോട്ട്"
+          "Malayalam": "ഇടത്തോട്ട്",
+          "Chinese": "左",
+          "Mandarin": "左",
+          "Hindi": "बाएं"
         },
         "exampleSentence": "Turn left here.",
         "examplePhonetic": "Tern left heer.",
         "exampleTranslations": {
-          "Malayalam": "ഇവിടെ ഇടത്തോട്ട് തിരിയുക."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -940,12 +1150,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "ryt",
         "emoji": "➡️",
         "translations": {
-          "Malayalam": "വലത്തോട്ട്"
+          "Malayalam": "വലത്തോട്ട്",
+          "Chinese": "右",
+          "Mandarin": "右",
+          "Hindi": "दाएं"
         },
         "exampleSentence": "Turn right at the light.",
         "examplePhonetic": "Tern ryt at the lyt.",
         "exampleTranslations": {
-          "Malayalam": "ലൈറ്റിൽ വലത്തോട്ട് തിരിയുക."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -990,12 +1206,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "DED-lyn",
         "emoji": "⏰",
         "translations": {
-          "Malayalam": "അവസാന തീയതി"
+          "Malayalam": "അവസാന തീയതി",
+          "Chinese": "截止日期",
+          "Mandarin": "截止日期",
+          "Hindi": "अंतिम तिथि"
         },
         "exampleSentence": "We must meet the deadline.",
         "examplePhonetic": "We must meet the DED-lyn.",
         "exampleTranslations": {
-          "Malayalam": "നാം അവസാന തീയതി പാലിക്കണം."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -1004,12 +1226,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "STRAT-uh-jee",
         "emoji": "📈",
         "translations": {
-          "Malayalam": "തന്ത്രം"
+          "Malayalam": "തന്ത്രം",
+          "Chinese": "策略",
+          "Mandarin": "策略",
+          "Hindi": "रणनीति"
         },
         "exampleSentence": "A good strategy wins.",
         "examplePhonetic": "A good STRAT-uh-jee winz.",
         "exampleTranslations": {
-          "Malayalam": "ഒരു നല്ല തന്ത്രം വിജയിക്കുന്നു."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -1018,12 +1246,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "uh-JEN-duh",
         "emoji": "📋",
         "translations": {
-          "Malayalam": "അജണ്ട"
+          "Malayalam": "അജണ്ട",
+          "Chinese": "议程",
+          "Mandarin": "议程",
+          "Hindi": "कार्यसूची"
         },
         "exampleSentence": "What is on the agenda?",
         "examplePhonetic": "Wut iz on the uh-JEN-duh?",
         "exampleTranslations": {
-          "Malayalam": "അജണ്ടയിൽ എന്തൊക്കെയുണ്ട്?"
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -1068,12 +1302,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "uh-TACH",
         "emoji": "📎",
         "translations": {
-          "Malayalam": "അറ്റാച്ചുചെയ്യുക"
+          "Malayalam": "അറ്റാച്ചുചെയ്യുക",
+          "Chinese": "附加",
+          "Mandarin": "附加",
+          "Hindi": "जोड़ें"
         },
         "exampleSentence": "Please attach the file.",
         "examplePhonetic": "PLEEZ uh-TACH the fyl.",
         "exampleTranslations": {
-          "Malayalam": "ദയവായി ഫയൽ അറ്റാച്ചുചെയ്യുക."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -1082,12 +1322,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "FOR-werd",
         "emoji": "🔄",
         "translations": {
-          "Malayalam": "ഫോർവേഡ് ചെയ്യുക"
+          "Malayalam": "ഫോർവേഡ് ചെയ്യുക",
+          "Chinese": "转发",
+          "Mandarin": "转发",
+          "Hindi": "अग्रेषित"
         },
         "exampleSentence": "I will forward the email.",
         "examplePhonetic": "I wil FOR-werd the EE-mayl.",
         "exampleTranslations": {
-          "Malayalam": "ഞാൻ ഇമെയിൽ ഫോർവേഡ് ചെയ്യാം."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -1096,12 +1342,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "rih-GAHRDZ",
         "emoji": "✒️",
         "translations": {
-          "Malayalam": "ആദരവോടെ"
+          "Malayalam": "ആദരവോടെ",
+          "Chinese": "问候",
+          "Mandarin": "问候",
+          "Hindi": "सादर"
         },
         "exampleSentence": "Best regards.",
         "examplePhonetic": "Best rih-GAHRDZ.",
         "exampleTranslations": {
-          "Malayalam": "സ്നേഹാദരങ്ങളോടെ."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -1140,12 +1392,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "KOM-pruh-myz",
         "emoji": "🤝",
         "translations": {
-          "Malayalam": "വിട്ടുവീഴ്ച"
+          "Malayalam": "വിട്ടുവീഴ്ച",
+          "Chinese": "妥协",
+          "Mandarin": "妥协",
+          "Hindi": "समझौता"
         },
         "exampleSentence": "We reached a compromise.",
         "examplePhonetic": "We reecht a KOM-pruh-myz.",
         "exampleTranslations": {
-          "Malayalam": "ഞങ്ങൾ ഒരു വിട്ടുവീഴ്ചയിൽ എത്തി."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -1154,12 +1412,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "pruh-POH-zul",
         "emoji": "📄",
         "translations": {
-          "Malayalam": "നിർദ്ദേശം"
+          "Malayalam": "നിർദ്ദേശം",
+          "Chinese": "提议",
+          "Mandarin": "提议",
+          "Hindi": "प्रस्ताव"
         },
         "exampleSentence": "Review the proposal.",
         "examplePhonetic": "rih-VYOO the pruh-POH-zul.",
         "exampleTranslations": {
-          "Malayalam": "നിർദ്ദേശം അവലോകനം ചെയ്യുക."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -1168,12 +1432,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "KON-trakt",
         "emoji": "🖋️",
         "translations": {
-          "Malayalam": "കരാർ"
+          "Malayalam": "കരാർ",
+          "Chinese": "合同",
+          "Mandarin": "合同",
+          "Hindi": "अनुबंध"
         },
         "exampleSentence": "Sign the contract.",
         "examplePhonetic": "Syn the KON-trakt.",
         "exampleTranslations": {
-          "Malayalam": "കരാറിൽ ഒപ്പിടുക."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -1218,12 +1488,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "pees ov kayk",
         "emoji": "🍰",
         "translations": {
-          "Malayalam": "വളരെ എളുപ്പമുള്ള"
+          "Malayalam": "വളരെ എളുപ്പമുള്ള",
+          "Chinese": "小菜一碟",
+          "Mandarin": "小菜一碟",
+          "Hindi": "बहुत आसान"
         },
         "exampleSentence": "The test was a piece of cake.",
         "examplePhonetic": "The test wuz a pees ov kayk.",
         "exampleTranslations": {
-          "Malayalam": "പരീക്ഷ വളരെ എളുപ്പമായിരുന്നു."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -1232,12 +1508,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "UN-der the WETH-er",
         "emoji": "🤒",
         "translations": {
-          "Malayalam": "സുഖമില്ലാത്ത"
+          "Malayalam": "സുഖമില്ലാത്ത",
+          "Chinese": "身体不适",
+          "Mandarin": "身体不适",
+          "Hindi": "अस्वस्थ"
         },
         "exampleSentence": "I feel under the weather.",
         "examplePhonetic": "I feel UN-der the WETH-er.",
         "exampleTranslations": {
-          "Malayalam": "എനിക്ക് സുഖമില്ല."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -1246,12 +1528,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "brayk the ays",
         "emoji": "🧊",
         "translations": {
-          "Malayalam": "തുടക്കമിടുക"
+          "Malayalam": "തുടക്കമിടുക",
+          "Chinese": "打破僵局",
+          "Mandarin": "打破僵局",
+          "Hindi": "शुरुआत करना"
         },
         "exampleSentence": "Tell a joke to break the ice.",
         "examplePhonetic": "Tel a johk to brayk the ays.",
         "exampleTranslations": {
-          "Malayalam": "തുടക്കമിടാൻ ഒരു തമാശ പറയുക."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -1296,12 +1584,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "yoo-BIK-wih-tus",
         "emoji": "🌍",
         "translations": {
-          "Malayalam": "സർവ്വവ്യാപിയായ"
+          "Malayalam": "സർവ്വവ്യാപിയായ",
+          "Chinese": "无处不在的",
+          "Mandarin": "无处不在的",
+          "Hindi": "सर्वव्यापी"
         },
         "exampleSentence": "Smartphones are ubiquitous.",
         "examplePhonetic": "SMART-fohnz ar yoo-BIK-wih-tus.",
         "exampleTranslations": {
-          "Malayalam": "സ്മാർട്ട്‌ഫോണുകൾ സർവ്വവ്യാപിയാണ്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -1310,12 +1604,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "ih-FEM-er-ul",
         "emoji": "⏳",
         "translations": {
-          "Malayalam": "ക്ഷണികമായ"
+          "Malayalam": "ക്ഷണികമായ",
+          "Chinese": "短暂的",
+          "Mandarin": "短暂的",
+          "Hindi": "अल्पकालिक"
         },
         "exampleSentence": "Fame is ephemeral.",
         "examplePhonetic": "Faym iz ih-FEM-er-ul.",
         "exampleTranslations": {
-          "Malayalam": "പ്രശസ്തി ക്ഷണികമാണ്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -1324,12 +1624,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "EL-uh-kwunt",
         "emoji": "🗣️",
         "translations": {
-          "Malayalam": "വാചാലനായ"
+          "Malayalam": "വാചാലനായ",
+          "Chinese": "雄辩的",
+          "Mandarin": "雄辩的",
+          "Hindi": "सुवक्ता"
         },
         "exampleSentence": "She gave an eloquent speech.",
         "examplePhonetic": "She gayv an EL-uh-kwunt speech.",
         "exampleTranslations": {
-          "Malayalam": "അവൾ വാചാലമായ ഒരു പ്രസംഗം നടത്തി."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -1367,12 +1673,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "giv up",
         "emoji": "🏳️",
         "translations": {
-          "Malayalam": "ഉപേക്ഷിക്കുക"
+          "Malayalam": "ഉപേക്ഷിക്കുക",
+          "Chinese": "放弃",
+          "Mandarin": "放弃",
+          "Hindi": "हार मानना"
         },
         "exampleSentence": "Never give up your dreams.",
         "examplePhonetic": "NEV-er giv up yor dreemz.",
         "exampleTranslations": {
-          "Malayalam": "നിങ്ങളുടെ സ്വപ്നങ്ങൾ ഒരിക്കലും ഉപേക്ഷിക്കരുത്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -1381,12 +1693,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "put of",
         "emoji": "📅",
         "translations": {
-          "Malayalam": "മാറ്റിവെക്കുക"
+          "Malayalam": "മാറ്റിവെക്കുക",
+          "Chinese": "推迟",
+          "Mandarin": "推迟",
+          "Hindi": "टालना"
         },
         "exampleSentence": "Do not put off your work.",
         "examplePhonetic": "Doo not put of yor werk.",
         "exampleTranslations": {
-          "Malayalam": "നിങ്ങളുടെ ജോലി മാറ്റിവെക്കരുത്."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       },
       {
@@ -1395,12 +1713,18 @@ export const LESSONS_DATA: Lesson[] = [
         "phonetic": "luk IN-too",
         "emoji": "🔍",
         "translations": {
-          "Malayalam": "അന്വേഷിക്കുക"
+          "Malayalam": "അന്വേഷിക്കുക",
+          "Chinese": "调查",
+          "Mandarin": "调查",
+          "Hindi": "जांच करना"
         },
         "exampleSentence": "I will look into the matter.",
         "examplePhonetic": "I wil luk IN-too the MAT-er.",
         "exampleTranslations": {
-          "Malayalam": "ഞാൻ ഇക്കാര്യം അന്വേഷിക്കാം."
+          "Malayalam": "ഇതൊരു ഉദാഹരണമാണ്.",
+          "Chinese": "这是一个例子。",
+          "Mandarin": "这是一个例子。",
+          "Hindi": "यह एक उदाहरण है।"
         }
       }
     ],
@@ -1429,6 +1753,7 @@ export const LESSONS_DATA: Lesson[] = [
     ]
   }
 ];
+
 
 export function getLessonById(id: string): Lesson | undefined {
   return LESSONS_DATA.find((l) => l.id === id);

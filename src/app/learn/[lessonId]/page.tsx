@@ -21,7 +21,7 @@ export default function LessonRunnerPage({ params }: PageProps) {
   const resolvedParams = use(params);
   const lesson = getLessonById(resolvedParams.lessonId);
 
-  const [userLanguage, setUserLanguage] = useState('Malayalam');
+  const [userLanguage, setUserLanguage] = useState('English');
   const [currentStage, setCurrentStage] = useState<'vocab' | 'exercises' | 'completed'>('vocab');
   const [vocabIndex, setVocabIndex] = useState(0);
   const [exerciseIndex, setExerciseIndex] = useState(0);
@@ -261,7 +261,7 @@ export default function LessonRunnerPage({ params }: PageProps) {
                 Meaning in {userLanguage}
               </span>
               <p className="text-xl font-bold text-indigo-900">
-                {currentVocab.translations[userLanguage] || currentVocab.translations['Malayalam']}
+                {currentVocab.translations[userLanguage] || Object.values(currentVocab.translations)[0]}
               </p>
             </div>
 
@@ -277,8 +277,7 @@ export default function LessonRunnerPage({ params }: PageProps) {
                 <AudioButton text={currentVocab.exampleSentence} label="" size="sm" />
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                {currentVocab.exampleTranslations[userLanguage] ||
-                  currentVocab.exampleTranslations['Malayalam']}
+                {currentVocab.exampleTranslations[userLanguage] || Object.values(currentVocab.exampleTranslations)[0]}
               </p>
             </div>
 

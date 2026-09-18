@@ -85,7 +85,7 @@ export default function WordsPage() {
         body: JSON.stringify({
           word: word.word,
           nativeTranslation:
-            word.translations[user?.preferredLanguage || 'Malayalam'] || '',
+            word.translations[user?.preferredLanguage || 'English'] || Object.values(word.translations)[0] || '',
           definition: word.simpleDefinition,
         }),
       });
@@ -125,7 +125,7 @@ export default function WordsPage() {
           id: 'guest',
           name: 'Learner',
           email: '',
-          preferredLanguage: 'Malayalam',
+          preferredLanguage: 'English',
         }
       }
     >
@@ -192,8 +192,7 @@ export default function WordsPage() {
                 {items.map((item) => {
             const isSaved = savedWords.includes(item.word.toLowerCase());
             const nativeWord =
-              item.translations[user?.preferredLanguage || 'Malayalam'] ||
-              item.translations['Malayalam'];
+              item.translations[user?.preferredLanguage || 'English'] || Object.values(item.translations)[0];
 
             return (
               <div
@@ -236,7 +235,7 @@ export default function WordsPage() {
                   {/* Native Translation */}
                   <div className="mt-4 p-3 bg-indigo-50/70 border border-indigo-100 rounded-xl">
                     <span className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">
-                      Meaning in {user?.preferredLanguage || 'Malayalam'}
+                      Meaning in {user?.preferredLanguage || 'your language'}
                     </span>
                     <p className="font-bold text-base text-indigo-950">{nativeWord}</p>
                   </div>

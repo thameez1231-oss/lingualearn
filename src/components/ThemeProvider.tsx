@@ -13,15 +13,12 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("light");
-  const [mounted, setMounted] = useState(false);
+  
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-    const stored = localStorage.getItem("langualearn-theme") as Theme | null;
+            const stored = localStorage.getItem("langualearn-theme") as Theme | null;
     if (stored === "dark" || stored === "light") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setThemeState(stored);
+            setTimeout(() => setThemeState(stored), 0);
       if (stored === "dark") {
         document.documentElement.classList.add("dark");
       } else {
@@ -29,8 +26,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       }
     } else {
       const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setThemeState(prefersDark ? "dark" : "light");
+            setTimeout(() => setThemeState(prefersDark ? "dark" : "light"), 0);
       if (prefersDark) {
         document.documentElement.classList.add("dark");
       }
