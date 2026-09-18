@@ -69,6 +69,23 @@ function VerifyEmailContent() {
         </div>
       )}
 
+      {!loading && !token && !verified && (
+        <div className="py-12 space-y-4">
+          <div className="w-20 h-20 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center mx-auto mb-6">
+            <span className="text-3xl">✉️</span>
+          </div>
+          <h2 className="text-2xl font-extrabold text-slate-900 dark:text-slate-50">Check your email</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed">
+            We've sent a verification link to your inbox. Please click the link to verify your account and continue.
+          </p>
+          <div className="pt-6">
+            <Link href="/dev/mailbox" target="_blank" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 underline">
+              Open Development Mailbox (for testing)
+            </Link>
+          </div>
+        </div>
+      )}
+
       {!loading && error && (
         <div className="py-6 space-y-4">
           <div className="w-16 h-16 rounded-full bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center mx-auto">

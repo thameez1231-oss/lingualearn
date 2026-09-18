@@ -5,6 +5,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { AppShell } from '@/components/layout/AppShell';
 import { LESSONS_DATA, getLessonById } from '@/data/lessons';
+import { getLanguageById } from '@/lib/languages';
 import {
   ArrowRight,
   Mic,
@@ -207,7 +208,7 @@ export default async function DashboardPage() {
               </p>
 
               <div className="mt-4 p-3.5 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-xl text-xs text-slate-700 dark:text-slate-300 italic">
-                &ldquo;Say: എനിക്ക് വിശക്കുന്നു or your own words...&rdquo;
+                {`"Say: ${getLanguageById(user.preferredLanguage || 'English').samplePhrase} or your own words..."`}
               </div>
             </div>
 

@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { SUPPORTED_LANGUAGES } from '@/lib/languages';
+import { SUPPORTED_LANGUAGES, getLanguageById } from '@/lib/languages';
 import { AudioButton } from '@/components/ui/AudioButton';
 import { CheckCircle2, Globe, Loader2 } from 'lucide-react';
 
-export function InteractiveHeroDemo() {
-  const [selectedLang, setSelectedLang] = useState('Malayalam');
-  const [inputText, setInputText] = useState('എനിക്ക് വിശക്കുന്നു');
+export function InteractiveHeroDemo({ userLanguage }: { userLanguage?: string }) {
+  const [selectedLang, setSelectedLang] = useState(userLanguage || 'English');
+  const [inputText, setInputText] = useState(getLanguageById(userLanguage || 'English').samplePhrase);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{
     detectedLanguage: string;
@@ -15,8 +15,8 @@ export function InteractiveHeroDemo() {
     englishText: string;
     phoneticGuide: string;
   }>({
-    detectedLanguage: 'Malayalam',
-    nativeText: 'എനിക്ക് വിശക്കുന്നു',
+    detectedLanguage: userLanguage || 'English',
+    nativeText: getLanguageById(userLanguage || 'English').samplePhrase,
     englishText: 'I am hungry.',
     phoneticGuide: 'eye am HUHNG-gree',
   });

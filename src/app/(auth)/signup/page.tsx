@@ -47,7 +47,9 @@ export default function SignupPage() {
       }
 
       // Success -> Instantly authenticated! Redirect to onboarding
-      if (data.user?.onboardingCompleted) {
+      if (data.user?.emailVerified === false) {
+          router.push('/verify-email');
+        } else if (data.user?.onboardingCompleted) {
         router.push('/dashboard');
       } else {
         router.push('/onboarding');

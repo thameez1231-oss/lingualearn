@@ -69,7 +69,7 @@ export default async function LandingPage() {
           </div>
 
           {/* Interactive Live Translation Preview Card */}
-          <InteractiveHeroDemo />
+          <InteractiveHeroDemo userLanguage={user?.preferredLanguage} />
         </div>
       </section>
 

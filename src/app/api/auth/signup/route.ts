@@ -49,8 +49,8 @@ export async function POST(req: Request) {
         name: name.trim(),
         email: emailNorm,
         passwordHash,
-        emailVerified: !hasSmtp,
-        emailVerifiedAt: !hasSmtp ? new Date() : null,
+        emailVerified: false,
+        emailVerifiedAt: null,
       },
     });
 

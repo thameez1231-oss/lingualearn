@@ -84,6 +84,7 @@ export async function POST(req: Request) {
       preferredLanguage: user.preferredLanguage,
       englishLevel: user.englishLevel,
       onboardingCompleted: user.onboardingCompleted,
+      emailVerified: user.emailVerified,
       xp: user.xp,
       streak: user.streak,
       currentLessonId: user.currentLessonId,
@@ -98,6 +99,7 @@ export async function POST(req: Request) {
         preferredLanguage: user.preferredLanguage,
         englishLevel: user.englishLevel,
         onboardingCompleted: user.onboardingCompleted,
+      emailVerified: user.emailVerified,
       },
     });
 
