@@ -103,9 +103,9 @@ function getAppBaseUrl(): string {
   return 'http://localhost:3000';
 }
 
-export async function sendVerificationEmail(email: string, name: string, token: string) {
-  const appUrl = getAppBaseUrl();
-  const verificationLink = `${appUrl}/verify-email?token=${token}`;
+export async function sendVerificationEmail(email: string, name: string, token: string, customBaseUrl?: string) {
+  const appUrl = customBaseUrl || getAppBaseUrl();
+  const verificationLink = `${appUrl}/api/auth/verify-email?token=${token}`;
 
   const html = `
     <!DOCTYPE html>
@@ -163,8 +163,8 @@ export async function sendVerificationEmail(email: string, name: string, token: 
   });
 }
 
-export async function sendPasswordResetEmail(email: string, name: string, token: string) {
-  const appUrl = getAppBaseUrl();
+export async function sendPasswordResetEmail(email: string, name: string, token: string, customBaseUrl?: string) {
+  const appUrl = customBaseUrl || getAppBaseUrl();
   const resetLink = `${appUrl}/reset-password?token=${token}`;
 
   const html = `

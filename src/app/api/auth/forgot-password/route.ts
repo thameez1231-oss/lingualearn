@@ -35,7 +35,8 @@ export async function POST(req: Request) {
         },
       });
 
-      const emailResult = await sendPasswordResetEmail(user.email, user.name, token);
+      const baseUrl = new URL(req.url).origin;
+    const emailResult = await sendPasswordResetEmail(user.email, user.name, token, baseUrl);
 
       return NextResponse.json({
         success: true,

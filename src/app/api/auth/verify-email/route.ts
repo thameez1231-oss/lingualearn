@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   const token = searchParams.get('token');
 
   if (!token) {
-    return NextResponse.redirect(new URL('/login?error=missing_token', req.url));
+    return NextResponse.redirect(new URL('/verify-email?error=missing_token', req.url));
   }
 
   const record = await db.emailVerificationToken.findUnique({
@@ -16,12 +16,12 @@ export async function GET(req: NextRequest) {
   });
 
   if (!record) {
-    return NextResponse.redirect(new URL('/login?error=invalid_token', req.url));
+    return NextResponse.redirect(new URL('/verify-email?error=invalid_token', req.url));
   }
 
   if (record.expiresAt < new Date()) {
     await db.emailVerificationToken.delete({ where: { id: record.id } });
-    return NextResponse.redirect(new URL('/login?error=expired_token', req.url));
+    return NextResponse.redirect(new URL('/verify-email?error=expired_token', req.url));
   }
 
   // Mark user verified in database

@@ -23,10 +23,11 @@ function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
   const statusParam = searchParams.get('status');
+  const errorParam = searchParams.get('error');
 
   const [loading, setLoading] = useState(token ? true : false);
   const [verified, setVerified] = useState(statusParam === 'success');
-  const [error, setError] = useState('');
+  const [error, setError] = useState(errorParam === 'invalid_token' ? 'The verification link is invalid. It may have been used already.' : errorParam === 'expired_token' ? 'The verification link has expired. Please request a new one.' : errorParam ? 'Verification failed.' : '');
 
   const [resendEmail, setResendEmail] = useState('');
   const [resending, setResending] = useState(false);
