@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { chatWithAITutor } from '@/lib/ai';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(req: Request) {
   try {
@@ -60,3 +61,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Tutor service temporarily unavailable.' }, { status: 500 });
   }
 }
+

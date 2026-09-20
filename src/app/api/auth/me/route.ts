@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
+import { getUserProgressStats } from '@/lib/progress';
 
 export async function GET() {
   try {
@@ -10,26 +11,8 @@ export async function GET() {
       return NextResponse.json({ user: null }, { status: 401 });
     }
 
-    // Fetch user stats with resilient fallbacks
-    const [completedLessonsCount, learnedWordsCount, speakingCount] = await Promise.all([
-      db.userProgress
-        .count({
-          where: { userId: user.id, status: 'COMPLETED' },
-        })
-        .catch(() => 0),
-      db.learnedWord
-        .count({
-          where: { userId: user.id },
-        })
-        .catch(() => 0),
-      db.speakingHistory
-        .count({
-          where: { userId: user.id },
-        })
-        .catch(() => 0),
-    ]);
+    const stats = await getUserProgressStats(user.id);
 
-    // Today's date YYYY-MM-DD
     const today = new Date().toISOString().split('T')[0];
     let dailyGoal = null;
     try {
@@ -61,10 +44,13 @@ export async function GET() {
     return NextResponse.json({
       user: {
         ...user,
+        xp: stats.xp,
+        streak: stats.streak,
         stats: {
-          completedLessonsCount,
-          learnedWordsCount,
-          speakingCount,
+          completedLessonsCount: stats.completedLessonsCount,
+          learnedWordsCount: stats.learnedWordsCount,
+          speakingCount: stats.speakingCount,
+          completedLessonIds: stats.completedLessonIds,
           dailyGoal,
         },
       },

@@ -12,19 +12,13 @@ import {
   Clock,
 } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+import { getUserProgressStats } from '@/lib/progress';
+
 export default async function LearnOverviewPage() {
   const user = await getCurrentUser();
-
-  // Fetch completed lessons from DB
-  const userProgress = user
-    ? await db.userProgress
-        .findMany({
-          where: { userId: user.id, status: 'COMPLETED' },
-        })
-        .catch(() => [])
-    : [];
-
-  const completedMap = new Set(userProgress.map((p) => p.lessonId));
+  const stats = user ? await getUserProgressStats(user.id) : null;
+  const completedMap = new Set(stats?.completedLessonIds || []);
 
   // Determine visible modules based on user's englishLevel
   const getVisibleModules = (level?: string) => {
@@ -190,3 +184,4 @@ export default async function LearnOverviewPage() {
     </AppShell>
   );
 }
+

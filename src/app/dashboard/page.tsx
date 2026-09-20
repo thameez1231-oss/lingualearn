@@ -16,6 +16,9 @@ import {
   Award,
 } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+import { getUserProgressStats, calculateProgressPercentage } from '@/lib/progress';
+
 export default async function DashboardPage() {
   const user = await getCurrentUser();
 
@@ -23,60 +26,24 @@ export default async function DashboardPage() {
     redirect('/login');
   }
 
-  // Redirect to onboarding if not done
   if (!user.onboardingCompleted) {
     redirect('/onboarding');
   }
 
-  // Fetch user stats with resilient serverless fallbacks
-  const [completedLessons, learnedWordsCount, speakingCount] = await Promise.all([
-    db.userProgress
-      .findMany({
-        where: { userId: user.id, status: 'COMPLETED' },
-      })
-      .catch(() => []),
-    db.learnedWord
-      .count({
-        where: { userId: user.id },
-      })
-      .catch(() => 0),
-    db.speakingHistory
-      .count({
-        where: { userId: user.id },
-      })
-      .catch(() => 0),
-  ]);
+  const stats = await getUserProgressStats(user.id);
+  user.xp = stats.xp;
+  user.streak = stats.streak;
 
-  // Today's daily goal with serverless fallback
   const today = new Date().toISOString().split('T')[0];
-  let dailyGoal: { wordsLearned: number; speakingMinutes: number; lessonsCompleted: number; isCompleted?: boolean } | null = null;
+  let dailyGoal = null;
   try {
-    dailyGoal = await db.dailyGoal.findUnique({
-      where: {
-        userId_date: {
-          userId: user.id,
-          date: today,
-        },
-      },
-    });
+    dailyGoal = await db.dailyGoal.findUnique({ where: { userId_date: { userId: user.id, date: today } } });
+    if (!dailyGoal) { dailyGoal = await db.dailyGoal.create({ data: { userId: user.id, date: today } }); }
+  } catch { dailyGoal = { wordsLearned: 0, speakingMinutes: 0, lessonsCompleted: 0 }; }
 
-    if (!dailyGoal) {
-      dailyGoal = await db.dailyGoal.create({
-        data: {
-          userId: user.id,
-          date: today,
-        },
-      });
-    }
-  } catch {
-    dailyGoal = {
-      wordsLearned: 0,
-      speakingMinutes: 0,
-      lessonsCompleted: 0,
-      isCompleted: false,
-    };
-  }
-
+  const completedLessons = stats.completedLessonIds.map(id => ({ lessonId: id }));
+  const learnedWordsCount = stats.learnedWordsCount;
+  const speakingCount = stats.speakingCount;
   // Current lesson
   const currentLesson = getLessonById(user.currentLessonId || 'basics-1') || LESSONS_DATA[0];
 
@@ -349,3 +316,4 @@ export default async function DashboardPage() {
     </AppShell>
   );
 }
+

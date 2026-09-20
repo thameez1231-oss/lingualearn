@@ -115,7 +115,7 @@ export default function WordsPage() {
     : words;
     
   // Filter by user's englishLevel
-  displayedWords = displayedWords.filter(w => visibleCategories.includes(w.category.toLowerCase()));
+  displayedWords = displayedWords.filter(w => visibleCategories.includes(w.level.toLowerCase()));
 
 
   return (
@@ -178,7 +178,7 @@ export default function WordsPage() {
         <div className="space-y-10">
           {Object.entries(
             displayedWords.reduce((acc, item) => {
-              const cat = item.category.toUpperCase();
+              const cat = item.level.toUpperCase();
               if (!acc[cat]) acc[cat] = [];
               acc[cat].push(item);
               return acc;
@@ -202,7 +202,7 @@ export default function WordsPage() {
                 <div>
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <span className="text-3xl">{item.emoji}</span>
+                      <span className="text-3xl"></span>
                       <div>
                         <div className="flex items-center gap-2">
                           <h3 className="font-extrabold text-xl text-slate-900 dark:text-slate-50">
@@ -254,7 +254,7 @@ export default function WordsPage() {
                       <AudioButton text={item.exampleSentence} label="" size="sm" />
                     </div>
                     <p className="text-[11px] text-slate-400 mt-0.5">
-                      {item.exampleTranslation}
+                      {item.translations[user?.preferredLanguage || "English"]}
                     </p>
                   </div>
                 </div>
@@ -262,7 +262,7 @@ export default function WordsPage() {
                 <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                   <AudioButton text={item.word} label="Pronounce Word" size="sm" />
                   <span className="text-[11px] font-medium text-slate-400">
-                    Category: {item.category}
+                    Level: {item.level}
                   </span>
                 </div>
               </div>

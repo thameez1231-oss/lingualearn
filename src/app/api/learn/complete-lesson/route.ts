@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { getLessonById, getNextLessonId } from '@/data/lessons';
@@ -102,6 +103,12 @@ export async function POST(req: Request) {
         wordsLearned: lesson.vocabulary.length,
       },
     });
+
+    // FORCE REVALIDATION OF DASHBOARD AND LEARN ROUTES
+    revalidatePath('/dashboard');
+    revalidatePath('/learn');
+    revalidatePath('/profile');
+    revalidatePath('/words');
 
     return NextResponse.json({
       success: true,

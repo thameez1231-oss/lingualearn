@@ -1,4 +1,6 @@
-export interface VocabWord {
+const fs = require('fs');
+
+const output = `export interface VocabWord {
   id: string;
   word: string;
   phonetic: string;
@@ -218,3 +220,5 @@ export function getNextLessonId(currentLessonId: string): string {
   }
   return LESSONS_DATA[currentIndex + 1].id;
 }
+`;
+fs.writeFileSync('src/data/lessons.ts', output);

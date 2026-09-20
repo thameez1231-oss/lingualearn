@@ -503,20 +503,7 @@ export async function chatWithAITutor(
   const isNativeScript = !/^[a-zA-Z0-9\s.,!?'"-]+$/.test(trimmed);
   let isEnglishAttempt = !isNativeScript;
   
-  let detectedCorrection: GrammarCorrection | undefined;
-  if (isEnglishAttempt) {
-    for (const check of GRAMMAR_MISTAKES) {
-      if (check.regex.test(trimmed)) {
-        const betterReplacement = trimmed.replace(check.regex, check.better);
-        detectedCorrection = {
-          original: trimmed,
-          better: betterReplacement,
-          explanation: check.explanation,
-        };
-        break;
-      }
-    }
-  }
+  let detectedCorrection: GrammarCorrection | undefined = undefined;
 
   const geminiKey = process.env.GEMINI_API_KEY?.trim();
   if (geminiKey) {
@@ -533,7 +520,7 @@ export async function chatWithAITutor(
           .map((h) => `${h.role === 'user' ? 'Learner' : 'Coach Maya'}: ${h.text}`)
           .join('\n');
 
-        const prompt = `You are Coach Maya, an encouraging, remarkably smart, empathetic, and friendly English teacher for LanguaLearn.
+        const prompt = `You are Coach Maya, an encouraging, incredibly smart, empathetic, and professional English teacher for LinguaLearn.
 Learner's Native Language: ${userLanguage}
 Learner's English Proficiency: ${englishLevel}
 
@@ -543,33 +530,35 @@ ${conversationContext || 'No previous conversation yet.'}
 Learner's Latest Message: "${trimmed}"
 
 PEDAGOGICAL & CONVERSATIONAL RULES:
-1. UNDERSTAND ANY INPUT:
-   The learner may write in English, their native language (${userLanguage}), or transliterated ${userLanguage}.
-   Always accurately understand their true intent and meaning.
+1. ADAPTIVE INTELLIGENCE:
+   - The learner may write in English, their native script (${userLanguage}), OR transliterated/romanized ${userLanguage} (e.g., Manglish for Malayalam, Pinyin for Chinese, Hinglish for Hindi). 
+   - Accurately understand their true intent, even if heavily transliterated. Do NOT get confused by transliterations.
 
-2. TEACHER BEHAVIOR & RESPONSE STYLE:
-   - Act as a real, warm, supportive English teacher.
-   - Reply directly in natural, friendly English (1 to 3 sentences maximum) appropriate for their level.
-   - If they wrote in ${userLanguage} or transliterated ${userLanguage}, acknowledge their thought warmly and teach them how to express that in natural English.
+2. TEACHER BEHAVIOR:
+   - Act as a real, professional English tutor.
+   - For BEGINNER levels: Explain concepts extremely simply. Do not overwhelm them.
+   - For ADVANCED/PROFESSIONAL levels: Use more sophisticated vocabulary and focus on nuance, idioms, or professional context.
+   - If the user wrote in ${userLanguage} or transliteration, validate their thought warmly, translate it mentally, and teach them how to naturally express that specific thought in English.
+   
+3. SMART CORRECTIONS:
+   - ONLY provide a "correction" object if the user made an English grammatical, word-choice, or tense error.
+   - NEVER correct their ${userLanguage} or transliterated messages. If they write in their native language, set "correction": null.
+   - If you correct them, explicitly explain WHY they were wrong in the "explanation" field.
 
-3. STRICT SMART CORRECTION RULES:
-   - ONLY provide a "correction" object if the user attempted an English sentence AND made an English grammatical/tense/preposition error.
-   - NEVER provide a "correction" object for ${userLanguage} messages! For those, set "correction": null.
-   - NEVER provide a "correction" object if the user's English is already correct. Set "correction": null.
-
-4. CLEAN UI & AVOID DUPLICATION:
-   - Keep English as the primary response language.
-   - In "replyNative", provide ONLY a brief 1-sentence ${userLanguage} translation of your main thought or a brief encouragement in ${userLanguage}. NEVER duplicate or re-translate the entire English paragraph twice.
-   - NEVER output any HTML, SVG, XML tags.
+4. LANGUAGE ISOLATION (CRITICAL):
+   - ONLY use English and ${userLanguage}. 
+   - NEVER use any other language. NEVER assume they speak Malayalam unless ${userLanguage} is Malayalam.
+   - "replyEnglish" is your main teaching response (1-4 natural sentences).
+   - "replyNative" is a supportive translation, explanation, or encouragement strictly in ${userLanguage} script.
 
 5. SUGGESTIONS:
-   - Provide 3 short, natural English sentences the learner can say or click next.
+   - Provide 3 contextually relevant, natural English sentences the learner can say next to keep the conversation flowing.
 
 Return PURE JSON ONLY with this schema:
 {
-  "replyEnglish": "your clear English reply",
-  "replyNative": "short 1-sentence ${userLanguage} summary or encouragement",
-  "correction": null or {"original": "learner's English mistake", "better": "corrected English sentence", "explanation": "friendly 1-sentence rule tip"},
+  "replyEnglish": "your main English teaching reply",
+  "replyNative": "helpful translation/encouragement strictly in ${userLanguage}",
+  "correction": null or {"original": "the exact mistake", "better": "natural correction", "explanation": "Why this is correct"},
   "suggestions": ["suggestion 1", "suggestion 2", "suggestion 3"]
 }`;
 
@@ -598,7 +587,7 @@ Return PURE JSON ONLY with this schema:
                 original: sanitizeTutorText(parsed.correction.original),
                 better: sanitizeTutorText(parsed.correction.better),
                 explanation: sanitizeTutorText(parsed.correction.explanation)
-              } : (isEnglishAttempt ? detectedCorrection : undefined),
+              } : undefined,
               suggestions: (parsed.suggestions || []).map((s: string) => sanitizeTutorText(s)).slice(0, 3)
             };
           }
@@ -619,12 +608,6 @@ Return PURE JSON ONLY with this schema:
   const naturalPhrase = naturalizeEnglish(englishMeaning);
   let replyEnglish = `That is great! A clear way to express this in English is: "${naturalPhrase}". Try saying it aloud!`;
   let replyNative = `Practice saying this naturally in English!`;
-  
-  if (isEnglishAttempt && detectedCorrection) {
-    replyEnglish = `Almost! A more natural way to say that is: "${detectedCorrection.better}". Remember: ${detectedCorrection.explanation}`;
-  } else if (isEnglishAttempt) {
-    replyEnglish = `Great! Your English is coming along wonderfully. Keep it up!`;
-  }
 
   try {
      const fallbackTranslation = await fetchNeuralTranslation(replyNative, 'en', userLangCode);
@@ -634,7 +617,7 @@ Return PURE JSON ONLY with this schema:
   return {
     replyEnglish: sanitizeTutorText(replyEnglish),
     replyNative: sanitizeTutorText(replyNative),
-    correction: isEnglishAttempt ? detectedCorrection : undefined,
+    correction: undefined,
     suggestions: [naturalPhrase, 'Can you explain that again?', 'What should I say next?'].map(s => sanitizeTutorText(s)),
   };
 }
