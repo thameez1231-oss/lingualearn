@@ -105,7 +105,7 @@ function getAppBaseUrl(): string {
 
 export async function sendVerificationEmail(email: string, name: string, token: string, customBaseUrl?: string) {
   const appUrl = customBaseUrl || getAppBaseUrl();
-  const verificationLink = `${appUrl}/api/auth/verify-email?token=${token}`;
+  const verificationLink = `${appUrl}/verify-email?token=${token}`;
 
   const html = `
     <!DOCTYPE html>

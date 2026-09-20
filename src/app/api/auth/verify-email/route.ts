@@ -10,50 +10,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL('/verify-email?error=missing_token', req.url));
   }
 
-  const record = await db.emailVerificationToken.findUnique({
-    where: { token },
-    include: { user: true },
-  });
-
-  if (!record) {
-    return NextResponse.redirect(new URL('/verify-email?error=invalid_token', req.url));
-  }
-
-  if (record.expiresAt < new Date()) {
-    await db.emailVerificationToken.delete({ where: { id: record.id } });
-    return NextResponse.redirect(new URL('/verify-email?error=expired_token', req.url));
-  }
-
-  // Mark user verified in database
-  await db.user.update({
-    where: { id: record.userId },
-    data: {
-      emailVerified: true,
-      emailVerifiedAt: new Date(),
-    },
-  });
-
-  // Remove used token
-  await db.emailVerificationToken.delete({ where: { id: record.id } });
-
-  // Automatically create session and sign user in
-  const jwt = await createSession(record.userId);
-
-  // Redirect to verify success page (which celebrates and leads to onboarding)
-  const redirectUrl = new URL('/verify-email?status=success', req.url);
-  const response = NextResponse.redirect(redirectUrl);
-
-  response.cookies.set({
-    name: SESSION_COOKIE_NAME,
-    value: jwt,
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 30 * 24 * 60 * 60,
-  });
-
-  return response;
+  // Safe redirect to frontend, no DB mutation on GET to prevent email scanner token destruction
+  return NextResponse.redirect(new URL(`/verify-email?token=${token}`, req.url));
 }
 
 export async function POST(req: Request) {

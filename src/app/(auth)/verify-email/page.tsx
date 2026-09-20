@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Loader2, AlertCircle, ArrowRight, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -21,12 +21,15 @@ function triggerConfetti() {
 
 function VerifyEmailContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const token = searchParams.get('token');
   const statusParam = searchParams.get('status');
   const errorParam = searchParams.get('error');
+  const redirectDest = searchParams.get('redirect');
 
   const [loading, setLoading] = useState(token ? true : false);
   const [verified, setVerified] = useState(statusParam === 'success');
+  const [isNewUser, setIsNewUser] = useState(true);
   const [error, setError] = useState(errorParam === 'invalid_token' ? 'The verification link is invalid. It may have been used already.' : errorParam === 'expired_token' ? 'The verification link has expired. Please request a new one.' : errorParam ? 'Verification failed.' : '');
 
   const [resendEmail, setResendEmail] = useState('');
@@ -52,7 +55,8 @@ function VerifyEmailContent() {
       const res = await fetch('/api/auth/resend-verification', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: resendEmail })
+        body: JSON.stringify({ email: resendEmail }),
+        credentials: 'same-origin',
       });
       const data = await res.json();
       if (res.ok) {
@@ -80,11 +84,14 @@ function VerifyEmailContent() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token }),
+            credentials: 'same-origin',
           });
           const data = await res.json();
           if (res.ok && data.success) {
             setVerified(true);
+            setIsNewUser(!data.user?.onboardingCompleted);
             triggerConfetti();
+            router.refresh();
           } else {
             setError(data.error || 'Verification failed. The link may have expired.');
           }
@@ -173,23 +180,37 @@ function VerifyEmailContent() {
             </p>
           </div>
 
-          <div className="p-4 bg-indigo-50/70 border border-indigo-100 rounded-xl text-left flex items-start gap-3">
-            <Sparkles className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
-            <div className="text-xs text-slate-600 dark:text-slate-400">
-              <span className="font-bold text-indigo-900 block mb-0.5">Next step: Quick Onboarding</span>
-              Choose your native language (Malayalam, Hindi, etc.) and your starting English level.
-            </div>
-          </div>
+          {isNewUser ? (
+            <>
+              <div className="p-4 bg-indigo-50/70 border border-indigo-100 rounded-xl text-left flex items-start gap-3">
+                <Sparkles className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
+                <div className="text-xs text-slate-600 dark:text-slate-400">
+                  <span className="font-bold text-indigo-900 block mb-0.5">Next step: Quick Onboarding</span>
+                  Choose your native language and your starting English level.
+                </div>
+              </div>
 
-          <div className="pt-2">
-            <Link
-              href="/onboarding"
-              className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl text-base font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-98 transition-all shadow-sm dark:shadow-none shadow-indigo-100"
-            >
-              <span>Continue to Onboarding</span>
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
+              <div className="pt-2">
+                <Link
+                  href="/onboarding"
+                  className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl text-base font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-98 transition-all shadow-sm dark:shadow-none shadow-indigo-100"
+                >
+                  <span>Continue to Onboarding</span>
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </div>
+            </>
+          ) : (
+            <div className="pt-2">
+              <Link
+                href={redirectDest || '/dashboard'}
+                className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl text-base font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-98 transition-all shadow-sm dark:shadow-none shadow-indigo-100"
+              >
+                <span>{redirectDest ? 'Return to Application' : 'Go to Dashboard'}</span>
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </div>

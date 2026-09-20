@@ -46,7 +46,11 @@ export async function middleware(req: NextRequest) {
   // If accessing protected routes while unauthenticated, redirect to login
   const isProtected = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
   if (isProtected && isAuthenticated && !isEmailVerified) {
-    return NextResponse.redirect(new URL('/verify-email', req.url));
+    const verifyUrl = new URL('/verify-email', req.url);
+    if (pathname !== '/dashboard') {
+      verifyUrl.searchParams.set('redirect', pathname);
+    }
+    return NextResponse.redirect(verifyUrl);
   }
 
   if (isProtected && !isAuthenticated) {
