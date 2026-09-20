@@ -22,7 +22,7 @@ async function seed() {
       onboardingCompleted: true,
       xp: 420,
       streak: 7,
-      currentLessonId: 'everyday-intro',
+      currentLessonId: 'beginner-1',
     },
   });
 

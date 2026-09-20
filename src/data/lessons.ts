@@ -35,13 +35,14 @@ export interface Lesson {
   vocabulary: VocabWord[];
   exercises: ExerciseItem[];
   order: number;
+  isCheckpoint?: boolean;
 }
 
 export const LESSONS_DATA: Lesson[] = [
   {
     id: "beginner-1",
     moduleId: "beginner",
-    moduleTitle: "Beginner",
+    moduleTitle: "BEGINNER",
     moduleBadge: "🌟 Beginner",
     title: "Everyday Activities",
     subtitle: "Learn to talk about your daily routine.",
@@ -49,8 +50,7 @@ export const LESSONS_DATA: Lesson[] = [
     xpReward: 50,
     estimatedMinutes: 5,
     order: 1,
-    vocabulary: [
-      {
+    vocabulary: [{
         id: "v-wake", word: "wake", phonetic: "wayk", emoji: "🌅",
         translations: { Malayalam: "ഉണരുക", Chinese: "醒来", Hindi: "जागना", Spanish: "Despertar", English: "wake" },
         exampleSentence: "I wake up at seven.", examplePhonetic: "", exampleTranslations: {}
@@ -64,38 +64,60 @@ export const LESSONS_DATA: Lesson[] = [
         id: "v-eat", word: "eat", phonetic: "eet", emoji: "🌅",
         translations: { Malayalam: "കഴിക്കുക", Chinese: "吃", Hindi: "खाना", Spanish: "Comer", English: "eat" },
         exampleSentence: "I eat breakfast.", examplePhonetic: "", exampleTranslations: {}
-      }
-    ],
+      }],
     exercises: [
       {
-        id: "ex-beginner-1-0", type: "multiple_choice", question: "Which word means to consume food?", audioPrompt: "",
+        id: "ex-beginner-1-0", type: "multiple_choice", question: "Which word is correct?", audioPrompt: "",
         options: [
-          { text: "eat", isCorrect: true },
+          { text: "wake", isCorrect: true },
           { text: "sleep", isCorrect: false },
-          { text: "wake", isCorrect: false }
+          { text: "eat", isCorrect: false }
         ],
-        explanation: "The correct answer is eat."
+        explanation: "The correct answer is wake."
       },
       {
-        id: "ex-beginner-1-1", type: "sentence_builder", question: "Build the sentence:",
-        correctSentence: "I eat breakfast", scrambledWords: ["I","eat","breakfast","sleep"],
-        explanation: "Correct order: I eat breakfast."
+        id: "ex-beginner-1-1", type: "sentence_builder", question: "Build a sentence:",
+        correctSentence: "this is wake", scrambledWords: ["this", "is", "wake", "sleep"],
+        explanation: "Correct order: this is wake."
+      }
+    ]
+  },
+  {
+    id: "checkpoint-beginner-1",
+    moduleId: "beginner",
+    moduleTitle: "BEGINNER",
+    moduleBadge: "🌟 Beginner",
+    title: "Checkpoint: Everyday Activities",
+    subtitle: "Pass this checkpoint to unlock the next lesson.",
+    icon: "🎯",
+    xpReward: 50,
+    estimatedMinutes: 3,
+    order: 2,
+    isCheckpoint: true,
+    vocabulary: [],
+    exercises: [
+      {
+        id: "ex-chk-beginner-1-0", type: "multiple_choice", question: "Checkpoint Question: Select the correct word.", audioPrompt: "",
+        options: [
+          { text: "wake", isCorrect: true },
+          { text: "Wrong", isCorrect: false }
+        ],
+        explanation: "Checkpoint passed."
       }
     ]
   },
   {
     id: "beginner-2",
     moduleId: "beginner",
-    moduleTitle: "Beginner",
+    moduleTitle: "BEGINNER",
     moduleBadge: "🌟 Beginner",
     title: "Shopping & Basic Requests",
     subtitle: "Learn to buy things and ask for prices.",
     icon: "🛒",
     xpReward: 50,
     estimatedMinutes: 5,
-    order: 2,
-    vocabulary: [
-      {
+    order: 3,
+    vocabulary: [{
         id: "v-price", word: "price", phonetic: "prys", emoji: "🛒",
         translations: { Malayalam: "വില", Chinese: "价格", Hindi: "कीमत", Spanish: "Precio", English: "price" },
         exampleSentence: "What is the price?", examplePhonetic: "", exampleTranslations: {}
@@ -109,38 +131,60 @@ export const LESSONS_DATA: Lesson[] = [
         id: "v-cheap", word: "cheap", phonetic: "cheep", emoji: "🛒",
         translations: { Malayalam: "വിലകുറഞ്ഞ", Chinese: "便宜", Hindi: "सस्ता", Spanish: "Barato", English: "cheap" },
         exampleSentence: "This is very cheap.", examplePhonetic: "", exampleTranslations: {}
-      }
-    ],
+      }],
     exercises: [
       {
-        id: "ex-beginner-2-0", type: "listen_choose", question: "Listen and choose the word.", audioPrompt: "cheap",
+        id: "ex-beginner-2-0", type: "multiple_choice", question: "Which word is correct?", audioPrompt: "",
         options: [
-          { text: "cheap", isCorrect: true },
-          { text: "price", isCorrect: false },
-          { text: "buy", isCorrect: false }
+          { text: "price", isCorrect: true },
+          { text: "buy", isCorrect: false },
+          { text: "cheap", isCorrect: false }
         ],
-        explanation: "The correct answer is cheap."
+        explanation: "The correct answer is price."
       },
       {
-        id: "ex-beginner-2-1", type: "sentence_builder", question: "Build the sentence:",
-        correctSentence: "I want to buy this", scrambledWords: ["I","want","to","buy","this","cheap"],
-        explanation: "Correct order: I want to buy this."
+        id: "ex-beginner-2-1", type: "sentence_builder", question: "Build a sentence:",
+        correctSentence: "this is price", scrambledWords: ["this", "is", "price", "buy"],
+        explanation: "Correct order: this is price."
+      }
+    ]
+  },
+  {
+    id: "checkpoint-beginner-2",
+    moduleId: "beginner",
+    moduleTitle: "BEGINNER",
+    moduleBadge: "🌟 Beginner",
+    title: "Checkpoint: Shopping & Basic Requests",
+    subtitle: "Pass this checkpoint to unlock the next lesson.",
+    icon: "🎯",
+    xpReward: 50,
+    estimatedMinutes: 3,
+    order: 4,
+    isCheckpoint: true,
+    vocabulary: [],
+    exercises: [
+      {
+        id: "ex-chk-beginner-2-0", type: "multiple_choice", question: "Checkpoint Question: Select the correct word.", audioPrompt: "",
+        options: [
+          { text: "price", isCorrect: true },
+          { text: "Wrong", isCorrect: false }
+        ],
+        explanation: "Checkpoint passed."
       }
     ]
   },
   {
     id: "elementary-1",
     moduleId: "elementary",
-    moduleTitle: "Elementary",
+    moduleTitle: "ELEMENTARY",
     moduleBadge: "🚶 Elementary",
     title: "Travel & Directions",
     subtitle: "Navigate the city and take transport.",
     icon: "🚉",
-    xpReward: 60,
-    estimatedMinutes: 6,
-    order: 3,
-    vocabulary: [
-      {
+    xpReward: 50,
+    estimatedMinutes: 5,
+    order: 5,
+    vocabulary: [{
         id: "v-station", word: "station", phonetic: "STAY-shun", emoji: "🚉",
         translations: { Malayalam: "സ്റ്റേഷൻ", Chinese: "车站", Hindi: "स्टेशन", Spanish: "Estación", English: "station" },
         exampleSentence: "Where is the train station?", examplePhonetic: "", exampleTranslations: {}
@@ -154,34 +198,60 @@ export const LESSONS_DATA: Lesson[] = [
         id: "v-ticket", word: "ticket", phonetic: "TIK-it", emoji: "🚉",
         translations: { Malayalam: "ടിക്കറ്റ്", Chinese: "票", Hindi: "टिकट", Spanish: "Boleto", English: "ticket" },
         exampleSentence: "I need a ticket.", examplePhonetic: "", exampleTranslations: {}
-      }
-    ],
+      }],
     exercises: [
       {
-        id: "ex-elementary-1-0", type: "matching", question: "Match the definitions",
-        pairs: [{"left":"station","right":"where trains stop"},{"left":"ticket","right":"paper to travel"}],
-        explanation: "Matching definitions."
+        id: "ex-elementary-1-0", type: "multiple_choice", question: "Which word is correct?", audioPrompt: "",
+        options: [
+          { text: "station", isCorrect: true },
+          { text: "left", isCorrect: false },
+          { text: "ticket", isCorrect: false }
+        ],
+        explanation: "The correct answer is station."
       },
       {
-        id: "ex-elementary-1-1", type: "sentence_builder", question: "Build the sentence:",
-        correctSentence: "where is the station", scrambledWords: ["where","is","the","station","ticket"],
-        explanation: "Correct order: where is the station."
+        id: "ex-elementary-1-1", type: "sentence_builder", question: "Build a sentence:",
+        correctSentence: "this is station", scrambledWords: ["this", "is", "station", "left"],
+        explanation: "Correct order: this is station."
+      }
+    ]
+  },
+  {
+    id: "checkpoint-elementary-1",
+    moduleId: "elementary",
+    moduleTitle: "ELEMENTARY",
+    moduleBadge: "🚶 Elementary",
+    title: "Checkpoint: Travel & Directions",
+    subtitle: "Pass this checkpoint to unlock the next lesson.",
+    icon: "🎯",
+    xpReward: 50,
+    estimatedMinutes: 3,
+    order: 6,
+    isCheckpoint: true,
+    vocabulary: [],
+    exercises: [
+      {
+        id: "ex-chk-elementary-1-0", type: "multiple_choice", question: "Checkpoint Question: Select the correct word.", audioPrompt: "",
+        options: [
+          { text: "station", isCorrect: true },
+          { text: "Wrong", isCorrect: false }
+        ],
+        explanation: "Checkpoint passed."
       }
     ]
   },
   {
     id: "elementary-2",
     moduleId: "elementary",
-    moduleTitle: "Elementary",
+    moduleTitle: "ELEMENTARY",
     moduleBadge: "🚶 Elementary",
     title: "Daily Conversations",
     subtitle: "Talk about hobbies and family.",
     icon: "👨‍👩‍👧‍👦",
-    xpReward: 60,
-    estimatedMinutes: 6,
-    order: 4,
-    vocabulary: [
-      {
+    xpReward: 50,
+    estimatedMinutes: 5,
+    order: 7,
+    vocabulary: [{
         id: "v-hobby", word: "hobby", phonetic: "HOB-ee", emoji: "👨‍👩‍👧‍👦",
         translations: { Malayalam: "വിനോദം", Chinese: "爱好", Hindi: "शौक", Spanish: "Pasatiempo", English: "hobby" },
         exampleSentence: "What is your hobby?", examplePhonetic: "", exampleTranslations: {}
@@ -195,38 +265,60 @@ export const LESSONS_DATA: Lesson[] = [
         id: "v-family", word: "family", phonetic: "FAM-ih-lee", emoji: "👨‍👩‍👧‍👦",
         translations: { Malayalam: "കുടുംബം", Chinese: "家庭", Hindi: "परिवार", Spanish: "Familia", English: "family" },
         exampleSentence: "I love my family.", examplePhonetic: "", exampleTranslations: {}
-      }
-    ],
+      }],
     exercises: [
       {
-        id: "ex-elementary-2-0", type: "multiple_choice", question: "Which word means parents and children?", audioPrompt: "",
+        id: "ex-elementary-2-0", type: "multiple_choice", question: "Which word is correct?", audioPrompt: "",
         options: [
-          { text: "family", isCorrect: true },
-          { text: "hobby", isCorrect: false },
-          { text: "plan", isCorrect: false }
+          { text: "hobby", isCorrect: true },
+          { text: "plan", isCorrect: false },
+          { text: "family", isCorrect: false }
         ],
-        explanation: "The correct answer is family."
+        explanation: "The correct answer is hobby."
       },
       {
-        id: "ex-elementary-2-1", type: "sentence_builder", question: "Build the sentence:",
-        correctSentence: "I love my family", scrambledWords: ["I","love","my","family","plan"],
-        explanation: "Correct order: I love my family."
+        id: "ex-elementary-2-1", type: "sentence_builder", question: "Build a sentence:",
+        correctSentence: "this is hobby", scrambledWords: ["this", "is", "hobby", "plan"],
+        explanation: "Correct order: this is hobby."
+      }
+    ]
+  },
+  {
+    id: "checkpoint-elementary-2",
+    moduleId: "elementary",
+    moduleTitle: "ELEMENTARY",
+    moduleBadge: "🚶 Elementary",
+    title: "Checkpoint: Daily Conversations",
+    subtitle: "Pass this checkpoint to unlock the next lesson.",
+    icon: "🎯",
+    xpReward: 50,
+    estimatedMinutes: 3,
+    order: 8,
+    isCheckpoint: true,
+    vocabulary: [],
+    exercises: [
+      {
+        id: "ex-chk-elementary-2-0", type: "multiple_choice", question: "Checkpoint Question: Select the correct word.", audioPrompt: "",
+        options: [
+          { text: "hobby", isCorrect: true },
+          { text: "Wrong", isCorrect: false }
+        ],
+        explanation: "Checkpoint passed."
       }
     ]
   },
   {
     id: "intermediate-1",
     moduleId: "intermediate",
-    moduleTitle: "Intermediate",
+    moduleTitle: "INTERMEDIATE",
     moduleBadge: "💬 Intermediate",
     title: "Work & Communication",
     subtitle: "Discuss plans and schedules.",
     icon: "💼",
-    xpReward: 70,
-    estimatedMinutes: 7,
-    order: 5,
-    vocabulary: [
-      {
+    xpReward: 50,
+    estimatedMinutes: 5,
+    order: 9,
+    vocabulary: [{
         id: "v-meeting", word: "meeting", phonetic: "MEE-ting", emoji: "💼",
         translations: { Malayalam: "യോഗം", Chinese: "会议", Hindi: "बैठक", Spanish: "Reunión", English: "meeting" },
         exampleSentence: "We have a meeting.", examplePhonetic: "", exampleTranslations: {}
@@ -240,38 +332,60 @@ export const LESSONS_DATA: Lesson[] = [
         id: "v-schedule", word: "schedule", phonetic: "SKEJ-ool", emoji: "💼",
         translations: { Malayalam: "സമയക്രമം", Chinese: "日程", Hindi: "अनुसूची", Spanish: "Horario", English: "schedule" },
         exampleSentence: "My schedule is full.", examplePhonetic: "", exampleTranslations: {}
-      }
-    ],
+      }],
     exercises: [
       {
-        id: "ex-intermediate-1-0", type: "multiple_choice", question: "Which word means a plan of times?", audioPrompt: "",
+        id: "ex-intermediate-1-0", type: "multiple_choice", question: "Which word is correct?", audioPrompt: "",
         options: [
-          { text: "schedule", isCorrect: true },
-          { text: "meeting", isCorrect: false },
-          { text: "discuss", isCorrect: false }
+          { text: "meeting", isCorrect: true },
+          { text: "discuss", isCorrect: false },
+          { text: "schedule", isCorrect: false }
         ],
-        explanation: "The correct answer is schedule."
+        explanation: "The correct answer is meeting."
       },
       {
-        id: "ex-intermediate-1-1", type: "sentence_builder", question: "Build the sentence:",
-        correctSentence: "we have a meeting", scrambledWords: ["we","have","a","meeting","discuss"],
-        explanation: "Correct order: we have a meeting."
+        id: "ex-intermediate-1-1", type: "sentence_builder", question: "Build a sentence:",
+        correctSentence: "this is meeting", scrambledWords: ["this", "is", "meeting", "discuss"],
+        explanation: "Correct order: this is meeting."
+      }
+    ]
+  },
+  {
+    id: "checkpoint-intermediate-1",
+    moduleId: "intermediate",
+    moduleTitle: "INTERMEDIATE",
+    moduleBadge: "💬 Intermediate",
+    title: "Checkpoint: Work & Communication",
+    subtitle: "Pass this checkpoint to unlock the next lesson.",
+    icon: "🎯",
+    xpReward: 50,
+    estimatedMinutes: 3,
+    order: 10,
+    isCheckpoint: true,
+    vocabulary: [],
+    exercises: [
+      {
+        id: "ex-chk-intermediate-1-0", type: "multiple_choice", question: "Checkpoint Question: Select the correct word.", audioPrompt: "",
+        options: [
+          { text: "meeting", isCorrect: true },
+          { text: "Wrong", isCorrect: false }
+        ],
+        explanation: "Checkpoint passed."
       }
     ]
   },
   {
     id: "intermediate-2",
     moduleId: "intermediate",
-    moduleTitle: "Intermediate",
+    moduleTitle: "INTERMEDIATE",
     moduleBadge: "💬 Intermediate",
     title: "Opinions & Experiences",
     subtitle: "Share your thoughts and agree with others.",
     icon: "🧠",
-    xpReward: 70,
-    estimatedMinutes: 7,
-    order: 6,
-    vocabulary: [
-      {
+    xpReward: 50,
+    estimatedMinutes: 5,
+    order: 11,
+    vocabulary: [{
         id: "v-opinion", word: "opinion", phonetic: "uh-PIN-yun", emoji: "🧠",
         translations: { Malayalam: "അഭിപ്രായം", Chinese: "意见", Hindi: "राय", Spanish: "Opinión", English: "opinion" },
         exampleSentence: "In my opinion, it is good.", examplePhonetic: "", exampleTranslations: {}
@@ -285,11 +399,10 @@ export const LESSONS_DATA: Lesson[] = [
         id: "v-story", word: "story", phonetic: "STOR-ee", emoji: "🧠",
         translations: { Malayalam: "കഥ", Chinese: "故事", Hindi: "कहानी", Spanish: "Historia", English: "story" },
         exampleSentence: "Tell me a story.", examplePhonetic: "", exampleTranslations: {}
-      }
-    ],
+      }],
     exercises: [
       {
-        id: "ex-intermediate-2-0", type: "listen_choose", question: "Listen and choose the word.", audioPrompt: "opinion",
+        id: "ex-intermediate-2-0", type: "multiple_choice", question: "Which word is correct?", audioPrompt: "",
         options: [
           { text: "opinion", isCorrect: true },
           { text: "agree", isCorrect: false },
@@ -298,25 +411,48 @@ export const LESSONS_DATA: Lesson[] = [
         explanation: "The correct answer is opinion."
       },
       {
-        id: "ex-intermediate-2-1", type: "sentence_builder", question: "Build the sentence:",
-        correctSentence: "I agree with you", scrambledWords: ["I","agree","with","you","opinion"],
-        explanation: "Correct order: I agree with you."
+        id: "ex-intermediate-2-1", type: "sentence_builder", question: "Build a sentence:",
+        correctSentence: "this is opinion", scrambledWords: ["this", "is", "opinion", "agree"],
+        explanation: "Correct order: this is opinion."
+      }
+    ]
+  },
+  {
+    id: "checkpoint-intermediate-2",
+    moduleId: "intermediate",
+    moduleTitle: "INTERMEDIATE",
+    moduleBadge: "💬 Intermediate",
+    title: "Checkpoint: Opinions & Experiences",
+    subtitle: "Pass this checkpoint to unlock the next lesson.",
+    icon: "🎯",
+    xpReward: 50,
+    estimatedMinutes: 3,
+    order: 12,
+    isCheckpoint: true,
+    vocabulary: [],
+    exercises: [
+      {
+        id: "ex-chk-intermediate-2-0", type: "multiple_choice", question: "Checkpoint Question: Select the correct word.", audioPrompt: "",
+        options: [
+          { text: "opinion", isCorrect: true },
+          { text: "Wrong", isCorrect: false }
+        ],
+        explanation: "Checkpoint passed."
       }
     ]
   },
   {
     id: "upper-intermediate-1",
     moduleId: "upper_intermediate",
-    moduleTitle: "Upper-Intermediate",
+    moduleTitle: "UPPER_INTERMEDIATE",
     moduleBadge: "⚖️ Upper-Intermediate",
     title: "Problem Solving",
     subtitle: "Resolve issues effectively.",
     icon: "🧩",
-    xpReward: 80,
-    estimatedMinutes: 8,
-    order: 7,
-    vocabulary: [
-      {
+    xpReward: 50,
+    estimatedMinutes: 5,
+    order: 13,
+    vocabulary: [{
         id: "v-alternative", word: "alternative", phonetic: "awl-TUR-nuh-tiv", emoji: "🧩",
         translations: { Malayalam: "ബദൽ", Chinese: "替代", Hindi: "विकल्प", Spanish: "Alternativa", English: "alternative" },
         exampleSentence: "We need an alternative.", examplePhonetic: "", exampleTranslations: {}
@@ -330,34 +466,60 @@ export const LESSONS_DATA: Lesson[] = [
         id: "v-effective", word: "effective", phonetic: "ih-FEK-tiv", emoji: "🧩",
         translations: { Malayalam: "ഫലപ്രദമായ", Chinese: "有效", Hindi: "प्रभावी", Spanish: "Efectivo", English: "effective" },
         exampleSentence: "This is an effective method.", examplePhonetic: "", exampleTranslations: {}
-      }
-    ],
+      }],
     exercises: [
       {
-        id: "ex-upper-intermediate-1-0", type: "matching", question: "Match the definitions",
-        pairs: [{"left":"alternative","right":"another option"},{"left":"resolve","right":"find a solution"}],
-        explanation: "Matching definitions."
+        id: "ex-upper-intermediate-1-0", type: "multiple_choice", question: "Which word is correct?", audioPrompt: "",
+        options: [
+          { text: "alternative", isCorrect: true },
+          { text: "resolve", isCorrect: false },
+          { text: "effective", isCorrect: false }
+        ],
+        explanation: "The correct answer is alternative."
       },
       {
-        id: "ex-upper-intermediate-1-1", type: "sentence_builder", question: "Build the sentence:",
-        correctSentence: "this is an effective alternative", scrambledWords: ["this","is","an","effective","alternative"],
-        explanation: "Correct order: this is an effective alternative."
+        id: "ex-upper-intermediate-1-1", type: "sentence_builder", question: "Build a sentence:",
+        correctSentence: "this is alternative", scrambledWords: ["this", "is", "alternative", "resolve"],
+        explanation: "Correct order: this is alternative."
+      }
+    ]
+  },
+  {
+    id: "checkpoint-upper-intermediate-1",
+    moduleId: "upper_intermediate",
+    moduleTitle: "UPPER_INTERMEDIATE",
+    moduleBadge: "⚖️ Upper-Intermediate",
+    title: "Checkpoint: Problem Solving",
+    subtitle: "Pass this checkpoint to unlock the next lesson.",
+    icon: "🎯",
+    xpReward: 50,
+    estimatedMinutes: 3,
+    order: 14,
+    isCheckpoint: true,
+    vocabulary: [],
+    exercises: [
+      {
+        id: "ex-chk-upper-intermediate-1-0", type: "multiple_choice", question: "Checkpoint Question: Select the correct word.", audioPrompt: "",
+        options: [
+          { text: "alternative", isCorrect: true },
+          { text: "Wrong", isCorrect: false }
+        ],
+        explanation: "Checkpoint passed."
       }
     ]
   },
   {
     id: "upper-intermediate-2",
     moduleId: "upper_intermediate",
-    moduleTitle: "Upper-Intermediate",
+    moduleTitle: "UPPER_INTERMEDIATE",
     moduleBadge: "⚖️ Upper-Intermediate",
     title: "Discussion & Debate",
     subtitle: "Express nuanced arguments.",
     icon: "🗣️",
-    xpReward: 80,
-    estimatedMinutes: 8,
-    order: 8,
-    vocabulary: [
-      {
+    xpReward: 50,
+    estimatedMinutes: 5,
+    order: 15,
+    vocabulary: [{
         id: "v-argument", word: "argument", phonetic: "AR-gyoo-ment", emoji: "🗣️",
         translations: { Malayalam: "വാദം", Chinese: "论点", Hindi: "तर्क", Spanish: "Argumento", English: "argument" },
         exampleSentence: "That is a strong argument.", examplePhonetic: "", exampleTranslations: {}
@@ -371,38 +533,60 @@ export const LESSONS_DATA: Lesson[] = [
         id: "v-compare", word: "compare", phonetic: "kum-PAIR", emoji: "🗣️",
         translations: { Malayalam: "താരതമ്യം ചെയ്യുക", Chinese: "比较", Hindi: "तुलना करना", Spanish: "Comparar", English: "compare" },
         exampleSentence: "Compare these two ideas.", examplePhonetic: "", exampleTranslations: {}
-      }
-    ],
+      }],
     exercises: [
       {
-        id: "ex-upper-intermediate-2-0", type: "multiple_choice", question: "Which word means a subtle difference?", audioPrompt: "",
+        id: "ex-upper-intermediate-2-0", type: "multiple_choice", question: "Which word is correct?", audioPrompt: "",
         options: [
-          { text: "nuance", isCorrect: true },
-          { text: "argument", isCorrect: false },
+          { text: "argument", isCorrect: true },
+          { text: "nuance", isCorrect: false },
           { text: "compare", isCorrect: false }
         ],
-        explanation: "The correct answer is nuance."
+        explanation: "The correct answer is argument."
       },
       {
-        id: "ex-upper-intermediate-2-1", type: "sentence_builder", question: "Build the sentence:",
-        correctSentence: "compare these two arguments", scrambledWords: ["compare","these","two","arguments","nuance"],
-        explanation: "Correct order: compare these two arguments."
+        id: "ex-upper-intermediate-2-1", type: "sentence_builder", question: "Build a sentence:",
+        correctSentence: "this is argument", scrambledWords: ["this", "is", "argument", "nuance"],
+        explanation: "Correct order: this is argument."
+      }
+    ]
+  },
+  {
+    id: "checkpoint-upper-intermediate-2",
+    moduleId: "upper_intermediate",
+    moduleTitle: "UPPER_INTERMEDIATE",
+    moduleBadge: "⚖️ Upper-Intermediate",
+    title: "Checkpoint: Discussion & Debate",
+    subtitle: "Pass this checkpoint to unlock the next lesson.",
+    icon: "🎯",
+    xpReward: 50,
+    estimatedMinutes: 3,
+    order: 16,
+    isCheckpoint: true,
+    vocabulary: [],
+    exercises: [
+      {
+        id: "ex-chk-upper-intermediate-2-0", type: "multiple_choice", question: "Checkpoint Question: Select the correct word.", audioPrompt: "",
+        options: [
+          { text: "argument", isCorrect: true },
+          { text: "Wrong", isCorrect: false }
+        ],
+        explanation: "Checkpoint passed."
       }
     ]
   },
   {
     id: "advanced-1",
     moduleId: "advanced",
-    moduleTitle: "Advanced",
+    moduleTitle: "ADVANCED",
     moduleBadge: "🎓 Advanced",
     title: "Professional Communication",
     subtitle: "Implement and evaluate strategies.",
     icon: "📊",
-    xpReward: 90,
-    estimatedMinutes: 9,
-    order: 9,
-    vocabulary: [
-      {
+    xpReward: 50,
+    estimatedMinutes: 5,
+    order: 17,
+    vocabulary: [{
         id: "v-clarify", word: "clarify", phonetic: "KLAR-ih-fy", emoji: "📊",
         translations: { Malayalam: "വ്യക്തമാക്കുക", Chinese: "澄清", Hindi: "स्पष्ट करना", Spanish: "Aclarar", English: "clarify" },
         exampleSentence: "Please clarify your point.", examplePhonetic: "", exampleTranslations: {}
@@ -416,38 +600,60 @@ export const LESSONS_DATA: Lesson[] = [
         id: "v-evaluate", word: "evaluate", phonetic: "ih-VAL-yoo-ayt", emoji: "📊",
         translations: { Malayalam: "വിലയിരുത്തുക", Chinese: "评估", Hindi: "मूल्यांकन करना", Spanish: "Evaluar", English: "evaluate" },
         exampleSentence: "Evaluate the results.", examplePhonetic: "", exampleTranslations: {}
-      }
-    ],
+      }],
     exercises: [
       {
-        id: "ex-advanced-1-0", type: "multiple_choice", question: "Which word means to put into action?", audioPrompt: "",
+        id: "ex-advanced-1-0", type: "multiple_choice", question: "Which word is correct?", audioPrompt: "",
         options: [
-          { text: "implement", isCorrect: true },
-          { text: "clarify", isCorrect: false },
+          { text: "clarify", isCorrect: true },
+          { text: "implement", isCorrect: false },
           { text: "evaluate", isCorrect: false }
         ],
-        explanation: "The correct answer is implement."
+        explanation: "The correct answer is clarify."
       },
       {
-        id: "ex-advanced-1-1", type: "sentence_builder", question: "Build the sentence:",
-        correctSentence: "we will evaluate the results", scrambledWords: ["we","will","evaluate","the","results"],
-        explanation: "Correct order: we will evaluate the results."
+        id: "ex-advanced-1-1", type: "sentence_builder", question: "Build a sentence:",
+        correctSentence: "this is clarify", scrambledWords: ["this", "is", "clarify", "implement"],
+        explanation: "Correct order: this is clarify."
+      }
+    ]
+  },
+  {
+    id: "checkpoint-advanced-1",
+    moduleId: "advanced",
+    moduleTitle: "ADVANCED",
+    moduleBadge: "🎓 Advanced",
+    title: "Checkpoint: Professional Communication",
+    subtitle: "Pass this checkpoint to unlock the next lesson.",
+    icon: "🎯",
+    xpReward: 50,
+    estimatedMinutes: 3,
+    order: 18,
+    isCheckpoint: true,
+    vocabulary: [],
+    exercises: [
+      {
+        id: "ex-chk-advanced-1-0", type: "multiple_choice", question: "Checkpoint Question: Select the correct word.", audioPrompt: "",
+        options: [
+          { text: "clarify", isCorrect: true },
+          { text: "Wrong", isCorrect: false }
+        ],
+        explanation: "Checkpoint passed."
       }
     ]
   },
   {
     id: "advanced-2",
     moduleId: "advanced",
-    moduleTitle: "Advanced",
+    moduleTitle: "ADVANCED",
     moduleBadge: "🎓 Advanced",
     title: "Advanced Reading",
     subtitle: "Understand context and idioms.",
     icon: "📚",
-    xpReward: 90,
-    estimatedMinutes: 9,
-    order: 10,
-    vocabulary: [
-      {
+    xpReward: 50,
+    estimatedMinutes: 5,
+    order: 19,
+    vocabulary: [{
         id: "v-idiom", word: "idiom", phonetic: "ID-ee-um", emoji: "📚",
         translations: { Malayalam: "ശൈലി", Chinese: "习语", Hindi: "मुहावरा", Spanish: "Modismo", English: "idiom" },
         exampleSentence: "That is a common English idiom.", examplePhonetic: "", exampleTranslations: {}
@@ -461,38 +667,60 @@ export const LESSONS_DATA: Lesson[] = [
         id: "v-context", word: "context", phonetic: "KON-tekst", emoji: "📚",
         translations: { Malayalam: "സന്ദർഭം", Chinese: "上下文", Hindi: "संदर्भ", Spanish: "Contexto", English: "context" },
         exampleSentence: "Look at the context of the sentence.", examplePhonetic: "", exampleTranslations: {}
-      }
-    ],
+      }],
     exercises: [
       {
-        id: "ex-advanced-2-0", type: "listen_choose", question: "Listen and choose the word.", audioPrompt: "context",
+        id: "ex-advanced-2-0", type: "multiple_choice", question: "Which word is correct?", audioPrompt: "",
         options: [
-          { text: "context", isCorrect: true },
-          { text: "idiom", isCorrect: false },
-          { text: "formal", isCorrect: false }
+          { text: "idiom", isCorrect: true },
+          { text: "formal", isCorrect: false },
+          { text: "context", isCorrect: false }
         ],
-        explanation: "The correct answer is context."
+        explanation: "The correct answer is idiom."
       },
       {
-        id: "ex-advanced-2-1", type: "sentence_builder", question: "Build the sentence:",
-        correctSentence: "look at the formal context", scrambledWords: ["look","at","the","formal","context"],
-        explanation: "Correct order: look at the formal context."
+        id: "ex-advanced-2-1", type: "sentence_builder", question: "Build a sentence:",
+        correctSentence: "this is idiom", scrambledWords: ["this", "is", "idiom", "formal"],
+        explanation: "Correct order: this is idiom."
+      }
+    ]
+  },
+  {
+    id: "checkpoint-advanced-2",
+    moduleId: "advanced",
+    moduleTitle: "ADVANCED",
+    moduleBadge: "🎓 Advanced",
+    title: "Checkpoint: Advanced Reading",
+    subtitle: "Pass this checkpoint to unlock the next lesson.",
+    icon: "🎯",
+    xpReward: 50,
+    estimatedMinutes: 3,
+    order: 20,
+    isCheckpoint: true,
+    vocabulary: [],
+    exercises: [
+      {
+        id: "ex-chk-advanced-2-0", type: "multiple_choice", question: "Checkpoint Question: Select the correct word.", audioPrompt: "",
+        options: [
+          { text: "idiom", isCorrect: true },
+          { text: "Wrong", isCorrect: false }
+        ],
+        explanation: "Checkpoint passed."
       }
     ]
   },
   {
     id: "professional-1",
     moduleId: "professional",
-    moduleTitle: "Professional",
+    moduleTitle: "PROFESSIONAL",
     moduleBadge: "🏢 Professional",
     title: "Business Meetings",
     subtitle: "Negotiate and manage stakeholders.",
     icon: "📈",
-    xpReward: 100,
-    estimatedMinutes: 10,
-    order: 11,
-    vocabulary: [
-      {
+    xpReward: 50,
+    estimatedMinutes: 5,
+    order: 21,
+    vocabulary: [{
         id: "v-negotiation", word: "negotiation", phonetic: "nih-goh-shee-AY-shun", emoji: "📈",
         translations: { Malayalam: "ചർച്ച", Chinese: "谈判", Hindi: "बातचीत", Spanish: "Negociación", English: "negotiation" },
         exampleSentence: "The negotiation was successful.", examplePhonetic: "", exampleTranslations: {}
@@ -506,34 +734,60 @@ export const LESSONS_DATA: Lesson[] = [
         id: "v-revenue", word: "revenue", phonetic: "REV-uh-noo", emoji: "📈",
         translations: { Malayalam: "വരുമാനം", Chinese: "收入", Hindi: "राजस्व", Spanish: "Ingresos", English: "revenue" },
         exampleSentence: "Revenue increased this year.", examplePhonetic: "", exampleTranslations: {}
-      }
-    ],
+      }],
     exercises: [
       {
-        id: "ex-professional-1-0", type: "matching", question: "Match the definitions",
-        pairs: [{"left":"revenue","right":"company income"},{"left":"stakeholder","right":"interested party"}],
-        explanation: "Matching definitions."
+        id: "ex-professional-1-0", type: "multiple_choice", question: "Which word is correct?", audioPrompt: "",
+        options: [
+          { text: "negotiation", isCorrect: true },
+          { text: "stakeholder", isCorrect: false },
+          { text: "revenue", isCorrect: false }
+        ],
+        explanation: "The correct answer is negotiation."
       },
       {
-        id: "ex-professional-1-1", type: "sentence_builder", question: "Build the sentence:",
-        correctSentence: "the negotiation was successful", scrambledWords: ["the","negotiation","was","successful","revenue"],
-        explanation: "Correct order: the negotiation was successful."
+        id: "ex-professional-1-1", type: "sentence_builder", question: "Build a sentence:",
+        correctSentence: "this is negotiation", scrambledWords: ["this", "is", "negotiation", "stakeholder"],
+        explanation: "Correct order: this is negotiation."
+      }
+    ]
+  },
+  {
+    id: "checkpoint-professional-1",
+    moduleId: "professional",
+    moduleTitle: "PROFESSIONAL",
+    moduleBadge: "🏢 Professional",
+    title: "Checkpoint: Business Meetings",
+    subtitle: "Pass this checkpoint to unlock the next lesson.",
+    icon: "🎯",
+    xpReward: 50,
+    estimatedMinutes: 3,
+    order: 22,
+    isCheckpoint: true,
+    vocabulary: [],
+    exercises: [
+      {
+        id: "ex-chk-professional-1-0", type: "multiple_choice", question: "Checkpoint Question: Select the correct word.", audioPrompt: "",
+        options: [
+          { text: "negotiation", isCorrect: true },
+          { text: "Wrong", isCorrect: false }
+        ],
+        explanation: "Checkpoint passed."
       }
     ]
   },
   {
     id: "professional-2",
     moduleId: "professional",
-    moduleTitle: "Professional",
+    moduleTitle: "PROFESSIONAL",
     moduleBadge: "🏢 Professional",
     title: "Leadership & Presentations",
     subtitle: "Collaborate and achieve objectives.",
     icon: "👑",
-    xpReward: 100,
-    estimatedMinutes: 10,
-    order: 12,
-    vocabulary: [
-      {
+    xpReward: 50,
+    estimatedMinutes: 5,
+    order: 23,
+    vocabulary: [{
         id: "v-presentation", word: "presentation", phonetic: "prez-en-TAY-shun", emoji: "👑",
         translations: { Malayalam: "അവതരണം", Chinese: "演讲", Hindi: "प्रस्तुति", Spanish: "Presentación", English: "presentation" },
         exampleSentence: "The presentation was clear.", examplePhonetic: "", exampleTranslations: {}
@@ -547,22 +801,45 @@ export const LESSONS_DATA: Lesson[] = [
         id: "v-collaboration", word: "collaboration", phonetic: "kuh-lab-uh-RAY-shun", emoji: "👑",
         translations: { Malayalam: "സഹകരണം", Chinese: "合作", Hindi: "सहयोग", Spanish: "Colaboración", English: "collaboration" },
         exampleSentence: "Thanks for your collaboration.", examplePhonetic: "", exampleTranslations: {}
-      }
-    ],
+      }],
     exercises: [
       {
-        id: "ex-professional-2-0", type: "multiple_choice", question: "Which word means working together?", audioPrompt: "",
+        id: "ex-professional-2-0", type: "multiple_choice", question: "Which word is correct?", audioPrompt: "",
         options: [
-          { text: "collaboration", isCorrect: true },
-          { text: "presentation", isCorrect: false },
-          { text: "objective", isCorrect: false }
+          { text: "presentation", isCorrect: true },
+          { text: "objective", isCorrect: false },
+          { text: "collaboration", isCorrect: false }
         ],
-        explanation: "The correct answer is collaboration."
+        explanation: "The correct answer is presentation."
       },
       {
-        id: "ex-professional-2-1", type: "sentence_builder", question: "Build the sentence:",
-        correctSentence: "our main objective is growth", scrambledWords: ["our","main","objective","is","growth"],
-        explanation: "Correct order: our main objective is growth."
+        id: "ex-professional-2-1", type: "sentence_builder", question: "Build a sentence:",
+        correctSentence: "this is presentation", scrambledWords: ["this", "is", "presentation", "objective"],
+        explanation: "Correct order: this is presentation."
+      }
+    ]
+  },
+  {
+    id: "checkpoint-professional-2",
+    moduleId: "professional",
+    moduleTitle: "PROFESSIONAL",
+    moduleBadge: "🏢 Professional",
+    title: "Checkpoint: Leadership & Presentations",
+    subtitle: "Pass this checkpoint to unlock the next lesson.",
+    icon: "🎯",
+    xpReward: 50,
+    estimatedMinutes: 3,
+    order: 24,
+    isCheckpoint: true,
+    vocabulary: [],
+    exercises: [
+      {
+        id: "ex-chk-professional-2-0", type: "multiple_choice", question: "Checkpoint Question: Select the correct word.", audioPrompt: "",
+        options: [
+          { text: "presentation", isCorrect: true },
+          { text: "Wrong", isCorrect: false }
+        ],
+        explanation: "Checkpoint passed."
       }
     ]
   },

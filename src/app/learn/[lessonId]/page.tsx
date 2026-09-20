@@ -22,7 +22,7 @@ export default function LessonRunnerPage({ params }: PageProps) {
   const lesson = getLessonById(resolvedParams.lessonId);
 
   const [userLanguage, setUserLanguage] = useState('English');
-  const [currentStage, setCurrentStage] = useState<'vocab' | 'exercises' | 'completed'>('vocab');
+  const [currentStage, setCurrentStage] = useState<'vocab' | 'exercises' | 'completed' | 'failed'>('vocab');
   const [vocabIndex, setVocabIndex] = useState(0);
   const [exerciseIndex, setExerciseIndex] = useState(0);
 
@@ -176,7 +176,7 @@ export default function LessonRunnerPage({ params }: PageProps) {
     } else {
       // Completed all exercises! Record in database
       try {
-        await fetch('/api/learn/complete-lesson', {
+        const res = await fetch('/api/learn/complete-lesson', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -184,6 +184,12 @@ export default function LessonRunnerPage({ params }: PageProps) {
             score,
           }),
         });
+        const data = await res.json();
+        
+        if (data.passed === false) {
+          setCurrentStage('failed');
+          return;
+        }
       } catch (err) {
         console.error('Save progress error:', err);
       }
@@ -507,6 +513,37 @@ export default function LessonRunnerPage({ params }: PageProps) {
         )}
 
         {/* 3. LESSON COMPLETE CELEBRATION STAGE */}
+        {currentStage === 'failed' && (
+          <div className="bg-white dark:bg-slate-900 rounded-xl p-8 sm:p-10 shadow-lg dark:shadow-none shadow-slate-200/50 border border-slate-200 dark:border-slate-700 text-center space-y-6 animate-in fade-in zoom-in-95 duration-300">
+            <div className="w-24 h-24 mx-auto rounded-xl bg-gradient-to-tr from-red-500 to-rose-600 text-white flex items-center justify-center text-4xl shadow-lg shadow-red-200">
+              ❌
+            </div>
+            <div>
+              <h2 className="text-3xl font-black text-slate-900 dark:text-slate-50 tracking-tight">
+                Checkpoint Failed
+              </h2>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
+                You need at least <strong className="text-slate-800 dark:text-slate-200">80%</strong> to pass this checkpoint.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setExerciseIndex(0);
+                setCurrentStage('exercises');
+              }}
+              className="w-full py-4 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-all mt-4"
+            >
+              Retry Checkpoint
+            </button>
+            <Link
+              href="/learn"
+              className="w-full block py-4 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold transition-all"
+            >
+              Return to Path
+            </Link>
+          </div>
+        )}
+
         {currentStage === 'completed' && (
           <div className="bg-white dark:bg-slate-900 rounded-xl p-8 sm:p-10 shadow-lg dark:shadow-none shadow-slate-200/50 border border-slate-200 dark:border-slate-700 text-center space-y-6 animate-in fade-in zoom-in-95 duration-300">
             <div className="w-24 h-24 mx-auto rounded-xl bg-gradient-to-tr from-amber-400 to-orange-500 text-white flex items-center justify-center text-4xl shadow-lg dark:shadow-none shadow-amber-200">

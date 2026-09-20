@@ -123,7 +123,7 @@ export default async function LearnOverviewPage() {
                           ) : isCurrent ? (
                             <div className="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 px-2.5 py-1 rounded-full flex items-center gap-1.5 text-xs font-semibold">
                               <Sparkles className="w-3.5 h-3.5" />
-                              CURRENT
+                              {lesson.isCheckpoint ? 'CHECKPOINT' : 'CURRENT'}
                             </div>
                           ) : isUnlocked ? (
                             <div className="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-full flex items-center gap-1.5 text-xs font-semibold">
@@ -138,7 +138,7 @@ export default async function LearnOverviewPage() {
                         </div>
 
                         <h3 className={`font-bold text-lg mb-1 ${isCurrent ? 'text-indigo-900 dark:text-indigo-100' : 'text-slate-800 dark:text-slate-200'}`}>
-                          Lesson {lesson.order}: {lesson.title}
+                          {lesson.isCheckpoint ? lesson.title : `Lesson ${lesson.order}: ${lesson.title}`}
                         </h3>
                         <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 line-clamp-2">
                           {lesson.subtitle}
@@ -164,7 +164,7 @@ export default async function LearnOverviewPage() {
                                 : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-white'
                             }`}
                           >
-                            {isCompleted ? 'Review Lesson' : isCurrent ? 'Start Lesson' : 'Start Lesson'}
+                            {isCompleted ? 'Review' : isCurrent ? (lesson.isCheckpoint ? 'Start Checkpoint' : 'Start Lesson') : (lesson.isCheckpoint ? 'Start Checkpoint' : 'Start Lesson')}
                             <ArrowRight className="w-4 h-4" />
                           </Link>
                         ) : (
