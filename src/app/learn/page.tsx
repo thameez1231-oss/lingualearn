@@ -1,187 +1,187 @@
 import React from 'react';
 import Link from 'next/link';
 import { getCurrentUser } from '@/lib/auth';
-import { db } from '@/lib/db';
 import { AppShell } from '@/components/layout/AppShell';
 import { LESSONS_DATA } from '@/data/lessons';
 import {
   BookOpen,
   CheckCircle2,
+  Lock,
   ArrowRight,
   Sparkles,
   Clock,
 } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { getUserProgressStats, getHighestUnlockedOrder } from '@/lib/progress';
 
 export const dynamic = 'force-dynamic';
-import { getUserProgressStats } from '@/lib/progress';
 
 export default async function LearnOverviewPage() {
   const user = await getCurrentUser();
-  const stats = user ? await getUserProgressStats(user.id) : null;
+  if (!user) {
+    redirect('/login');
+  }
+  const stats = await getUserProgressStats(user.id);
   const completedMap = new Set(stats?.completedLessonIds || []);
+  const highestUnlockedOrder = stats ? getHighestUnlockedOrder(stats.completedLessonIds) : 1;
 
-  // Determine visible modules based on user's englishLevel
-  const getVisibleModules = (level?: string) => {
-    switch (level) {
-      case 'COMPLETE_BEGINNER':
-      case 'BEGINNER':
-        return ['basics', 'everyday'];
-      case 'INTERMEDIATE':
-        return ['grammar', 'speaking'];
-      case 'ADVANCED':
-        return ['business', 'expert'];
-      default:
-        return ['basics', 'everyday'];
-    }
-  };
-  const visibleModuleIds = getVisibleModules(user?.englishLevel);
-
-  // Group lessons by module
-  const allModules = [
-    {
-      id: 'basics',
-      title: '🌱 A1 - Beginner Basics',
-      desc: 'Alphabet, Numbers 1-10, Colors, Days & Simple Everyday Words',
-      lessons: LESSONS_DATA.filter((l) => l.moduleId === 'basics'),
-    },
-    {
-      id: 'everyday',
-      title: '☕ A2 - Pre-Intermediate',
-      desc: 'Greetings, Introducing Yourself, Ordering Food & Cafe English',
-      lessons: LESSONS_DATA.filter((l) => l.moduleId === 'everyday'),
-    },
-    {
-      id: 'grammar',
-      title: '📘 B1 - Intermediate',
-      desc: 'Am, Is, Are, Simple Sentences & Action Verbs without confusing rules',
-      lessons: LESSONS_DATA.filter((l) => l.moduleId === 'grammar'),
-    },
-    {
-      id: 'speaking',
-      title: '🗣️ B2 - Upper-Intermediate',
-      desc: 'Complex conversations, hypothetical scenarios, and fluency practice',
-      lessons: LESSONS_DATA.filter((l) => l.moduleId === 'speaking'),
-    },
-    {
-      id: 'business',
-      title: '💼 C1 - Advanced Professional',
-      desc: 'Corporate English, meeting vocabulary, emails, and presentations',
-      lessons: LESSONS_DATA.filter((l) => l.moduleId === 'business'),
-    },
-    {
-      id: 'expert',
-      title: '👑 C2 - Mastery & Idioms',
-      desc: 'Native-level slang, nuanced expressions, and complex vocabulary',
-      lessons: LESSONS_DATA.filter((l) => l.moduleId === 'expert'),
-    },
+  const moduleDefinitions = [
+    { id: 'beginner', title: 'Beginner', badge: '🌟', desc: 'Practical everyday English.' },
+    { id: 'elementary', title: 'Elementary', badge: '🚶', desc: 'Longer sentences and common situations.' },
+    { id: 'intermediate', title: 'Intermediate', badge: '💬', desc: 'Natural conversations and communication.' },
+    { id: 'upper_intermediate', title: 'Upper-Intermediate', badge: '⚖️', desc: 'Nuanced vocabulary and problem solving.' },
+    { id: 'advanced', title: 'Advanced', badge: '🎓', desc: 'Sophisticated communication and idioms.' },
+    { id: 'professional', title: 'Professional', badge: '🏢', desc: 'Business meetings and leadership.' },
   ];
 
-  const modules = allModules.filter(m => visibleModuleIds.includes(m.id));
+  const allModules = moduleDefinitions.map(def => ({
+    ...def,
+    lessons: LESSONS_DATA.filter((l) => l.moduleId === def.id).sort((a, b) => a.order - b.order)
+  }));
 
   return (
-    <AppShell
-      user={
-        user || {
-          id: 'guest',
-          name: 'Learner',
-          email: '',
-          preferredLanguage: 'English',
-        }
-      }
-    >
+    <AppShell user={user}>
       <div className="max-w-4xl mx-auto space-y-8">
-        {/* Header */}
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold mb-2">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Interactive Learning Track</span>
-          </div>
-          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
-            English Lessons
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <BookOpen className="w-8 h-8 text-indigo-600" />
+            Learning Path
           </h1>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-            Step-by-step interactive lessons with native translations, audio, visual cards, and quizzes.
+          <p className="text-slate-600 dark:text-slate-400 mt-2 text-lg">
+            Complete lessons in order to unlock advanced content.
           </p>
         </div>
 
-        {/* Modules List */}
-        <div className="space-y-10">
-          {modules.map((mod) => (
-            <div key={mod.id} className="space-y-4">
-              <div className="border-b border-slate-200 dark:border-slate-700 pb-3">
-                <h2 className="text-xl font-extrabold text-slate-900 dark:text-slate-50">{mod.title}</h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{mod.desc}</p>
-              </div>
+        <div className="space-y-12">
+          {allModules.map((mod, index) => {
+            if (mod.lessons.length === 0) return null;
+            
+            // Check if entire module is locked
+            const isModuleLocked = mod.lessons[0].order > highestUnlockedOrder;
+            const isModuleCompleted = mod.lessons.every(l => completedMap.has(l.id));
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {mod.lessons.map((lesson) => {
-                  const isCompleted = completedMap.has(lesson.id);
+            return (
+              <div
+                key={mod.id}
+                className={`bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border ${
+                  isModuleLocked ? 'border-slate-200 dark:border-slate-700 opacity-75' : 'border-indigo-100 dark:border-indigo-900/50'
+                }`}
+              >
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-2xl">{mod.badge}</span>
+                      <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+                        {mod.title}
+                      </h2>
+                      {isModuleCompleted && (
+                        <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3" />
+                          COMPLETED
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-slate-500 dark:text-slate-400">
+                      {mod.desc}
+                    </p>
+                  </div>
+                  {isModuleLocked && (
+                    <div className="bg-slate-100 dark:bg-slate-700 rounded-full p-3">
+                      <Lock className="w-5 h-5 text-slate-400" />
+                    </div>
+                  )}
+                </div>
 
-                  return (
-                    <div
-                      key={lesson.id}
-                      className={`bg-white dark:bg-slate-900 rounded-xl p-6 border transition-all flex flex-col justify-between hover:shadow-md ${
-                        isCompleted
-                          ? 'border-emerald-200 shadow-xs'
-                          : 'border-slate-200 dark:border-slate-700/80 shadow-xs'
-                      }`}
-                    >
-                      <div>
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="text-3xl">{lesson.icon}</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {mod.lessons.map((lesson) => {
+                    const isCompleted = completedMap.has(lesson.id);
+                    const isUnlocked = lesson.order <= highestUnlockedOrder;
+                    const isCurrent = isUnlocked && !isCompleted && lesson.order === highestUnlockedOrder;
+
+                    return (
+                      <div
+                        key={lesson.id}
+                        className={`group rounded-xl p-5 border transition-all duration-200 ${
+                          isCompleted
+                            ? 'bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-700'
+                            : isCurrent
+                            ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800 ring-2 ring-indigo-500/20'
+                            : isUnlocked
+                            ? 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-indigo-300'
+                            : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 opacity-60'
+                        }`}
+                      >
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="text-3xl bg-white dark:bg-slate-800 shadow-sm rounded-lg w-12 h-12 flex items-center justify-center border border-slate-100 dark:border-slate-700">
+                            {lesson.icon}
+                          </div>
                           {isCompleted ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
+                            <div className="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-2.5 py-1 rounded-full flex items-center gap-1.5 text-xs font-semibold">
                               <CheckCircle2 className="w-3.5 h-3.5" />
-                              <span>Completed</span>
-                            </span>
+                              DONE
+                            </div>
+                          ) : isCurrent ? (
+                            <div className="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 px-2.5 py-1 rounded-full flex items-center gap-1.5 text-xs font-semibold">
+                              <Sparkles className="w-3.5 h-3.5" />
+                              CURRENT
+                            </div>
+                          ) : isUnlocked ? (
+                            <div className="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-full flex items-center gap-1.5 text-xs font-semibold">
+                              READY
+                            </div>
                           ) : (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold">
-                              +{lesson.xpReward} XP
-                            </span>
+                            <div className="bg-slate-100 dark:bg-slate-700 text-slate-500 px-2.5 py-1 rounded-full flex items-center gap-1.5 text-xs font-semibold">
+                              <Lock className="w-3 h-3" />
+                              LOCKED
+                            </div>
                           )}
                         </div>
 
-                        <h3 className="font-bold text-lg text-slate-900 dark:text-slate-50 leading-snug">
-                          {lesson.title}
+                        <h3 className={`font-bold text-lg mb-1 ${isCurrent ? 'text-indigo-900 dark:text-indigo-100' : 'text-slate-800 dark:text-slate-200'}`}>
+                          Lesson {lesson.order}: {lesson.title}
                         </h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 line-clamp-2">
                           {lesson.subtitle}
                         </p>
 
-                        <div className="flex items-center gap-4 mt-4 text-xs font-semibold text-slate-400">
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-3.5 h-3.5" />
-                            <span>{lesson.estimatedMinutes} mins</span>
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <BookOpen className="w-3.5 h-3.5" />
-                            <span>{lesson.vocabulary.length} words</span>
-                          </span>
+                        <div className="flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400 mb-5">
+                          <div className="flex items-center gap-1">
+                            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                            {lesson.xpReward} XP
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-3.5 h-3.5 text-blue-500" />
+                            {lesson.estimatedMinutes} min
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <Link
-                          href={`/learn/${lesson.id}`}
-                          className={`w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all active:scale-95 ${
-                            isCompleted
-                              ? 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
-                              : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm shadow-indigo-100'
-                          }`}
-                        >
-                          <span>{isCompleted ? 'Review Lesson' : 'Start Lesson'}</span>
-                          <ArrowRight className="w-4 h-4" />
-                        </Link>
+                        {isUnlocked ? (
+                          <Link
+                            href={`/learn/${lesson.id}`}
+                            className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg font-semibold transition-all ${
+                              isCurrent
+                                ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm'
+                                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-white'
+                            }`}
+                          >
+                            {isCompleted ? 'Review Lesson' : isCurrent ? 'Start Lesson' : 'Start Lesson'}
+                            <ArrowRight className="w-4 h-4" />
+                          </Link>
+                        ) : (
+                          <div className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg font-semibold bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed">
+                            <Lock className="w-4 h-4" />
+                            Complete Lesson {lesson.order - 1} to unlock
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </AppShell>
   );
 }
-

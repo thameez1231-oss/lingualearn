@@ -25,6 +25,18 @@ export async function POST(req: Request) {
     const numericScore = typeof score === 'number' ? score : 100;
     const earnedXp = lesson.xpReward || 50;
 
+    // Check if already completed (to make XP idempotent)
+    const existingProgress = await db.userProgress.findUnique({
+      where: {
+        userId_lessonId: {
+          userId: user.id,
+          lessonId,
+        },
+      },
+    });
+
+    const isFirstTimeCompletion = !existingProgress || existingProgress.status !== 'COMPLETED';
+
     // 1. Record lesson progress
     await db.userProgress.upsert({
       where: {
@@ -75,10 +87,14 @@ export async function POST(req: Request) {
 
     // 3. Advance next lesson and award XP
     const nextLessonId = getNextLessonId(lessonId);
+    
+    // Only increment XP if it is the first time completing this lesson
+    const xpIncrement = isFirstTimeCompletion ? earnedXp : 0;
+    
     const updatedUser = await db.user.update({
       where: { id: user.id },
       data: {
-        xp: { increment: earnedXp },
+        xp: { increment: xpIncrement },
         currentLessonId: nextLessonId,
       },
     });
@@ -94,30 +110,27 @@ export async function POST(req: Request) {
       },
       update: {
         lessonsCompleted: { increment: 1 },
-        wordsLearned: { increment: lesson.vocabulary.length },
       },
       create: {
         userId: user.id,
         date: today,
         lessonsCompleted: 1,
-        wordsLearned: lesson.vocabulary.length,
       },
     });
 
-    // FORCE REVALIDATION OF DASHBOARD AND LEARN ROUTES
+    // CRITICAL: Bust the Next.js Cache so Dashboard, Profile, and Learn pages show updated progress instantly
     revalidatePath('/dashboard');
     revalidatePath('/learn');
     revalidatePath('/profile');
-    revalidatePath('/words');
 
     return NextResponse.json({
       success: true,
-      earnedXp,
-      nextLessonId,
+      xpAwarded: xpIncrement,
       totalXp: updatedUser.xp,
+      nextLessonId,
     });
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('[API] Complete lesson error:', error);
-    return NextResponse.json({ error: 'Failed to record lesson completion.' }, { status: 500 });
+    return NextResponse.json({ error: 'Internal server error.' }, { status: 500 });
   }
 }

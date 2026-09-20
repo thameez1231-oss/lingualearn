@@ -46,3 +46,26 @@ export function calculateProgressPercentage(completedCount: number, totalCount: 
   if (totalCount === 0) return 0;
   return Math.min(100, Math.round((completedCount / totalCount) * 100));
 }
+
+import { LESSONS_DATA } from '@/data/lessons';
+
+export function getHighestUnlockedOrder(completedLessonIds: string[]): number {
+  let highestCompletedOrder = 0;
+  
+  for (const id of completedLessonIds) {
+    const lesson = LESSONS_DATA.find(l => l.id === id);
+    if (lesson && lesson.order > highestCompletedOrder) {
+      highestCompletedOrder = lesson.order;
+    }
+  }
+  
+  return highestCompletedOrder + 1;
+}
+
+export function isLessonUnlocked(lessonId: string, completedLessonIds: string[]): boolean {
+  const lesson = LESSONS_DATA.find(l => l.id === lessonId);
+  if (!lesson) return false;
+  
+  const unlockedOrder = getHighestUnlockedOrder(completedLessonIds);
+  return lesson.order <= unlockedOrder;
+}

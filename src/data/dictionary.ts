@@ -12,139 +12,43 @@ export interface DictionaryEntry {
 export const DICTIONARY_DATA: DictionaryEntry[] = [
   {
     id: "d-word-1",
-    word: "hello",
-    partOfSpeech: "greeting",
-    phonetic: "heh-LOH",
-    simpleDefinition: "A word used to greet someone.",
-    exampleSentence: "Hello, how are you?",
+    word: "wake",
+    partOfSpeech: "verb",
+    phonetic: "wayk",
+    simpleDefinition: "To stop sleeping.",
+    exampleSentence: "I wake up at seven.",
     translations: {
-      "Malayalam": "നമസ്കാരം",
-      "Chinese": "你好",
-      "Hindi": "नमस्ते",
-      "Spanish": "Hola",
-      "English": "hello"
+      "Malayalam": "ഉണരുക",
+      "Chinese": "醒来",
+      "Hindi": "जागना",
+      "Spanish": "Despertar",
+      "English": "wake"
     },
     level: "BEGINNER"
   },
   {
     id: "d-word-2",
-    word: "water",
-    partOfSpeech: "noun",
-    phonetic: "WAH-ter",
-    simpleDefinition: "A clear liquid we drink.",
-    exampleSentence: "I need some water.",
+    word: "sleep",
+    partOfSpeech: "verb",
+    phonetic: "sleep",
+    simpleDefinition: "To rest with eyes closed.",
+    exampleSentence: "I sleep at night.",
     translations: {
-      "Malayalam": "വെള്ളം",
-      "Chinese": "水",
-      "Hindi": "पानी",
-      "Spanish": "Agua",
-      "English": "water"
+      "Malayalam": "ഉറങ്ങുക",
+      "Chinese": "睡觉",
+      "Hindi": "सोना",
+      "Spanish": "Dormir",
+      "English": "sleep"
     },
     level: "BEGINNER"
   },
   {
     id: "d-word-3",
-    word: "food",
-    partOfSpeech: "noun",
-    phonetic: "food",
-    simpleDefinition: "What we eat to live.",
-    exampleSentence: "The food is delicious.",
-    translations: {
-      "Malayalam": "ഭക്ഷണം",
-      "Chinese": "食物",
-      "Hindi": "खाना",
-      "Spanish": "Comida",
-      "English": "food"
-    },
-    level: "BEGINNER"
-  },
-  {
-    id: "d-word-4",
-    word: "home",
-    partOfSpeech: "noun",
-    phonetic: "hohm",
-    simpleDefinition: "The place where you live.",
-    exampleSentence: "I am going home.",
-    translations: {
-      "Malayalam": "വീട്",
-      "Chinese": "家",
-      "Hindi": "घर",
-      "Spanish": "Casa",
-      "English": "home"
-    },
-    level: "BEGINNER"
-  },
-  {
-    id: "d-word-5",
-    word: "school",
-    partOfSpeech: "noun",
-    phonetic: "skool",
-    simpleDefinition: "A place for learning.",
-    exampleSentence: "The kids are at school.",
-    translations: {
-      "Malayalam": "സ്കൂൾ",
-      "Chinese": "学校",
-      "Hindi": "स्कूल",
-      "Spanish": "Escuela",
-      "English": "school"
-    },
-    level: "BEGINNER"
-  },
-  {
-    id: "d-word-6",
-    word: "friend",
-    partOfSpeech: "noun",
-    phonetic: "frend",
-    simpleDefinition: "A person you like and trust.",
-    exampleSentence: "She is my best friend.",
-    translations: {
-      "Malayalam": "സുഹൃത്ത്",
-      "Chinese": "朋友",
-      "Hindi": "दोस्त",
-      "Spanish": "Amigo",
-      "English": "friend"
-    },
-    level: "BEGINNER"
-  },
-  {
-    id: "d-word-7",
-    word: "family",
-    partOfSpeech: "noun",
-    phonetic: "FAM-ih-lee",
-    simpleDefinition: "Parents and children.",
-    exampleSentence: "My family is big.",
-    translations: {
-      "Malayalam": "കുടുംബം",
-      "Chinese": "家庭",
-      "Hindi": "परिवार",
-      "Spanish": "Familia",
-      "English": "family"
-    },
-    level: "BEGINNER"
-  },
-  {
-    id: "d-word-8",
-    word: "work",
-    partOfSpeech: "noun",
-    phonetic: "wurk",
-    simpleDefinition: "A job or task.",
-    exampleSentence: "I have a lot of work.",
-    translations: {
-      "Malayalam": "ജോലി",
-      "Chinese": "工作",
-      "Hindi": "काम",
-      "Spanish": "Trabajo",
-      "English": "work"
-    },
-    level: "BEGINNER"
-  },
-  {
-    id: "d-word-9",
     word: "eat",
     partOfSpeech: "verb",
     phonetic: "eet",
     simpleDefinition: "To consume food.",
-    exampleSentence: "Let's eat dinner.",
+    exampleSentence: "I eat breakfast.",
     translations: {
       "Malayalam": "കഴിക്കുക",
       "Chinese": "吃",
@@ -155,354 +59,450 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     level: "BEGINNER"
   },
   {
-    id: "d-word-10",
-    word: "drink",
-    partOfSpeech: "verb",
-    phonetic: "dringk",
-    simpleDefinition: "To consume liquid.",
-    exampleSentence: "Drink more water.",
+    id: "d-word-4",
+    word: "price",
+    partOfSpeech: "noun",
+    phonetic: "prys",
+    simpleDefinition: "How much money something costs.",
+    exampleSentence: "What is the price?",
     translations: {
-      "Malayalam": "കുടിക്കുക",
-      "Chinese": "喝",
-      "Hindi": "पीना",
-      "Spanish": "Beber",
-      "English": "drink"
+      "Malayalam": "വില",
+      "Chinese": "价格",
+      "Hindi": "कीमत",
+      "Spanish": "Precio",
+      "English": "price"
     },
     level: "BEGINNER"
+  },
+  {
+    id: "d-word-5",
+    word: "buy",
+    partOfSpeech: "verb",
+    phonetic: "by",
+    simpleDefinition: "To pay for something.",
+    exampleSentence: "I want to buy this.",
+    translations: {
+      "Malayalam": "വാങ്ങുക",
+      "Chinese": "买",
+      "Hindi": "खरीदना",
+      "Spanish": "Comprar",
+      "English": "buy"
+    },
+    level: "BEGINNER"
+  },
+  {
+    id: "d-word-6",
+    word: "cheap",
+    partOfSpeech: "adjective",
+    phonetic: "cheep",
+    simpleDefinition: "Not expensive.",
+    exampleSentence: "This is very cheap.",
+    translations: {
+      "Malayalam": "വിലകുറഞ്ഞ",
+      "Chinese": "便宜",
+      "Hindi": "सस्ता",
+      "Spanish": "Barato",
+      "English": "cheap"
+    },
+    level: "BEGINNER"
+  },
+  {
+    id: "d-word-7",
+    word: "station",
+    partOfSpeech: "noun",
+    phonetic: "STAY-shun",
+    simpleDefinition: "A place where trains stop.",
+    exampleSentence: "Where is the train station?",
+    translations: {
+      "Malayalam": "സ്റ്റേഷൻ",
+      "Chinese": "车站",
+      "Hindi": "स्टेशन",
+      "Spanish": "Estación",
+      "English": "station"
+    },
+    level: "ELEMENTARY"
+  },
+  {
+    id: "d-word-8",
+    word: "left",
+    partOfSpeech: "noun",
+    phonetic: "left",
+    simpleDefinition: "Direction opposite of right.",
+    exampleSentence: "Turn left here.",
+    translations: {
+      "Malayalam": "ഇടത്",
+      "Chinese": "左",
+      "Hindi": "बाएं",
+      "Spanish": "Izquierda",
+      "English": "left"
+    },
+    level: "ELEMENTARY"
+  },
+  {
+    id: "d-word-9",
+    word: "ticket",
+    partOfSpeech: "noun",
+    phonetic: "TIK-it",
+    simpleDefinition: "Paper to travel.",
+    exampleSentence: "I need a ticket.",
+    translations: {
+      "Malayalam": "ടിക്കറ്റ്",
+      "Chinese": "票",
+      "Hindi": "टिकट",
+      "Spanish": "Boleto",
+      "English": "ticket"
+    },
+    level: "ELEMENTARY"
+  },
+  {
+    id: "d-word-10",
+    word: "hobby",
+    partOfSpeech: "noun",
+    phonetic: "HOB-ee",
+    simpleDefinition: "Activity done for fun.",
+    exampleSentence: "What is your hobby?",
+    translations: {
+      "Malayalam": "വിനോദം",
+      "Chinese": "爱好",
+      "Hindi": "शौक",
+      "Spanish": "Pasatiempo",
+      "English": "hobby"
+    },
+    level: "ELEMENTARY"
   },
   {
     id: "d-word-11",
-    word: "go",
-    partOfSpeech: "verb",
-    phonetic: "goh",
-    simpleDefinition: "To move to a place.",
-    exampleSentence: "I have to go now.",
+    word: "plan",
+    partOfSpeech: "noun",
+    phonetic: "plan",
+    simpleDefinition: "Idea for what to do.",
+    exampleSentence: "Do you have a plan?",
     translations: {
-      "Malayalam": "പോകുക",
-      "Chinese": "去",
-      "Hindi": "जाना",
-      "Spanish": "Ir",
-      "English": "go"
+      "Malayalam": "പദ്ധതി",
+      "Chinese": "计划",
+      "Hindi": "योजना",
+      "Spanish": "Plan",
+      "English": "plan"
     },
-    level: "BEGINNER"
+    level: "ELEMENTARY"
   },
   {
     id: "d-word-12",
-    word: "help",
-    partOfSpeech: "verb",
-    phonetic: "help",
-    simpleDefinition: "To assist someone.",
-    exampleSentence: "Can you help me?",
+    word: "family",
+    partOfSpeech: "noun",
+    phonetic: "FAM-ih-lee",
+    simpleDefinition: "Parents and children.",
+    exampleSentence: "I love my family.",
     translations: {
-      "Malayalam": "സഹായിക്കുക",
-      "Chinese": "帮助",
-      "Hindi": "मदद",
-      "Spanish": "Ayuda",
-      "English": "help"
+      "Malayalam": "കുടുംബം",
+      "Chinese": "家庭",
+      "Hindi": "परिवार",
+      "Spanish": "Familia",
+      "English": "family"
     },
-    level: "BEGINNER"
+    level: "ELEMENTARY"
   },
   {
     id: "d-word-13",
-    word: "today",
+    word: "meeting",
     partOfSpeech: "noun",
-    phonetic: "tuh-DAY",
-    simpleDefinition: "This current day.",
-    exampleSentence: "Today is Monday.",
+    phonetic: "MEE-ting",
+    simpleDefinition: "People coming together.",
+    exampleSentence: "We have a meeting.",
     translations: {
-      "Malayalam": "ഇന്ന്",
-      "Chinese": "今天",
-      "Hindi": "आज",
-      "Spanish": "Hoy",
-      "English": "today"
+      "Malayalam": "യോഗം",
+      "Chinese": "会议",
+      "Hindi": "बैठक",
+      "Spanish": "Reunión",
+      "English": "meeting"
     },
-    level: "BEGINNER"
+    level: "INTERMEDIATE"
   },
   {
     id: "d-word-14",
-    word: "tomorrow",
-    partOfSpeech: "noun",
-    phonetic: "tuh-MOR-oh",
-    simpleDefinition: "The day after today.",
-    exampleSentence: "See you tomorrow.",
+    word: "discuss",
+    partOfSpeech: "verb",
+    phonetic: "dih-SKUS",
+    simpleDefinition: "To talk about something.",
+    exampleSentence: "Let us discuss this.",
     translations: {
-      "Malayalam": "നാളെ",
-      "Chinese": "明天",
-      "Hindi": "कल",
-      "Spanish": "Mañana",
-      "English": "tomorrow"
+      "Malayalam": "ചർച്ച ചെയ്യുക",
+      "Chinese": "讨论",
+      "Hindi": "चर्चा करना",
+      "Spanish": "Discutir",
+      "English": "discuss"
     },
-    level: "BEGINNER"
+    level: "INTERMEDIATE"
   },
   {
     id: "d-word-15",
-    word: "communicate",
-    partOfSpeech: "verb",
-    phonetic: "kuh-MYOO-nih-kayt",
-    simpleDefinition: "To share information.",
-    exampleSentence: "We need to communicate better.",
+    word: "schedule",
+    partOfSpeech: "noun",
+    phonetic: "SKEJ-ool",
+    simpleDefinition: "A plan of times.",
+    exampleSentence: "My schedule is full.",
     translations: {
-      "Malayalam": "ആശയവിനിമയം നടത്തുക",
-      "Chinese": "沟通",
-      "Hindi": "संवाद करना",
-      "Spanish": "Comunicar",
-      "English": "communicate"
+      "Malayalam": "സമയക്രമം",
+      "Chinese": "日程",
+      "Hindi": "अनुसूची",
+      "Spanish": "Horario",
+      "English": "schedule"
     },
     level: "INTERMEDIATE"
   },
   {
     id: "d-word-16",
-    word: "improve",
-    partOfSpeech: "verb",
-    phonetic: "im-PROOV",
-    simpleDefinition: "To make something better.",
-    exampleSentence: "I want to improve my English.",
+    word: "opinion",
+    partOfSpeech: "noun",
+    phonetic: "uh-PIN-yun",
+    simpleDefinition: "What you think about something.",
+    exampleSentence: "In my opinion, it is good.",
     translations: {
-      "Malayalam": "മെച്ചപ്പെടുത്തുക",
-      "Chinese": "改善",
-      "Hindi": "सुधारना",
-      "Spanish": "Mejorar",
-      "English": "improve"
+      "Malayalam": "അഭിപ്രായം",
+      "Chinese": "意见",
+      "Hindi": "राय",
+      "Spanish": "Opinión",
+      "English": "opinion"
     },
     level: "INTERMEDIATE"
   },
   {
     id: "d-word-17",
-    word: "experience",
-    partOfSpeech: "noun",
-    phonetic: "ik-SPEER-ee-ens",
-    simpleDefinition: "Knowledge gained by doing.",
-    exampleSentence: "She has a lot of experience.",
+    word: "agree",
+    partOfSpeech: "verb",
+    phonetic: "uh-GREE",
+    simpleDefinition: "To have the same opinion.",
+    exampleSentence: "I agree with you.",
     translations: {
-      "Malayalam": "അനുഭവം",
-      "Chinese": "经验",
-      "Hindi": "अनुभव",
-      "Spanish": "Experiencia",
-      "English": "experience"
+      "Malayalam": "യോജിക്കുക",
+      "Chinese": "同意",
+      "Hindi": "सहमत होना",
+      "Spanish": "Acordar",
+      "English": "agree"
     },
     level: "INTERMEDIATE"
   },
   {
     id: "d-word-18",
-    word: "opportunity",
+    word: "story",
     partOfSpeech: "noun",
-    phonetic: "op-er-TOO-nih-tee",
-    simpleDefinition: "A chance to do something.",
-    exampleSentence: "This is a great opportunity.",
+    phonetic: "STOR-ee",
+    simpleDefinition: "A tale of events.",
+    exampleSentence: "Tell me a story.",
     translations: {
-      "Malayalam": "അവസരം",
-      "Chinese": "机会",
-      "Hindi": "अवसर",
-      "Spanish": "Oportunidad",
-      "English": "opportunity"
+      "Malayalam": "കഥ",
+      "Chinese": "故事",
+      "Hindi": "कहानी",
+      "Spanish": "Historia",
+      "English": "story"
     },
     level: "INTERMEDIATE"
   },
   {
     id: "d-word-19",
-    word: "decision",
+    word: "alternative",
     partOfSpeech: "noun",
-    phonetic: "dih-SIZH-un",
-    simpleDefinition: "A choice made after thinking.",
-    exampleSentence: "It was a difficult decision.",
+    phonetic: "awl-TUR-nuh-tiv",
+    simpleDefinition: "Another option.",
+    exampleSentence: "We need an alternative.",
     translations: {
-      "Malayalam": "തീരുമാനം",
-      "Chinese": "决定",
-      "Hindi": "निर्णय",
-      "Spanish": "Decisión",
-      "English": "decision"
+      "Malayalam": "ബദൽ",
+      "Chinese": "替代",
+      "Hindi": "विकल्प",
+      "Spanish": "Alternativa",
+      "English": "alternative"
     },
-    level: "INTERMEDIATE"
+    level: "UPPER-INTERMEDIATE"
   },
   {
     id: "d-word-20",
-    word: "environment",
-    partOfSpeech: "noun",
-    phonetic: "en-VY-run-ment",
-    simpleDefinition: "The surroundings or conditions.",
-    exampleSentence: "A healthy work environment.",
+    word: "resolve",
+    partOfSpeech: "verb",
+    phonetic: "rih-ZOLV",
+    simpleDefinition: "To find a solution.",
+    exampleSentence: "We must resolve this problem.",
     translations: {
-      "Malayalam": "പരിസ്ഥിതി",
-      "Chinese": "环境",
-      "Hindi": "पर्यावरण",
-      "Spanish": "Entorno",
-      "English": "environment"
+      "Malayalam": "പരിഹരിക്കുക",
+      "Chinese": "解决",
+      "Hindi": "हल करना",
+      "Spanish": "Resolver",
+      "English": "resolve"
     },
-    level: "INTERMEDIATE"
+    level: "UPPER-INTERMEDIATE"
   },
   {
     id: "d-word-21",
-    word: "responsibility",
-    partOfSpeech: "noun",
-    phonetic: "rih-spon-suh-BIL-ih-tee",
-    simpleDefinition: "A duty to deal with something.",
-    exampleSentence: "It is my responsibility.",
+    word: "effective",
+    partOfSpeech: "adjective",
+    phonetic: "ih-FEK-tiv",
+    simpleDefinition: "Successful in producing a result.",
+    exampleSentence: "This is an effective method.",
     translations: {
-      "Malayalam": "ഉത്തരവാദിത്തം",
-      "Chinese": "责任",
-      "Hindi": "ज़िम्मेदारी",
-      "Spanish": "Responsabilidad",
-      "English": "responsibility"
+      "Malayalam": "ഫലപ്രദമായ",
+      "Chinese": "有效",
+      "Hindi": "प्रभावी",
+      "Spanish": "Efectivo",
+      "English": "effective"
     },
-    level: "INTERMEDIATE"
+    level: "UPPER-INTERMEDIATE"
   },
   {
     id: "d-word-22",
-    word: "consequently",
-    partOfSpeech: "adverb",
-    phonetic: "KON-suh-kwent-lee",
-    simpleDefinition: "As a result.",
-    exampleSentence: "It rained heavily; consequently, the game was canceled.",
+    word: "argument",
+    partOfSpeech: "noun",
+    phonetic: "AR-gyoo-ment",
+    simpleDefinition: "A reason given in debate.",
+    exampleSentence: "That is a strong argument.",
     translations: {
-      "Malayalam": "തൽഫലമായി",
-      "Chinese": "因此",
-      "Hindi": "फलस्वरूप",
-      "Spanish": "En consecuencia",
-      "English": "consequently"
+      "Malayalam": "വാദം",
+      "Chinese": "论点",
+      "Hindi": "तर्क",
+      "Spanish": "Argumento",
+      "English": "argument"
     },
-    level: "ADVANCED"
+    level: "UPPER-INTERMEDIATE"
   },
   {
     id: "d-word-23",
-    word: "substantial",
-    partOfSpeech: "adjective",
-    phonetic: "sub-STAN-shul",
-    simpleDefinition: "Large in amount or importance.",
-    exampleSentence: "A substantial amount of money.",
+    word: "nuance",
+    partOfSpeech: "noun",
+    phonetic: "NOO-ahns",
+    simpleDefinition: "A subtle difference.",
+    exampleSentence: "Understand the nuance of the word.",
     translations: {
-      "Malayalam": "ഗണ്യമായ",
-      "Chinese": "大量的",
-      "Hindi": "पर्याप्त",
-      "Spanish": "Sustancial",
-      "English": "substantial"
+      "Malayalam": "സൂക്ഷ്മത",
+      "Chinese": "细微差别",
+      "Hindi": "सूक्ष्मता",
+      "Spanish": "Matiz",
+      "English": "nuance"
     },
-    level: "ADVANCED"
+    level: "UPPER-INTERMEDIATE"
   },
   {
     id: "d-word-24",
-    word: "interpret",
+    word: "compare",
     partOfSpeech: "verb",
-    phonetic: "in-TUR-prit",
-    simpleDefinition: "To explain or understand the meaning.",
-    exampleSentence: "How do you interpret this data?",
+    phonetic: "kum-PAIR",
+    simpleDefinition: "To look at similarities and differences.",
+    exampleSentence: "Compare these two ideas.",
     translations: {
-      "Malayalam": "വ്യാഖ്യാനിക്കുക",
-      "Chinese": "解释",
-      "Hindi": "व्याख्या करना",
-      "Spanish": "Interpretar",
-      "English": "interpret"
+      "Malayalam": "താരതമ്യം ചെയ്യുക",
+      "Chinese": "比较",
+      "Hindi": "तुलना करना",
+      "Spanish": "Comparar",
+      "English": "compare"
     },
-    level: "ADVANCED"
+    level: "UPPER-INTERMEDIATE"
   },
   {
     id: "d-word-25",
-    word: "demonstrate",
+    word: "clarify",
     partOfSpeech: "verb",
-    phonetic: "DEM-un-strayt",
-    simpleDefinition: "To show clearly.",
-    exampleSentence: "Let me demonstrate how it works.",
+    phonetic: "KLAR-ih-fy",
+    simpleDefinition: "To make something clear.",
+    exampleSentence: "Please clarify your point.",
     translations: {
-      "Malayalam": "പ്രദർശിപ്പിക്കുക",
-      "Chinese": "证明",
-      "Hindi": "प्रदर्शित करना",
-      "Spanish": "Demostrar",
-      "English": "demonstrate"
+      "Malayalam": "വ്യക്തമാക്കുക",
+      "Chinese": "澄清",
+      "Hindi": "स्पष्ट करना",
+      "Spanish": "Aclarar",
+      "English": "clarify"
     },
     level: "ADVANCED"
   },
   {
     id: "d-word-26",
-    word: "facilitate",
+    word: "implement",
     partOfSpeech: "verb",
-    phonetic: "fuh-SIL-ih-tayt",
-    simpleDefinition: "To make an action easier.",
-    exampleSentence: "The new software will facilitate the process.",
+    phonetic: "IM-pluh-ment",
+    simpleDefinition: "To put into action.",
+    exampleSentence: "We will implement the plan.",
     translations: {
-      "Malayalam": "സുഗമമാക്കുക",
-      "Chinese": "促进",
-      "Hindi": "सुविधाजनक बनाना",
-      "Spanish": "Facilitar",
-      "English": "facilitate"
+      "Malayalam": "നടപ്പിലാക്കുക",
+      "Chinese": "实施",
+      "Hindi": "लागू करना",
+      "Spanish": "Implementar",
+      "English": "implement"
     },
     level: "ADVANCED"
   },
   {
     id: "d-word-27",
-    word: "perspective",
-    partOfSpeech: "noun",
-    phonetic: "per-SPEK-tiv",
-    simpleDefinition: "A particular way of considering something.",
-    exampleSentence: "From my perspective, it's a good idea.",
+    word: "evaluate",
+    partOfSpeech: "verb",
+    phonetic: "ih-VAL-yoo-ayt",
+    simpleDefinition: "To judge the value.",
+    exampleSentence: "Evaluate the results.",
     translations: {
-      "Malayalam": "കാഴ്ചപ്പാട്",
-      "Chinese": "观点",
-      "Hindi": "दृष्टिकोण",
-      "Spanish": "Perspectiva",
-      "English": "perspective"
+      "Malayalam": "വിലയിരുത്തുക",
+      "Chinese": "评估",
+      "Hindi": "मूल्यांकन करना",
+      "Spanish": "Evaluar",
+      "English": "evaluate"
     },
     level: "ADVANCED"
   },
   {
     id: "d-word-28",
-    word: "acquire",
-    partOfSpeech: "verb",
-    phonetic: "uh-KWY-er",
-    simpleDefinition: "To get or obtain something.",
-    exampleSentence: "He managed to acquire the rare book.",
+    word: "idiom",
+    partOfSpeech: "noun",
+    phonetic: "ID-ee-um",
+    simpleDefinition: "A phrase with figurative meaning.",
+    exampleSentence: "That is a common English idiom.",
     translations: {
-      "Malayalam": "നേടുക",
-      "Chinese": "获得",
-      "Hindi": "प्राप्त करना",
-      "Spanish": "Adquirir",
-      "English": "acquire"
+      "Malayalam": "ശൈലി",
+      "Chinese": "习语",
+      "Hindi": "मुहावरा",
+      "Spanish": "Modismo",
+      "English": "idiom"
     },
     level: "ADVANCED"
   },
   {
     id: "d-word-29",
-    word: "negotiate",
-    partOfSpeech: "verb",
-    phonetic: "nih-GOH-shee-ayt",
-    simpleDefinition: "To discuss in order to reach an agreement.",
-    exampleSentence: "We need to negotiate the contract.",
+    word: "formal",
+    partOfSpeech: "adjective",
+    phonetic: "FOR-mul",
+    simpleDefinition: "Proper and official.",
+    exampleSentence: "This is a formal letter.",
     translations: {
-      "Malayalam": "ചർച്ച ചെയ്യുക",
-      "Chinese": "谈判",
-      "Hindi": "बातचीत करना",
-      "Spanish": "Negociar",
-      "English": "negotiate"
+      "Malayalam": "ഔപചാരികമായ",
+      "Chinese": "正式",
+      "Hindi": "औपचारिक",
+      "Spanish": "Formal",
+      "English": "formal"
     },
-    level: "PROFESSIONAL"
+    level: "ADVANCED"
   },
   {
     id: "d-word-30",
-    word: "proposal",
+    word: "context",
     partOfSpeech: "noun",
-    phonetic: "pruh-POH-zul",
-    simpleDefinition: "A formal plan or suggestion.",
-    exampleSentence: "The board accepted our proposal.",
+    phonetic: "KON-tekst",
+    simpleDefinition: "The situation surrounding an event.",
+    exampleSentence: "Look at the context of the sentence.",
     translations: {
-      "Malayalam": "നിർദ്ദേശം",
-      "Chinese": "提议",
-      "Hindi": "प्रस्ताव",
-      "Spanish": "Propuesta",
-      "English": "proposal"
+      "Malayalam": "സന്ദർഭം",
+      "Chinese": "上下文",
+      "Hindi": "संदर्भ",
+      "Spanish": "Contexto",
+      "English": "context"
     },
-    level: "PROFESSIONAL"
+    level: "ADVANCED"
   },
   {
     id: "d-word-31",
-    word: "strategy",
+    word: "negotiation",
     partOfSpeech: "noun",
-    phonetic: "STRAT-uh-jee",
-    simpleDefinition: "A plan of action to achieve a goal.",
-    exampleSentence: "Our marketing strategy is effective.",
+    phonetic: "nih-goh-shee-AY-shun",
+    simpleDefinition: "Discussion to reach agreement.",
+    exampleSentence: "The negotiation was successful.",
     translations: {
-      "Malayalam": "തന്ത്രം",
-      "Chinese": "战略",
-      "Hindi": "रणनीति",
-      "Spanish": "Estrategia",
-      "English": "strategy"
+      "Malayalam": "ചർച്ച",
+      "Chinese": "谈判",
+      "Hindi": "बातचीत",
+      "Spanish": "Negociación",
+      "English": "negotiation"
     },
     level: "PROFESSIONAL"
   },
@@ -511,8 +511,8 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     word: "stakeholder",
     partOfSpeech: "noun",
     phonetic: "STAYK-hohl-der",
-    simpleDefinition: "A person with an interest in a business.",
-    exampleSentence: "We must update all stakeholders.",
+    simpleDefinition: "Person with an interest.",
+    exampleSentence: "Update the stakeholders.",
     translations: {
       "Malayalam": "പങ്കാളി",
       "Chinese": "利益相关者",
@@ -527,8 +527,8 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
     word: "revenue",
     partOfSpeech: "noun",
     phonetic: "REV-uh-noo",
-    simpleDefinition: "Income a company receives.",
-    exampleSentence: "Company revenue increased by 20%.",
+    simpleDefinition: "Income of a company.",
+    exampleSentence: "Revenue increased this year.",
     translations: {
       "Malayalam": "വരുമാനം",
       "Chinese": "收入",
@@ -540,26 +540,42 @@ export const DICTIONARY_DATA: DictionaryEntry[] = [
   },
   {
     id: "d-word-34",
-    word: "deadline",
+    word: "presentation",
     partOfSpeech: "noun",
-    phonetic: "DED-lyn",
-    simpleDefinition: "The time by which something must be finished.",
-    exampleSentence: "We cannot miss this deadline.",
+    phonetic: "prez-en-TAY-shun",
+    simpleDefinition: "Showing information to an audience.",
+    exampleSentence: "The presentation was clear.",
     translations: {
-      "Malayalam": "സമയപരിധി",
-      "Chinese": "截止日期",
-      "Hindi": "समयसीमा",
-      "Spanish": "Fecha límite",
-      "English": "deadline"
+      "Malayalam": "അവതരണം",
+      "Chinese": "演讲",
+      "Hindi": "प्रस्तुति",
+      "Spanish": "Presentación",
+      "English": "presentation"
     },
     level: "PROFESSIONAL"
   },
   {
     id: "d-word-35",
+    word: "objective",
+    partOfSpeech: "noun",
+    phonetic: "ub-JEK-tiv",
+    simpleDefinition: "A goal or purpose.",
+    exampleSentence: "Our main objective is growth.",
+    translations: {
+      "Malayalam": "ലക്ഷ്യം",
+      "Chinese": "目标",
+      "Hindi": "उद्देश्य",
+      "Spanish": "Objetivo",
+      "English": "objective"
+    },
+    level: "PROFESSIONAL"
+  },
+  {
+    id: "d-word-36",
     word: "collaboration",
     partOfSpeech: "noun",
     phonetic: "kuh-lab-uh-RAY-shun",
-    simpleDefinition: "Working together to create something.",
+    simpleDefinition: "Working together.",
     exampleSentence: "Thanks for your collaboration.",
     translations: {
       "Malayalam": "സഹകരണം",
