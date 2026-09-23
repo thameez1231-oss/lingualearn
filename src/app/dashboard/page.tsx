@@ -44,29 +44,17 @@ export default async function DashboardPage() {
   const completedLessons = stats.completedLessonIds.map(id => ({ lessonId: id }));
   const learnedWordsCount = stats.learnedWordsCount;
   const speakingCount = stats.speakingCount;
-  // Current lesson
-  const currentLesson = getLessonById(user.currentLessonId || 'basics-1') || LESSONS_DATA[0];
+const currentLesson = getLessonById(user.currentLessonId || 'beginner-1') || LESSONS_DATA[0];
+  const currentModuleId = currentLesson.moduleId;
+  const lessonsInModule = LESSONS_DATA.filter(l => l.moduleId === currentModuleId);
+  const totalLessonsInModule = lessonsInModule.length;
+  const completedInModule = lessonsInModule.filter(l => stats.completedLessonIds.includes(l.id)).length;
+  const progressPercent = totalLessonsInModule > 0 ? Math.round((completedInModule / totalLessonsInModule) * 100) : 0;
 
-  // Calculate overall progress percentage
-  const completedCount = completedLessons.length;
-  const progressPercent = Math.min(
-    100,
-    Math.round(((completedCount * 1.5 + learnedWordsCount * 0.5 + speakingCount * 0.5) / 20) * 100) || 15
-  );
-
-  // Time of day greeting
   const hour = new Date().getHours();
   const greetingTime = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
 
-  // Level display name
-  const levelTitle =
-    user.englishLevel === 'COMPLETE_BEGINNER'
-      ? 'Level 1 — Starter Explorer'
-      : user.englishLevel === 'BEGINNER'
-      ? 'Level 2 — Beginner'
-      : user.englishLevel === 'INTERMEDIATE'
-      ? 'Level 3 — Everyday Speaker'
-      : 'Level 4 — Fluent Communicator';
+  const levelTitle = currentLesson.moduleTitle + ' - ' + currentLesson.moduleBadge;
 
   return (
     <AppShell user={user}>
